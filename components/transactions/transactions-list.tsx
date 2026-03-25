@@ -1,25 +1,22 @@
 import type { Transaction } from '@/lib/types'
+import { formatCurrencyBRL, formatDateBR } from '@/lib/formatters'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from '@/components/ui/alert-dialog'
 
 type TransactionsListProps = {
   transactions: Transaction[]
   onEdit: (item: Transaction) => void
   onDelete: (id: string) => void
   isDeleting: boolean
-}
-
-function formatDate(value: string) {
-  return new Intl.DateTimeFormat('pt-BR', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric'
-  }).format(new Date(`${value}T00:00:00`))
-}
-
-function formatCurrency(value: number) {
-  return new Intl.NumberFormat('pt-BR', {
-    style: 'currency',
-    currency: 'BRL'
-  }).format(value)
 }
 
 export function TransactionsList({ transactions, onEdit, onDelete, isDeleting }: TransactionsListProps) {
@@ -39,12 +36,12 @@ export function TransactionsList({ transactions, onEdit, onDelete, isDeleting }:
             <div>
               <p className="text-sm font-medium text-slate-900">{item.description}</p>
               <p className="mt-1 text-xs text-slate-600">
-                {item.category?.name ?? 'Sem categoria'} - {formatDate(item.occurred_on)}
+                {item.category?.name ?? 'Sem categoria'} - {formatDateBR(item.occurred_on)}
               </p>
             </div>
 
             <p className={`text-sm font-semibold ${item.type === 'income' ? 'text-emerald-700' : 'text-rose-700'}`}>
-              {item.type === 'income' ? '+' : '-'} {formatCurrency(item.amount)}
+              {item.type === 'income' ? '+' : '-'} {formatCurrencyBRL(item.amount)}
             </p>
           </div>
 
@@ -56,14 +53,36 @@ export function TransactionsList({ transactions, onEdit, onDelete, isDeleting }:
             >
               Editar
             </button>
-            <button
-              className="rounded-lg border border-rose-300 bg-white px-3 py-1.5 text-xs font-medium text-rose-700 disabled:cursor-not-allowed disabled:opacity-60"
-              disabled={isDeleting}
-              onClick={() => onDelete(item.id)}
-              type="button"
-            >
-              Excluir
-            </button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <button
+                  className="rounded-lg border border-rose-300 bg-white px-3 py-1.5 text-xs font-medium text-rose-700 disabled:cursor-not-allowed disabled:opacity-60"
+                  disabled={isDeleting}
+                  type="button"
+                >
+                  Excluir
+                </button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Excluir transacao</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Esta acao nao pode ser desfeita. Deseja remover esta transacao?
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel disabled={isDeleting}>Cancelar</AlertDialogCancel>
+                  <AlertDialogAction
+                    disabled={isDeleting}
+                    onClick={() => {
+                      onDelete(item.id)
+                    }}
+                  >
+                    Confirmar exclusao
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         </article>
       ))}
