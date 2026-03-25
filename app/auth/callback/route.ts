@@ -1,7 +1,7 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextRequest, NextResponse } from 'next/server'
 
-import { getSupabasePublishableKey, getSupabaseUrl } from '@/lib/supabase/env'
+import { getSupabaseAnonKey, getSupabaseUrl } from '@/lib/supabase/env'
 
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url)
@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
 
   let response = NextResponse.redirect(dashboardUrl)
 
-  const supabase = createServerClient(getSupabaseUrl(), getSupabasePublishableKey(), {
+  const supabase = createServerClient(getSupabaseUrl(), getSupabaseAnonKey(), {
     cookies: {
       getAll() {
         return request.cookies.getAll()

@@ -1,14 +1,5 @@
-function readEnv(name: string): string | undefined {
-  const value = process.env[name]
-  if (!value || value.trim().length === 0) {
-    return undefined
-  }
-
-  return value
-}
-
 export function getSupabaseUrl() {
-  const value = readEnv('NEXT_PUBLIC_SUPABASE_URL')
+  const value = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim()
   if (!value) {
     throw new Error('NEXT_PUBLIC_SUPABASE_URL nao configurada')
   }
@@ -16,13 +7,11 @@ export function getSupabaseUrl() {
   return value
 }
 
-export function getSupabasePublishableKey() {
-  const value = readEnv('NEXT_PUBLIC_SUPABASE_ANON_KEY') ?? readEnv('NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY')
+export function getSupabaseAnonKey() {
+  const value = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim()
 
   if (!value) {
-    throw new Error(
-      'Configure NEXT_PUBLIC_SUPABASE_ANON_KEY ou NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY'
-    )
+    throw new Error('NEXT_PUBLIC_SUPABASE_ANON_KEY nao configurada')
   }
 
   return value

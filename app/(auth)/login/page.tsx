@@ -27,6 +27,7 @@ export default function LoginPage() {
 
     try {
       console.log('Login iniciado')
+      console.log('SUPABASE URL:', process.env.NEXT_PUBLIC_SUPABASE_URL)
       const supabase = createClient()
       const redirectTo = getRedirectTo()
 
