@@ -21,6 +21,7 @@ export type Transaction = {
   id: string
   user_id: string
   category_id: string
+  recurrent_id?: string | null
   type: TransactionType
   amount: number
   description: string
