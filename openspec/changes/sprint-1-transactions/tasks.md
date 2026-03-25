@@ -1,7 +1,7 @@
 # Tasks - Sprint 1 Transactions
 
 - [ ] 1.1 Criar hook `useTransactions` (query + mutations)
-- [ ] 1.2 Criar hook `useCategories` para formularios
+- [x] 1.2 Criar hook `useCategories` para formularios
 - [ ] 2.1 Implementar `TransactionForm` com validacao pt-BR
 - [ ] 2.2 Implementar pagina de transacoes com resumo mensal
 - [ ] 3.1 Implementar CRUD de recorrencias
