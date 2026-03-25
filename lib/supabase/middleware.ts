@@ -4,9 +4,19 @@ import { NextResponse, type NextRequest } from 'next/server'
 export async function updateSession(request: NextRequest) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  const pathname = request.nextUrl.pathname
+  const isProtectedRoute =
+    pathname.startsWith('/dashboard') ||
+    pathname.startsWith('/transacoes') ||
+    pathname.startsWith('/metas') ||
+    pathname.startsWith('/investimentos')
 
   if (!supabaseUrl || !supabaseKey) {
     console.error('Supabase env vars missing in middleware')
+    if (isProtectedRoute) {
+      return NextResponse.redirect(new URL('/login', request.url))
+    }
+
     return NextResponse.next()
   }
 
@@ -51,12 +61,7 @@ export async function updateSession(request: NextRequest) {
       data: { user }
     } = await supabase.auth.getUser()
 
-    const isAuthRoute = request.nextUrl.pathname.startsWith('/login')
-    const isProtectedRoute =
-      request.nextUrl.pathname.startsWith('/dashboard') ||
-      request.nextUrl.pathname.startsWith('/transacoes') ||
-      request.nextUrl.pathname.startsWith('/metas') ||
-      request.nextUrl.pathname.startsWith('/investimentos')
+    const isAuthRoute = pathname.startsWith('/login')
 
     if (!user && isProtectedRoute) {
       return NextResponse.redirect(new URL('/login', request.url))
@@ -69,6 +74,10 @@ export async function updateSession(request: NextRequest) {
     return response
   } catch (error) {
     console.error('Middleware auth check failed:', error)
+    if (isProtectedRoute) {
+      return NextResponse.redirect(new URL('/login', request.url))
+    }
+
     return NextResponse.next()
   }
 }

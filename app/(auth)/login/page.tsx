@@ -26,26 +26,20 @@ export default function LoginPage() {
     setError(null)
 
     try {
-      console.log('Login iniciado')
-      console.log('SUPABASE URL:', process.env.NEXT_PUBLIC_SUPABASE_URL)
       const supabase = createClient()
       const redirectTo = getRedirectTo()
 
-      const { data, error: authError } = await supabase.auth.signInWithOAuth({
+      const { error: authError } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo
         }
       })
 
-      console.log('Resposta OAuth:', data)
-
       if (authError) {
-        console.error('OAuth error:', authError)
         setError('Nao foi possivel iniciar o login. Tente novamente.')
       }
-    } catch (loginError) {
-      console.error('Erro ao iniciar login:', loginError)
+    } catch {
       setError('Configuracao do login ausente. Verifique as variaveis de ambiente.')
     } finally {
       setLoading(false)

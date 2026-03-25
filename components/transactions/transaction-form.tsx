@@ -23,6 +23,8 @@ const transactionSchema = z.object({
     .refine((value) => !Number.isNaN(Number(value.replace(',', '.'))), 'Informe um valor valido.')
     .refine((value) => Number(value.replace(',', '.')) > 0, 'O valor deve ser maior que zero.'),
   occurred_on: z.string().min(1, 'Selecione a data da transacao.')
+    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Use o formato AAAA-MM-DD.')
+    .refine((value) => !Number.isNaN(new Date(`${value}T00:00:00`).getTime()), 'Informe uma data valida.')
 })
 
 type TransactionFormValues = z.infer<typeof transactionSchema>
@@ -60,7 +62,12 @@ export function TransactionForm({
   })
 
   const selectedType = form.watch('type')
-  const { categories, isLoading: isLoadingCategories } = useCategories({ kind: selectedType })
+  const {
+    categories,
+    isLoading: isLoadingCategories,
+    isError: isCategoriesError,
+    refetch: refetchCategories
+  } = useCategories({ kind: selectedType })
   const typeOptions = useMemo(
     () => [
       { value: 'income' as const, label: mapTypeLabel('income') },
@@ -116,11 +123,13 @@ export function TransactionForm({
         </label>
         <select
           className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
-          disabled={isLoadingCategories}
+          disabled={isLoadingCategories || isCategoriesError}
           id="category_id"
           {...form.register('category_id')}
         >
-          <option value="">Selecione</option>
+          <option value="">
+            {isLoadingCategories ? 'Carregando categorias...' : isCategoriesError ? 'Falha ao carregar' : 'Selecione'}
+          </option>
           {categories.map((category) => (
             <option key={category.id} value={category.id}>
               {category.name}
@@ -128,6 +137,20 @@ export function TransactionForm({
           ))}
         </select>
         <p className="mt-1 text-xs text-slate-500">Categorias de {mapTypeLabel(selectedType)}</p>
+        {isCategoriesError ? (
+          <div className="mt-1 flex items-center gap-2">
+            <p className="text-xs text-red-600">Nao foi possivel carregar as categorias.</p>
+            <button
+              className="text-xs font-medium text-slate-700 underline"
+              onClick={() => {
+                void refetchCategories()
+              }}
+              type="button"
+            >
+              Tentar novamente
+            </button>
+          </div>
+        ) : null}
         {form.formState.errors.category_id ? (
           <p className="mt-1 text-xs text-red-600">{form.formState.errors.category_id.message}</p>
         ) : null}

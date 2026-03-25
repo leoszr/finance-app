@@ -9,7 +9,9 @@ export function PwaRegister() {
     }
 
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js').catch(() => {})
+      navigator.serviceWorker.register('/sw.js').catch((error) => {
+        console.warn('Falha ao registrar service worker:', error)
+      })
     }
   }, [])
 

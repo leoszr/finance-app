@@ -16,6 +16,7 @@ function currentMonth() {
 export default function TransacoesPage() {
   const [month, setMonth] = useState(currentMonth)
   const [editingItem, setEditingItem] = useState<Transaction | null>(null)
+  const [actionError, setActionError] = useState<string | null>(null)
 
   const {
     transactions,
@@ -36,7 +37,14 @@ export default function TransacoesPage() {
     description: string
     occurred_on: string
   }) => {
-    await createTransaction.mutateAsync(input)
+    setActionError(null)
+
+    try {
+      await createTransaction.mutateAsync(input)
+    } catch (mutationError) {
+      setActionError(mutationError instanceof Error ? mutationError.message : 'Falha ao criar transacao.')
+      throw mutationError
+    }
   }
 
   const handleUpdate = async (input: {
@@ -50,15 +58,28 @@ export default function TransacoesPage() {
       return
     }
 
-    await updateTransaction.mutateAsync({
-      id: editingItem.id,
-      input
-    })
-    setEditingItem(null)
+    setActionError(null)
+
+    try {
+      await updateTransaction.mutateAsync({
+        id: editingItem.id,
+        input
+      })
+      setEditingItem(null)
+    } catch (mutationError) {
+      setActionError(mutationError instanceof Error ? mutationError.message : 'Falha ao atualizar transacao.')
+      throw mutationError
+    }
   }
 
   const handleDelete = async (id: string) => {
-    await deleteTransaction.mutateAsync(id)
+    setActionError(null)
+
+    try {
+      await deleteTransaction.mutateAsync(id)
+    } catch (mutationError) {
+      setActionError(mutationError instanceof Error ? mutationError.message : 'Falha ao excluir transacao.')
+    }
   }
 
   return (
@@ -69,6 +90,12 @@ export default function TransacoesPage() {
       </header>
 
       <MonthPicker onChange={setMonth} value={month} />
+
+      {actionError ? (
+        <section className="rounded-2xl border border-rose-200 bg-rose-50 p-4">
+          <p className="text-sm text-rose-800">{actionError}</p>
+        </section>
+      ) : null}
 
       <TransactionsSummary
         balance={summary.balance}

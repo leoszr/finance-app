@@ -19,6 +19,14 @@ type UseTransactionsParams = {
   month: string
 }
 
+function monthKeyFromDate(dateValue: string) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateValue)) {
+    return null
+  }
+
+  return dateValue.slice(0, 7)
+}
+
 function monthRange(month: string) {
   const [yearRaw, monthRaw] = month.split('-')
   const year = Number(yearRaw)
@@ -59,6 +67,22 @@ async function fetchTransactionsByMonth(month: string): Promise<Transaction[]> {
 export function useTransactions({ month }: UseTransactionsParams) {
   const queryClient = useQueryClient()
 
+  const invalidateMonthData = async (monthKey?: string | null) => {
+    const keys = new Set<string>([month])
+
+    if (monthKey) {
+      keys.add(monthKey)
+    }
+
+    await Promise.all(
+      Array.from(keys).map((key) =>
+        queryClient.invalidateQueries({ queryKey: [TRANSACTIONS_KEY, key] })
+      )
+    )
+
+    await queryClient.invalidateQueries({ queryKey: ['dashboard'] })
+  }
+
   const query = useQuery({
     queryKey: [TRANSACTIONS_KEY, month],
     queryFn: () => fetchTransactionsByMonth(month)
@@ -93,7 +117,7 @@ export function useTransactions({ month }: UseTransactionsParams) {
           occurred_on: input.occurred_on,
           source: 'manual'
         })
-        .select('*')
+        .select('*, category:categories(id, name, kind, color, icon)')
         .single()
 
       if (error) {
@@ -102,9 +126,8 @@ export function useTransactions({ month }: UseTransactionsParams) {
 
       return data as Transaction
     },
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: [TRANSACTIONS_KEY] })
-      await queryClient.invalidateQueries({ queryKey: ['dashboard'] })
+    onSuccess: async (_, input) => {
+      await invalidateMonthData(monthKeyFromDate(input.occurred_on))
     }
   })
 
@@ -115,7 +138,7 @@ export function useTransactions({ month }: UseTransactionsParams) {
         .from('transactions')
         .update(payload.input)
         .eq('id', payload.id)
-        .select('*')
+        .select('*, category:categories(id, name, kind, color, icon)')
         .single()
 
       if (error) {
@@ -124,9 +147,8 @@ export function useTransactions({ month }: UseTransactionsParams) {
 
       return data as Transaction
     },
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: [TRANSACTIONS_KEY] })
-      await queryClient.invalidateQueries({ queryKey: ['dashboard'] })
+    onSuccess: async (_, payload) => {
+      await invalidateMonthData(monthKeyFromDate(payload.input.occurred_on))
     }
   })
 
@@ -140,8 +162,7 @@ export function useTransactions({ month }: UseTransactionsParams) {
       }
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: [TRANSACTIONS_KEY] })
-      await queryClient.invalidateQueries({ queryKey: ['dashboard'] })
+      await invalidateMonthData()
     }
   })
 
