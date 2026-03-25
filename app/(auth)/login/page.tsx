@@ -13,10 +13,14 @@ export default function LoginPage() {
     setError(null)
 
     const supabase = createClient()
+    const publicSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim()
+    const baseUrl = publicSiteUrl && publicSiteUrl.length > 0 ? publicSiteUrl : window.location.origin
+    const normalizedBaseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl
+
     const { error: authError } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`
+        redirectTo: `${normalizedBaseUrl}/auth/callback`
       }
     })
 
