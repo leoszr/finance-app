@@ -1,6 +1,6 @@
 # Tasks - Sprint 2 Dashboard
 
-- [ ] 1.1 Implementar hook `useDashboard` com agregacoes
+- [x] 1.1 Implementar hook `useDashboard` com agregacoes
 - [ ] 1.2 Implementar cards de resumo mensal
 - [ ] 2.1 Implementar grafico de gastos por categoria
 - [ ] 2.2 Implementar lista de ultimas transacoes
