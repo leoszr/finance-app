@@ -21,6 +21,9 @@ export default function TransacoesPage() {
     transactions,
     summary,
     isLoading,
+    isError,
+    error,
+    refetch,
     createTransaction,
     updateTransaction,
     deleteTransaction
@@ -102,6 +105,19 @@ export default function TransacoesPage() {
       {isLoading ? (
         <section className="rounded-2xl border border-slate-200 bg-white p-4">
           <p className="text-sm text-slate-600">Carregando transacoes...</p>
+        </section>
+      ) : isError ? (
+        <section className="rounded-2xl border border-rose-200 bg-rose-50 p-4">
+          <p className="text-sm text-rose-800">{error instanceof Error ? error.message : 'Falha ao carregar dados.'}</p>
+          <button
+            className="mt-3 rounded-lg border border-rose-300 bg-white px-3 py-1.5 text-xs font-medium text-rose-700"
+            onClick={() => {
+              void refetch()
+            }}
+            type="button"
+          >
+            Tentar novamente
+          </button>
         </section>
       ) : (
         <TransactionsList
