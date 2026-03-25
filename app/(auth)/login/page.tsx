@@ -8,24 +8,45 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  const getRedirectTo = () => {
+    if (typeof window !== 'undefined' && window.location.origin) {
+      return `${window.location.origin}/auth/callback`
+    }
+
+    const publicSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim()
+    if (publicSiteUrl) {
+      return `${publicSiteUrl.replace(/\/$/, '')}/auth/callback`
+    }
+
+    return '/auth/callback'
+  }
+
   const handleGoogleLogin = async () => {
     setLoading(true)
     setError(null)
 
-    const supabase = createClient()
-    const publicSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim()
-    const baseUrl = publicSiteUrl && publicSiteUrl.length > 0 ? publicSiteUrl : window.location.origin
-    const normalizedBaseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl
+    try {
+      console.log('Login iniciado')
+      const supabase = createClient()
+      const redirectTo = getRedirectTo()
 
-    const { error: authError } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${normalizedBaseUrl}/auth/callback`
+      const { data, error: authError } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo
+        }
+      })
+
+      console.log('Resposta OAuth:', data)
+
+      if (authError) {
+        console.error('OAuth error:', authError)
+        setError('Nao foi possivel iniciar o login. Tente novamente.')
       }
-    })
-
-    if (authError) {
-      setError('Nao foi possivel iniciar o login. Tente novamente.')
+    } catch (loginError) {
+      console.error('Erro ao iniciar login:', loginError)
+      setError('Configuracao do login ausente. Verifique as variaveis de ambiente.')
+    } finally {
       setLoading(false)
     }
   }
