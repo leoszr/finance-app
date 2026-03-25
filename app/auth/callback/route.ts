@@ -17,5 +17,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(new URL('/login?error=auth_failed', request.url))
   }
 
+  await supabase.rpc('generate_monthly_recurrents')
+
   return NextResponse.redirect(new URL('/dashboard', request.url))
 }
