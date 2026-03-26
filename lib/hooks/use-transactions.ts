@@ -19,6 +19,11 @@ type UseTransactionsParams = {
   month: string
 }
 
+type DeleteTransactionInput = {
+  id: string
+  occurred_on: string
+}
+
 function monthKeyFromDate(dateValue: string) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(dateValue)) {
     return null
@@ -43,6 +48,16 @@ function monthRange(month: string) {
     start: start.toISOString().slice(0, 10),
     end: end.toISOString().slice(0, 10)
   }
+}
+
+function sortTransactions(items: Transaction[]) {
+  return [...items].sort((a, b) => {
+    if (a.occurred_on === b.occurred_on) {
+      return b.created_at.localeCompare(a.created_at)
+    }
+
+    return b.occurred_on.localeCompare(a.occurred_on)
+  })
 }
 
 async function fetchTransactionsByMonth(month: string): Promise<Transaction[]> {
@@ -85,7 +100,8 @@ export function useTransactions({ month }: UseTransactionsParams) {
 
   const query = useQuery({
     queryKey: [TRANSACTIONS_KEY, month],
-    queryFn: () => fetchTransactionsByMonth(month)
+    queryFn: () => fetchTransactionsByMonth(month),
+    staleTime: 30_000
   })
 
   const summary = useMemo<MonthlySummary>(() => {
@@ -126,8 +142,17 @@ export function useTransactions({ month }: UseTransactionsParams) {
 
       return data as Transaction
     },
-    onSuccess: async (_, input) => {
-      await invalidateMonthData(monthKeyFromDate(input.occurred_on))
+    onSuccess: async (created, input) => {
+      const createdMonth = monthKeyFromDate(input.occurred_on)
+
+      if (createdMonth) {
+        queryClient.setQueryData<Transaction[]>([TRANSACTIONS_KEY, createdMonth], (current) => {
+          const previous = current ?? []
+          return sortTransactions([created, ...previous])
+        })
+      }
+
+      await invalidateMonthData(createdMonth)
     }
   })
 
@@ -147,22 +172,61 @@ export function useTransactions({ month }: UseTransactionsParams) {
 
       return data as Transaction
     },
-    onSuccess: async (_, payload) => {
-      await invalidateMonthData(monthKeyFromDate(payload.input.occurred_on))
+    onSuccess: async (updated, payload) => {
+      const updatedMonth = monthKeyFromDate(payload.input.occurred_on)
+
+      if (updatedMonth) {
+        queryClient.setQueryData<Transaction[]>([TRANSACTIONS_KEY, updatedMonth], (current) => {
+          if (!current) {
+            return current
+          }
+
+          return sortTransactions(
+            current.map((item) => (item.id === payload.id ? updated : item))
+          )
+        })
+      }
+
+      await invalidateMonthData(updatedMonth)
     }
   })
 
   const deleteTransaction = useMutation({
-    mutationFn: async (id: string) => {
+    mutationFn: async (payload: DeleteTransactionInput) => {
       const supabase = createClient()
-      const { error } = await supabase.from('transactions').delete().eq('id', id)
+      const { error } = await supabase.from('transactions').delete().eq('id', payload.id)
 
       if (error) {
         throw new Error('Nao foi possivel excluir a transacao.')
       }
+
+      return payload
     },
-    onSuccess: async () => {
-      await invalidateMonthData()
+    onMutate: async (payload) => {
+      const affectedMonth = monthKeyFromDate(payload.occurred_on)
+
+      if (!affectedMonth) {
+        return { affectedMonth, previous: undefined as Transaction[] | undefined }
+      }
+
+      await queryClient.cancelQueries({ queryKey: [TRANSACTIONS_KEY, affectedMonth] })
+
+      const previous = queryClient.getQueryData<Transaction[]>([TRANSACTIONS_KEY, affectedMonth])
+      queryClient.setQueryData<Transaction[]>([TRANSACTIONS_KEY, affectedMonth], (current) =>
+        (current ?? []).filter((item) => item.id !== payload.id)
+      )
+
+      return { affectedMonth, previous }
+    },
+    onError: (_error, _payload, context) => {
+      if (!context?.affectedMonth || !context.previous) {
+        return
+      }
+
+      queryClient.setQueryData([TRANSACTIONS_KEY, context.affectedMonth], context.previous)
+    },
+    onSuccess: async (payload) => {
+      await invalidateMonthData(monthKeyFromDate(payload.occurred_on))
     }
   })
 

@@ -15,7 +15,7 @@ import {
 type TransactionsListProps = {
   transactions: Transaction[]
   onEdit: (item: Transaction) => void
-  onDelete: (id: string) => void
+  onDelete: (item: Transaction) => void
   isDeleting: boolean
 }
 
@@ -47,7 +47,9 @@ export function TransactionsList({ transactions, onEdit, onDelete, isDeleting }:
 
           <div className="mt-3 flex justify-end gap-2">
             <button
+              aria-label={`Editar transacao ${item.description}`}
               className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700"
+              disabled={isDeleting}
               onClick={() => onEdit(item)}
               type="button"
             >
@@ -56,6 +58,7 @@ export function TransactionsList({ transactions, onEdit, onDelete, isDeleting }:
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <button
+                  aria-label={`Excluir transacao ${item.description}`}
                   className="rounded-lg border border-rose-300 bg-white px-3 py-1.5 text-xs font-medium text-rose-700 disabled:cursor-not-allowed disabled:opacity-60"
                   disabled={isDeleting}
                   type="button"
@@ -75,7 +78,7 @@ export function TransactionsList({ transactions, onEdit, onDelete, isDeleting }:
                   <AlertDialogAction
                     disabled={isDeleting}
                     onClick={() => {
-                      onDelete(item.id)
+                      onDelete(item)
                     }}
                   >
                     Confirmar exclusao
