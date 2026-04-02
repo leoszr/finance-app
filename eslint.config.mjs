@@ -15,7 +15,8 @@ export default defineConfig([
     {
         rules: {
             '@typescript-eslint/no-explicit-any': 'error',
+            '@typescript-eslint/consistent-type-imports': ['warn', { prefer: 'type-imports' }],
             'no-console': ['warn', { allow: ['warn', 'error'] }]
-        }
+    }
     }
 ])

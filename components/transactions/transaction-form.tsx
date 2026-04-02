@@ -1,7 +1,7 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -60,6 +60,16 @@ export function TransactionForm({
       occurred_on: initialData?.occurred_on ?? new Date().toISOString().slice(0, 10)
     }
   })
+
+  useEffect(() => {
+    form.reset({
+      type: initialData?.type ?? 'expense',
+      category_id: initialData?.category_id ?? '',
+      description: initialData?.description ?? '',
+      amount: initialData ? String(initialData.amount) : '',
+      occurred_on: initialData?.occurred_on ?? new Date().toISOString().slice(0, 10)
+    })
+  }, [form, initialData, mode])
 
   const selectedType = form.watch('type')
   const {
@@ -122,6 +132,7 @@ export function TransactionForm({
           Categoria
         </label>
         <select
+          aria-invalid={Boolean(form.formState.errors.category_id)}
           className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
           disabled={isLoadingCategories || isCategoriesError}
           id="category_id"
@@ -138,7 +149,7 @@ export function TransactionForm({
         </select>
         <p className="mt-1 text-xs text-slate-500">Categorias de {mapTypeLabel(selectedType)}</p>
         {isCategoriesError ? (
-          <div className="mt-1 flex items-center gap-2">
+          <div className="mt-1 flex items-center gap-2" role="alert">
             <p className="text-xs text-red-600">Nao foi possivel carregar as categorias.</p>
             <button
               className="text-xs font-medium text-slate-700 underline"
@@ -161,6 +172,7 @@ export function TransactionForm({
           Descricao
         </label>
         <input
+          aria-invalid={Boolean(form.formState.errors.description)}
           className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
           id="description"
           placeholder="Ex: Mercado"
@@ -178,6 +190,7 @@ export function TransactionForm({
             Valor
           </label>
           <input
+            aria-invalid={Boolean(form.formState.errors.amount)}
             className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
             id="amount"
             inputMode="decimal"
@@ -195,6 +208,7 @@ export function TransactionForm({
             Data
           </label>
           <input
+            aria-invalid={Boolean(form.formState.errors.occurred_on)}
             className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
             id="occurred_on"
             type="date"

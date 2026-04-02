@@ -1,11 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
+import { MonthlyComparisonChart } from '@/components/charts/monthly-comparison-chart'
 import { MonthPicker } from '@/components/transactions/month-picker'
 import { TransactionForm } from '@/components/transactions/transaction-form'
 import { TransactionsList } from '@/components/transactions/transactions-list'
 import { TransactionsSummary } from '@/components/transactions/transactions-summary'
+import { useDashboard } from '@/lib/hooks/use-dashboard'
 import { useTransactions } from '@/lib/hooks/use-transactions'
 import type { Transaction } from '@/lib/types'
 
@@ -29,6 +31,24 @@ export default function TransacoesPage() {
     updateTransaction,
     deleteTransaction
   } = useTransactions({ month })
+  const { comparison } = useDashboard({ month })
+
+  useEffect(() => {
+    setEditingItem(null)
+    setActionError(null)
+  }, [month])
+
+  useEffect(() => {
+    if (!editingItem) {
+      return
+    }
+
+    const exists = transactions.some((item) => item.id === editingItem.id)
+
+    if (!exists) {
+      setEditingItem(null)
+    }
+  }, [editingItem, transactions])
 
   const handleCreate = async (input: {
     type: 'income' | 'expense'
@@ -43,7 +63,6 @@ export default function TransacoesPage() {
       await createTransaction.mutateAsync(input)
     } catch (mutationError) {
       setActionError(mutationError instanceof Error ? mutationError.message : 'Falha ao criar transacao.')
-      throw mutationError
     }
   }
 
@@ -68,22 +87,26 @@ export default function TransacoesPage() {
       setEditingItem(null)
     } catch (mutationError) {
       setActionError(mutationError instanceof Error ? mutationError.message : 'Falha ao atualizar transacao.')
-      throw mutationError
     }
   }
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (transaction: Transaction) => {
     setActionError(null)
 
     try {
-      await deleteTransaction.mutateAsync(id)
+      await deleteTransaction.mutateAsync({
+        id: transaction.id,
+        occurred_on: transaction.occurred_on
+      })
     } catch (mutationError) {
       setActionError(mutationError instanceof Error ? mutationError.message : 'Falha ao excluir transacao.')
     }
   }
 
+  const isBusy = createTransaction.isPending || updateTransaction.isPending || deleteTransaction.isPending
+
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-4 px-5 py-6">
+    <main aria-busy={isBusy} className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-4 px-5 py-6">
       <header>
         <h1 className="text-xl font-semibold text-slate-900">Transacoes</h1>
         <p className="mt-1 text-sm text-slate-600">Gerencie seus lancamentos e acompanhe o saldo mensal.</p>
@@ -92,7 +115,7 @@ export default function TransacoesPage() {
       <MonthPicker onChange={setMonth} value={month} />
 
       {actionError ? (
-        <section className="rounded-2xl border border-rose-200 bg-rose-50 p-4">
+        <section aria-live="assertive" className="rounded-2xl border border-rose-200 bg-rose-50 p-4" role="alert">
           <p className="text-sm text-rose-800">{actionError}</p>
         </section>
       ) : null}
@@ -102,6 +125,13 @@ export default function TransacoesPage() {
         expense={summary.expense}
         income={summary.income}
       />
+
+      <section className="rounded-2xl border border-slate-200 bg-white p-4">
+        <h2 className="text-sm font-semibold text-slate-900">Comparativo dos últimos 6 meses</h2>
+        <div className="mt-3">
+          <MonthlyComparisonChart data={comparison} />
+        </div>
+      </section>
 
       <section className="rounded-2xl border border-slate-200 bg-white p-4">
         <h2 className="text-sm font-semibold text-slate-900">Nova transacao</h2>
@@ -130,11 +160,11 @@ export default function TransacoesPage() {
       ) : null}
 
       {isLoading ? (
-        <section className="rounded-2xl border border-slate-200 bg-white p-4">
+        <section aria-live="polite" className="rounded-2xl border border-slate-200 bg-white p-4" role="status">
           <p className="text-sm text-slate-600">Carregando transacoes...</p>
         </section>
       ) : isError ? (
-        <section className="rounded-2xl border border-rose-200 bg-rose-50 p-4">
+        <section aria-live="assertive" className="rounded-2xl border border-rose-200 bg-rose-50 p-4" role="alert">
           <p className="text-sm text-rose-800">{error instanceof Error ? error.message : 'Falha ao carregar dados.'}</p>
           <button
             className="mt-3 rounded-lg border border-rose-300 bg-white px-3 py-1.5 text-xs font-medium text-rose-700"

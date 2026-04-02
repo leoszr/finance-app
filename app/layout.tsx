@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { ReactNode } from 'react'
+import type { ReactNode } from 'react'
 
 import { PwaRegister } from '@/components/pwa-register'
 import { QueryProvider } from '@/lib/providers/query-provider'

@@ -1,7 +1,31 @@
-const CACHE_VERSION = 'v1'
+const CACHE_VERSION = 'v2'
 const APP_SHELL_CACHE = `app-shell-${CACHE_VERSION}`
 const RUNTIME_CACHE = `runtime-${CACHE_VERSION}`
-const APP_SHELL_ASSETS = ['/', '/manifest.webmanifest']
+const APP_SHELL_ASSETS = ['/', '/offline', '/manifest.webmanifest']
+
+function shouldCacheRequest(request, url) {
+  if (request.method !== 'GET') {
+    return false
+  }
+
+  if (url.origin !== self.location.origin) {
+    return false
+  }
+
+  if (url.pathname.startsWith('/api/')) {
+    return false
+  }
+
+  return true
+}
+
+function notifyClients(message) {
+  self.clients.matchAll({ includeUncontrolled: true, type: 'window' }).then((clients) => {
+    clients.forEach((client) => {
+      client.postMessage({ source: 'sw', ...message })
+    })
+  })
+}
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -28,13 +52,9 @@ self.addEventListener('activate', (event) => {
 })
 
 self.addEventListener('fetch', (event) => {
-  if (event.request.method !== 'GET') {
-    return
-  }
-
   const requestUrl = new URL(event.request.url)
 
-  if (requestUrl.origin !== self.location.origin) {
+  if (!shouldCacheRequest(event.request, requestUrl)) {
     return
   }
 
@@ -42,17 +62,25 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       fetch(event.request)
         .then((response) => {
-          const responseClone = response.clone()
-          caches.open(RUNTIME_CACHE).then((cache) => {
-            cache.put(event.request, responseClone)
-          })
+          if (response && response.status === 200) {
+            const responseClone = response.clone()
+            caches.open(RUNTIME_CACHE).then((cache) => {
+              cache.put(event.request, responseClone)
+            })
+          }
 
           return response
         })
         .catch(async () => {
+          notifyClients({ level: 'warn', event: 'navigate-fallback', url: event.request.url })
           const cachedResponse = await caches.match(event.request)
           if (cachedResponse) {
             return cachedResponse
+          }
+
+          const offlinePage = await caches.match('/offline')
+          if (offlinePage) {
+            return offlinePage
           }
 
           return caches.match('/')
@@ -75,7 +103,10 @@ self.addEventListener('fetch', (event) => {
 
           return response
         })
-        .catch(() => cachedResponse)
+        .catch(() => {
+          notifyClients({ level: 'warn', event: 'runtime-fallback', url: event.request.url })
+          return cachedResponse
+        })
 
       return cachedResponse || networkFetch
     })
