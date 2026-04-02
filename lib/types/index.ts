@@ -39,3 +39,44 @@ export type TransactionInput = {
   description: string
   occurred_on: string
 }
+
+export type Budget = {
+  id: string
+  user_id: string
+  category_id: string
+  month: string
+  limit_amount: number
+  created_at: string
+  updated_at: string
+  category?: Category | null
+}
+
+export type BudgetInput = {
+  category_id: string
+  month: string
+  limit_amount: number
+}
+
+export type GoalKind = 'monthly_saving' | 'final_target'
+
+export type Goal = {
+  id: string
+  user_id: string
+  name: string
+  kind: GoalKind
+  target_amount: number
+  current_amount: number
+  deadline: string | null
+  active: boolean
+  created_at: string
+  updated_at: string
+}
+
+export type GoalInput = {
+  name: string
+  kind: GoalKind
+  target_amount: number
+  current_amount?: number
+  deadline?: string | null
+  active?: boolean
+}

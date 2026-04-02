@@ -1,7 +1,7 @@
 # 🎯 Finance App - Progresso do Projeto (alinhado)
 
-**Status Geral**: 24/61 tasks completas (39.3%)  
-**Sprint Atual**: Sprint 3 - Goals & Budgets  
+**Status Geral**: 31/61 tasks completas (50.8%)  
+**Sprint Atual**: Sprint 4 - CSV Import  
 **Última Atualização**: 2026-04-02
 
 ---
@@ -13,7 +13,7 @@
 | sprint-0-setup | ✅ completed | 9 | 9 | 100% |
 | sprint-1-transactions | ✅ completed | 8 | 8 | 100% |
 | sprint-2-dashboard | ✅ completed | 7 | 7 | 100% |
-| sprint-3-goals-budgets | ⏳ pending | 0 | 7 | 0% |
+| sprint-3-goals-budgets | ✅ completed | 7 | 7 | 100% |
 | sprint-4-csv-import | ⏳ pending | 0 | 7 | 0% |
 | sprint-5-investments | ⏳ pending | 0 | 8 | 0% |
 | sprint-6-export | ⏳ pending | 0 | 7 | 0% |
@@ -30,13 +30,20 @@
   - `npm run lint` ✅
   - `npm run build` ✅
 
+### Sprint 3 - Goals & Budgets
+
+- TASK-015..TASK-017 concluídas (`openspec/changes/sprint-3-goals-budgets/tasks.md`)
+- Validação local:
+  - `npm run lint` ✅
+  - `npm run build` ✅
+
 ---
 
 ## 🔜 Próximo foco
 
-### Sprint 3 - Goals & Budgets
+### Sprint 4 - CSV Import
 
-- TASK-015..TASK-017 (`openspec/changes/sprint-3-goals-budgets/tasks.md`)
+- TASK-018..TASK-019 (`openspec/changes/sprint-4-csv-import/tasks.md`)
 
 ---
 

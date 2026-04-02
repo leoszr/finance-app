@@ -9,7 +9,7 @@ Tracking of all sprint completion status.
 | sprint-0-setup | completed | 9 | 9 | 100% |
 | sprint-1-transactions | completed | 8 | 8 | 100% |
 | sprint-2-dashboard | completed | 7 | 7 | 100% |
-| sprint-3-goals-budgets | pending | 0 | 7 | 0% |
+| sprint-3-goals-budgets | completed | 7 | 7 | 100% |
 | sprint-4-csv-import | pending | 0 | 7 | 0% |
 | sprint-5-investments | pending | 0 | 8 | 0% |
 | sprint-6-export | pending | 0 | 7 | 0% |
@@ -17,9 +17,9 @@ Tracking of all sprint completion status.
 
 ## Overall Progress
 
-- **Completed**: 24 tasks
+- **Completed**: 31 tasks
 - **Total**: 61 tasks
-- **Percentage**: 39.3%
+- **Percentage**: 50.8%
 
 ## Sprint Details
 
@@ -61,8 +61,13 @@ Validacao local:
 - `npm run build` ✅
 - Data: 2026-03-28
 
-### Sprint 3 - Goals & Budgets (pending)
-- [ ] TASK-015..TASK-017 - See `openspec/changes/sprint-3-goals-budgets/tasks.md`
+### Sprint 3 - Goals & Budgets (completed)
+- [x] TASK-015..TASK-017 - See `openspec/changes/sprint-3-goals-budgets/tasks.md`
+
+Validacao local:
+- `npm run lint` ✅
+- `npm run build` ✅
+- Data: 2026-04-02
 
 ### Sprint 4 - CSV Import (pending)
 - [ ] TASK-018..TASK-019 - See `openspec/changes/sprint-4-csv-import/tasks.md`
