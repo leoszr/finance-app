@@ -1,31 +1,80 @@
-import { redirect } from 'next/navigation'
+'use client'
 
-import { LogoutButton } from '@/components/logout-button'
-import { createClient } from '@/lib/supabase/server'
+import Link from 'next/link'
 
-export default async function DashboardPage() {
-  const supabase = await createClient()
-  const {
-    data: { user }
-  } = await supabase.auth.getUser()
+import { ExpensesPieChart } from '@/components/charts/expenses-pie-chart'
+import { RecentTransactions } from '@/components/dashboard/recent-transactions'
+import { SummaryCards } from '@/components/dashboard/summary-cards'
+import { useDashboard } from '@/lib/hooks/use-dashboard'
 
-  if (!user) {
-    redirect('/login')
+export default function DashboardPage() {
+  const { summary, expensesByCategory, recentTransactions, isLoading, isError, error, refetch } = useDashboard()
+
+  if (isLoading) {
+    return <DashboardLoading />
+  }
+
+  if (isError) {
+    return (
+      <main className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-4 px-5 py-6">
+        <section className="rounded-2xl border border-rose-200 bg-rose-50 p-4" role="alert" aria-live="assertive">
+          <p className="text-sm text-rose-800">{error instanceof Error ? error.message : 'Falha ao carregar dashboard.'}</p>
+          <button
+            type="button"
+            className="mt-3 rounded-lg border border-rose-300 bg-white px-3 py-1.5 text-xs font-medium text-rose-700"
+            onClick={() => {
+              void refetch()
+            }}
+          >
+            Tentar novamente
+          </button>
+        </section>
+      </main>
+    )
   }
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-6 px-5 py-8">
-      <header className="rounded-2xl bg-white p-5 shadow-sm">
+    <main className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-4 px-5 py-6">
+      <header>
         <h1 className="text-xl font-semibold text-slate-900">Dashboard</h1>
-        <p className="mt-1 text-sm text-slate-600">Sessao ativa: {user.email}</p>
+        <p className="mt-1 text-sm text-slate-600">Visão geral do mês atual.</p>
       </header>
 
-      <section className="rounded-2xl border border-slate-200 bg-white p-5">
-        <p className="text-sm text-slate-700">Autenticacao inicial concluida para a Sprint 0.</p>
-        <div className="mt-4">
-          <LogoutButton />
+      <SummaryCards income={summary.income} expense={summary.expense} balance={summary.balance} />
+
+      <section className="rounded-2xl border border-slate-200 bg-white p-4">
+        <h2 className="text-sm font-semibold text-slate-900">Gastos por categoria</h2>
+        <div className="mt-3">
+          <ExpensesPieChart data={expensesByCategory} />
         </div>
       </section>
+
+      <section className="rounded-2xl border border-slate-200 bg-white p-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-semibold text-slate-900">Últimas transações</h2>
+          <Link href="/transacoes" className="text-xs font-medium text-emerald-700">
+            Ver todas
+          </Link>
+        </div>
+        <div className="mt-3">
+          <RecentTransactions transactions={recentTransactions} />
+        </div>
+      </section>
+    </main>
+  )
+}
+
+function DashboardLoading() {
+  return (
+    <main className="mx-auto flex min-h-screen w-full max-w-md animate-pulse flex-col gap-4 px-5 py-6">
+      <div className="h-8 w-40 rounded-lg bg-slate-200" />
+      <div className="grid grid-cols-3 gap-3">
+        <div className="h-24 rounded-2xl bg-slate-200" />
+        <div className="h-24 rounded-2xl bg-slate-200" />
+        <div className="h-24 rounded-2xl bg-slate-200" />
+      </div>
+      <div className="h-80 rounded-2xl bg-slate-200" />
+      <div className="h-64 rounded-2xl bg-slate-200" />
     </main>
   )
 }

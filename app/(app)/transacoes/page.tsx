@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from 'react'
 
+import { MonthlyComparisonChart } from '@/components/charts/monthly-comparison-chart'
 import { MonthPicker } from '@/components/transactions/month-picker'
 import { TransactionForm } from '@/components/transactions/transaction-form'
 import { TransactionsList } from '@/components/transactions/transactions-list'
 import { TransactionsSummary } from '@/components/transactions/transactions-summary'
+import { useDashboard } from '@/lib/hooks/use-dashboard'
 import { useTransactions } from '@/lib/hooks/use-transactions'
 import type { Transaction } from '@/lib/types'
 
@@ -29,6 +31,7 @@ export default function TransacoesPage() {
     updateTransaction,
     deleteTransaction
   } = useTransactions({ month })
+  const { comparison } = useDashboard({ month })
 
   useEffect(() => {
     setEditingItem(null)
@@ -122,6 +125,13 @@ export default function TransacoesPage() {
         expense={summary.expense}
         income={summary.income}
       />
+
+      <section className="rounded-2xl border border-slate-200 bg-white p-4">
+        <h2 className="text-sm font-semibold text-slate-900">Comparativo dos últimos 6 meses</h2>
+        <div className="mt-3">
+          <MonthlyComparisonChart data={comparison} />
+        </div>
+      </section>
 
       <section className="rounded-2xl border border-slate-200 bg-white p-4">
         <h2 className="text-sm font-semibold text-slate-900">Nova transacao</h2>
