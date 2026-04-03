@@ -26,7 +26,7 @@
 - [x] Atualizar `progress.md`
 - [x] Rodar `npm run lint`
 - [x] Rodar `npm run build`
-- [ ] Commit + push
+- [x] Commit + push
 - [ ] Abrir PR `sprint-4-csv-import -> main`
 
 ## Estratégia de implementação
