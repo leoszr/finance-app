@@ -13,6 +13,13 @@ export type Category = {
   icon: string
 }
 
+export type CategoryInput = {
+  name: string
+  kind: CategoryKind
+  color?: string
+  icon?: string
+}
+
 export type TransactionType = 'income' | 'expense'
 
 export type TransactionSource = 'manual' | 'recurring' | 'csv_nubank'

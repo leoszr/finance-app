@@ -3,8 +3,12 @@
 import Link from 'next/link'
 import { type ChangeEvent, useMemo, useState } from 'react'
 
-import { useCategories } from '@/lib/hooks/use-categories'
+import { useQueryClient } from '@tanstack/react-query'
+
+import { CreateCategoryForm } from '@/components/categories/create-category-form'
 import { parseNubankCSV, type ParsedNubankRow, validateCSVFileName } from '@/lib/csv/parse-nubank-csv'
+import { useCategories } from '@/lib/hooks/use-categories'
+import { createClient } from '@/lib/supabase/client'
 
 type PreviewRow = ParsedNubankRow & {
   selected: boolean
@@ -18,13 +22,16 @@ async function readFileAsText(file: File) {
 }
 
 export default function ImportarTransacoesPage() {
+  const queryClient = useQueryClient()
   const [step, setStep] = useState<Step>('upload')
   const [rows, setRows] = useState<PreviewRow[]>([])
   const [errors, setErrors] = useState<string[]>([])
   const [info, setInfo] = useState<string | null>(null)
   const [isParsing, setIsParsing] = useState(false)
+  const [isImporting, setIsImporting] = useState(false)
+  const [showCreateCategory, setShowCreateCategory] = useState(false)
 
-  const { categories } = useCategories({ kind: 'expense' })
+  const { categories, isLoading: isLoadingCategories } = useCategories({ kind: 'expense' })
 
   const previewStats = useMemo(() => {
     return rows.reduce(
@@ -45,6 +52,7 @@ export default function ImportarTransacoesPage() {
     )
   }, [rows])
 
+  const selectedRows = useMemo(() => rows.filter((row) => row.selected), [rows])
   const selectedCount = previewStats.selected
   const selectedWithoutCategory = previewStats.selectedWithoutCategory
   const canAdvanceConfirm = selectedCount > 0 && selectedWithoutCategory === 0
@@ -85,9 +93,7 @@ export default function ImportarTransacoesPage() {
         setErrors(parseErrors)
       }
 
-      setInfo(
-        `Linhas válidas: ${result.rows.length}. Ignoradas (valor positivo): ${result.skippedPositive}.`
-      )
+      setInfo(`Linhas válidas: ${result.rows.length}. Ignoradas (valor positivo): ${result.skippedPositive}.`)
 
       setStep('preview')
     } catch (error) {
@@ -97,6 +103,48 @@ export default function ImportarTransacoesPage() {
     } finally {
       setIsParsing(false)
       event.target.value = ''
+    }
+  }
+
+  const handleImport = async () => {
+    if (!canAdvanceConfirm) {
+      setErrors(['Selecione ao menos uma linha e preencha categoria para todas as selecionadas.'])
+      return
+    }
+
+    setErrors([])
+    setInfo(null)
+    setIsImporting(true)
+
+    try {
+      const supabase = createClient()
+      const payload = selectedRows.map((row) => ({
+        category_id: row.category_id,
+        type: 'expense' as const,
+        amount: row.amount,
+        description: row.description,
+        occurred_on: row.occurred_on,
+        source: 'csv_nubank' as const
+      }))
+
+      const { error } = await supabase.from('transactions').insert(payload)
+
+      if (error) {
+        throw new Error('Nao foi possivel importar as transacoes selecionadas.')
+      }
+
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['transactions'] }),
+        queryClient.invalidateQueries({ queryKey: ['dashboard'] })
+      ])
+
+      setInfo(`${payload.length} transações importadas com sucesso.`)
+      setRows([])
+      setStep('upload')
+    } catch (error) {
+      setErrors([error instanceof Error ? error.message : 'Falha ao importar transações.'])
+    } finally {
+      setIsImporting(false)
     }
   }
 
@@ -164,9 +212,32 @@ export default function ImportarTransacoesPage() {
             </button>
           </div>
 
-          <p className="mt-2 text-xs text-slate-600">
-            Selecionadas: {selectedCount} · Sem categoria: {selectedWithoutCategory}
-          </p>
+          <div className="mt-2 flex items-center justify-between gap-2">
+            <p className="text-xs text-slate-600">
+              Selecionadas: {selectedCount} · Sem categoria: {selectedWithoutCategory}
+            </p>
+            <button
+              className="text-xs font-medium text-emerald-700 underline"
+              onClick={() => setShowCreateCategory((current) => !current)}
+              type="button"
+            >
+              {showCreateCategory ? 'Fechar nova categoria' : 'Criar categoria'}
+            </button>
+          </div>
+
+          {showCreateCategory ? (
+            <CreateCategoryForm
+              defaultKind="expense"
+              onCreated={(category) => {
+                setRows((current) =>
+                  current.map((row) =>
+                    row.selected && !row.category_id ? { ...row, category_id: category.id } : row
+                  )
+                )
+                setShowCreateCategory(false)
+              }}
+            />
+          ) : null}
 
           <div className="mt-3 space-y-2">
             {rows.map((row) => (
@@ -194,6 +265,7 @@ export default function ImportarTransacoesPage() {
 
                 <select
                   className="glass-btn mt-2 w-full rounded-lg px-2 py-1.5 text-xs text-slate-800"
+                  disabled={isLoadingCategories}
                   value={row.category_id}
                   onChange={(event) => {
                     setRows((current) =>
@@ -229,15 +301,27 @@ export default function ImportarTransacoesPage() {
         <section className="glass-card rounded-2xl p-4">
           <h2 className="text-sm font-semibold text-slate-900">3. Confirmação</h2>
           <p className="mt-2 text-sm text-slate-700">
-            Pronto para importar {selectedCount} transações. Implementação do batch será o próximo passo.
+            {selectedCount} transações serão importadas com origem CSV Nubank.
           </p>
-          <button
-            className="glass-btn mt-3 rounded-lg px-3 py-1.5 text-xs font-medium text-slate-800"
-            onClick={() => setStep('preview')}
-            type="button"
-          >
-            Voltar ao preview
-          </button>
+          <div className="mt-3 flex items-center gap-2">
+            <button
+              className="glass-btn rounded-lg px-3 py-1.5 text-xs font-medium text-slate-800"
+              onClick={() => setStep('preview')}
+              type="button"
+            >
+              Voltar ao preview
+            </button>
+            <button
+              className="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-medium text-white disabled:opacity-60"
+              disabled={isImporting}
+              onClick={() => {
+                void handleImport()
+              }}
+              type="button"
+            >
+              {isImporting ? 'Importando...' : 'Confirmar importação'}
+            </button>
+          </div>
         </section>
       ) : null}
     </main>
