@@ -11,7 +11,37 @@ type UseCategoriesParams = {
   kind?: CategoryKind
 }
 
-async function fetchCategories(kind?: CategoryKind): Promise<Category[]> {
+type DefaultCategoryTemplate = {
+  name: string
+  kind: CategoryKind
+  color: string
+  icon: string
+}
+
+const DEFAULT_CATEGORIES: DefaultCategoryTemplate[] = [
+  { name: 'Salario', kind: 'income', color: '#16a34a', icon: 'Wallet' },
+  { name: 'Freelance', kind: 'income', color: '#15803d', icon: 'Briefcase' },
+  { name: 'Investimentos', kind: 'income', color: '#166534', icon: 'TrendingUp' },
+  { name: 'Moradia', kind: 'expense', color: '#1d4ed8', icon: 'Home' },
+  { name: 'Alimentacao', kind: 'expense', color: '#9333ea', icon: 'Utensils' },
+  { name: 'Transporte', kind: 'expense', color: '#ea580c', icon: 'Car' },
+  { name: 'Saude', kind: 'expense', color: '#dc2626', icon: 'HeartPulse' },
+  { name: 'Educacao', kind: 'expense', color: '#0284c7', icon: 'GraduationCap' },
+  { name: 'Lazer', kind: 'expense', color: '#f59e0b', icon: 'Gamepad2' },
+  { name: 'Assinaturas', kind: 'expense', color: '#7c3aed', icon: 'Tv' },
+  { name: 'Reserva', kind: 'investment', color: '#0f766e', icon: 'PiggyBank' }
+]
+
+async function getCurrentUserId() {
+  const supabase = createClient()
+  const {
+    data: { user }
+  } = await supabase.auth.getUser()
+
+  return user?.id ?? null
+}
+
+async function queryCategories(kind?: CategoryKind) {
   const supabase = createClient()
 
   let query = supabase.from('categories').select('id, name, kind, color, icon').order('name')
@@ -20,7 +50,28 @@ async function fetchCategories(kind?: CategoryKind): Promise<Category[]> {
     query = query.eq('kind', kind)
   }
 
-  const { data, error } = await query
+  return query
+}
+
+async function ensureDefaultCategoriesFallback() {
+  const supabase = createClient()
+  const userId = await getCurrentUserId()
+
+  if (!userId) {
+    return
+  }
+
+  await supabase.from('categories').upsert(
+    DEFAULT_CATEGORIES.map((category) => ({
+      user_id: userId,
+      ...category
+    })),
+    { onConflict: 'user_id,name' }
+  )
+}
+
+async function fetchCategories(kind?: CategoryKind): Promise<Category[]> {
+  const { data, error } = await queryCategories(kind)
 
   if (error) {
     throw new Error('Nao foi possivel carregar as categorias.')
@@ -32,19 +83,14 @@ async function fetchCategories(kind?: CategoryKind): Promise<Category[]> {
     return categories
   }
 
+  const supabase = createClient()
   const { error: ensureDefaultsError } = await supabase.rpc('ensure_default_categories_for_current_user')
 
   if (ensureDefaultsError) {
-    return categories
+    await ensureDefaultCategoriesFallback()
   }
 
-  let fallbackQuery = supabase.from('categories').select('id, name, kind, color, icon').order('name')
-
-  if (kind) {
-    fallbackQuery = fallbackQuery.eq('kind', kind)
-  }
-
-  const { data: fallbackData, error: fallbackError } = await fallbackQuery
+  const { data: fallbackData, error: fallbackError } = await queryCategories(kind)
 
   if (fallbackError) {
     throw new Error('Nao foi possivel carregar as categorias.')
@@ -64,9 +110,16 @@ export function useCategories({ kind }: UseCategoriesParams = {}) {
   const createCategory = useMutation({
     mutationFn: async (input: CategoryInput) => {
       const supabase = createClient()
+      const userId = await getCurrentUserId()
+
+      if (!userId) {
+        throw new Error('Usuario nao autenticado.')
+      }
+
       const { data, error } = await supabase
         .from('categories')
         .insert({
+          user_id: userId,
           name: input.name,
           kind: input.kind,
           color: input.color ?? '#334155',
