@@ -17,11 +17,11 @@ export default function DashboardPage() {
   if (isError) {
     return (
       <main className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-4 px-5 py-6">
-        <section className="rounded-2xl border border-rose-200 bg-rose-50 p-4" role="alert" aria-live="assertive">
+        <section className="glass-card rounded-2xl border border-rose-200 bg-rose-50/80 p-4" role="alert" aria-live="assertive">
           <p className="text-sm text-rose-800">{error instanceof Error ? error.message : 'Falha ao carregar dashboard.'}</p>
           <button
             type="button"
-            className="mt-3 rounded-lg border border-rose-300 bg-white px-3 py-1.5 text-xs font-medium text-rose-700"
+            className="glass-btn mt-3 rounded-lg border border-rose-300 px-3 py-1.5 text-xs font-medium text-rose-700"
             onClick={() => {
               void refetch()
             }}
@@ -42,14 +42,14 @@ export default function DashboardPage() {
 
       <SummaryCards income={summary.income} expense={summary.expense} balance={summary.balance} />
 
-      <section className="rounded-2xl border border-slate-200 bg-white p-4">
+      <section className="glass-card rounded-2xl p-4">
         <h2 className="text-sm font-semibold text-slate-900">Gastos por categoria</h2>
         <div className="mt-3">
           <ExpensesPieChart data={expensesByCategory} />
         </div>
       </section>
 
-      <section className="rounded-2xl border border-slate-200 bg-white p-4">
+      <section className="glass-card rounded-2xl p-4">
         <div className="flex items-center justify-between">
           <h2 className="text-sm font-semibold text-slate-900">Últimas transações</h2>
           <Link href="/transacoes" className="text-xs font-medium text-emerald-700">
