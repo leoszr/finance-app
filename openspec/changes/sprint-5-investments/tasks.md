@@ -7,6 +7,6 @@
 - [x] 2.3 Implementar hook de consumo das taxas BCB
 - [x] 3.1 Implementar calculadora de investimentos
 - [x] 3.2 Implementar pagina de investimentos com abas
-- [ ] 4.1 Tratar erros/loading com feedback claro
+- [x] 4.1 Tratar erros/loading com feedback claro
 - [ ] 4.2 Rodar `npm run build` e registrar validacao
 - [ ] 4.3 Executar teste de interface via Chromium remoto e registrar evidencias
