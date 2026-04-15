@@ -2,7 +2,7 @@
 
 - [x] 1.1 Criar migration/tipos da entidade `investments`
 - [x] 1.2 Implementar hook `useInvestments` e resumo de portfolio
-- [ ] 2.1 Implementar formulario de investimento
+- [x] 2.1 Implementar formulario de investimento
 - [ ] 2.2 Implementar rota `/api/bcb-proxy`
 - [ ] 2.3 Implementar hook de consumo das taxas BCB
 - [ ] 3.1 Implementar calculadora de investimentos
