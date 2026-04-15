@@ -4,6 +4,8 @@ import Link from 'next/link'
 
 import { ExpensesPieChart } from '@/components/charts/expenses-pie-chart'
 import { RecentTransactions } from '@/components/dashboard/recent-transactions'
+import { ErrorMessage } from '@/components/shared/error-message'
+import { Skeleton } from '@/components/shared/skeleton'
 import { SummaryCards } from '@/components/dashboard/summary-cards'
 import { useDashboard } from '@/lib/hooks/use-dashboard'
 
@@ -17,18 +19,12 @@ export default function DashboardPage() {
   if (isError) {
     return (
       <main className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-4 px-5 py-6">
-        <section className="glass-card rounded-2xl border border-rose-200 bg-rose-50/80 p-4" role="alert" aria-live="assertive">
-          <p className="text-sm text-rose-800">{error instanceof Error ? error.message : 'Falha ao carregar dashboard.'}</p>
-          <button
-            type="button"
-            className="glass-btn mt-3 rounded-lg border border-rose-300 px-3 py-1.5 text-xs font-medium text-rose-700"
-            onClick={() => {
-              void refetch()
-            }}
-          >
-            Tentar novamente
-          </button>
-        </section>
+        <ErrorMessage
+          message={error instanceof Error ? error.message : 'Falha ao carregar dashboard.'}
+          onRetry={() => {
+            void refetch()
+          }}
+        />
       </main>
     )
   }
@@ -67,14 +63,14 @@ export default function DashboardPage() {
 function DashboardLoading() {
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-md animate-pulse flex-col gap-4 px-5 py-6">
-      <div className="h-8 w-40 rounded-lg bg-slate-200" />
+      <Skeleton className="h-8 w-40 rounded-lg" />
       <div className="grid grid-cols-3 gap-3">
-        <div className="h-24 rounded-2xl bg-slate-200" />
-        <div className="h-24 rounded-2xl bg-slate-200" />
-        <div className="h-24 rounded-2xl bg-slate-200" />
+        <Skeleton className="h-24 rounded-2xl" />
+        <Skeleton className="h-24 rounded-2xl" />
+        <Skeleton className="h-24 rounded-2xl" />
       </div>
-      <div className="h-80 rounded-2xl bg-slate-200" />
-      <div className="h-64 rounded-2xl bg-slate-200" />
+      <Skeleton className="h-80 rounded-2xl" />
+      <Skeleton className="h-64 rounded-2xl" />
     </main>
   )
 }

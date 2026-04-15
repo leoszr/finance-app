@@ -5,6 +5,9 @@ import { useState } from 'react'
 import { InvestmentForm } from '@/components/investments/investment-form'
 import { InvestmentsCalculator } from '@/components/investments/investments-calculator'
 import { InvestmentsList } from '@/components/investments/investments-list'
+import { ErrorMessage } from '@/components/shared/error-message'
+import { Skeleton } from '@/components/shared/skeleton'
+import { useToast } from '@/components/ui/toast-provider'
 import { formatCurrencyBRL } from '@/lib/formatters'
 import { useInvestments } from '@/lib/hooks/use-investments'
 import { getInvestmentTypeLabel } from '@/lib/investments'
@@ -25,8 +28,7 @@ export default function InvestimentosPage() {
   const [activeTab, setActiveTab] = useState<Tab>('portfolio')
   const [editingItem, setEditingItem] = useState<Investment | null>(null)
   const [showCreateForm, setShowCreateForm] = useState(false)
-  const [actionError, setActionError] = useState<string | null>(null)
-  const [actionSuccess, setActionSuccess] = useState<string | null>(null)
+  const { showToast } = useToast()
 
   const {
     investments,
@@ -41,36 +43,30 @@ export default function InvestimentosPage() {
   } = useInvestments()
 
   const handleSubmit = async (input: InvestmentInput) => {
-    setActionError(null)
-    setActionSuccess(null)
-
     try {
       if (editingItem) {
         await updateInvestment.mutateAsync({ id: editingItem.id, input })
         setEditingItem(null)
-        setActionSuccess('Investimento atualizado com sucesso.')
+        showToast('Investimento atualizado com sucesso.')
       } else {
         await createInvestment.mutateAsync(input)
         setShowCreateForm(false)
-        setActionSuccess('Investimento cadastrado com sucesso.')
+        showToast('Investimento cadastrado com sucesso.')
       }
     } catch (mutationError) {
-      setActionError(mutationError instanceof Error ? mutationError.message : 'Falha ao salvar investimento.')
+      showToast(mutationError instanceof Error ? mutationError.message : 'Falha ao salvar investimento.', 'error')
     }
   }
 
   const handleArchive = async (investment: Investment) => {
-    setActionError(null)
-    setActionSuccess(null)
-
     try {
       await archiveInvestment.mutateAsync(investment.id)
       if (editingItem?.id === investment.id) {
         setEditingItem(null)
       }
-      setActionSuccess('Investimento arquivado com sucesso.')
+      showToast('Investimento arquivado com sucesso.')
     } catch (mutationError) {
-      setActionError(mutationError instanceof Error ? mutationError.message : 'Falha ao arquivar investimento.')
+      showToast(mutationError instanceof Error ? mutationError.message : 'Falha ao arquivar investimento.', 'error')
     }
   }
 
@@ -102,17 +98,6 @@ export default function InvestimentosPage() {
         </button>
       </section>
 
-      {actionError ? (
-        <section aria-live="assertive" className="rounded-2xl border border-rose-200 bg-rose-50 p-4" role="alert">
-          <p className="text-sm text-rose-800">{actionError}</p>
-        </section>
-      ) : null}
-
-      {actionSuccess ? (
-        <section aria-live="polite" className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4" role="status">
-          <p className="text-sm text-emerald-800">{actionSuccess}</p>
-        </section>
-      ) : null}
 
       {activeTab === 'portfolio' ? (
         <>
@@ -168,22 +153,17 @@ export default function InvestimentosPage() {
 
             {isLoading ? (
               <div className="mt-3 space-y-3" role="status">
-                <div className="h-16 animate-pulse rounded-xl bg-slate-100" />
-                <div className="h-16 animate-pulse rounded-xl bg-slate-100" />
+                <Skeleton className="h-16" />
+                <Skeleton className="h-16" />
               </div>
             ) : isError ? (
-              <div className="mt-3" role="alert">
-                <p className="text-sm text-rose-800">{error instanceof Error ? error.message : 'Falha ao carregar investimentos.'}</p>
-                <button
-                  className="mt-3 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium"
-                  onClick={() => {
-                    void refetch()
-                  }}
-                  type="button"
-                >
-                  Tentar novamente
-                </button>
-              </div>
+              <ErrorMessage
+                className="mt-3"
+                message={error instanceof Error ? error.message : 'Falha ao carregar investimentos.'}
+                onRetry={() => {
+                  void refetch()
+                }}
+              />
             ) : summary.byType.length === 0 ? (
               <p className="mt-3 text-sm text-slate-600">Cadastre investimentos para ver distribuição por tipo.</p>
             ) : (
@@ -210,8 +190,9 @@ export default function InvestimentosPage() {
           </section>
 
           {isLoading ? (
-            <section className="rounded-2xl border border-slate-200 bg-white p-4" role="status">
-              <p className="text-sm text-slate-600">Carregando investimentos...</p>
+            <section className="space-y-3" role="status">
+              <Skeleton className="h-20 rounded-2xl" />
+              <Skeleton className="h-20 rounded-2xl" />
             </section>
           ) : isError ? null : (
             <InvestmentsList

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 
 import { PwaRegister } from '@/components/pwa-register'
+import { ToastProvider } from '@/components/ui/toast-provider'
 import { QueryProvider } from '@/lib/providers/query-provider'
 
 import './globals.css'
@@ -21,8 +22,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html lang="pt-BR">
       <body>
         <QueryProvider>
-          {children}
-          <PwaRegister />
+          <ToastProvider>
+            {children}
+            <PwaRegister />
+          </ToastProvider>
         </QueryProvider>
       </body>
     </html>

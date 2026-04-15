@@ -4,6 +4,9 @@ import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
 
 import { MonthlyComparisonChart } from '@/components/charts/monthly-comparison-chart'
+import { ErrorMessage } from '@/components/shared/error-message'
+import { Skeleton } from '@/components/shared/skeleton'
+import { useToast } from '@/components/ui/toast-provider'
 import { ExportButton } from '@/components/transactions/export-button'
 import { MonthPicker } from '@/components/transactions/month-picker'
 import { TransactionForm } from '@/components/transactions/transaction-form'
@@ -22,8 +25,8 @@ function currentMonth() {
 export default function TransacoesPage() {
   const [month, setMonth] = useState(currentMonth)
   const [editingItem, setEditingItem] = useState<Transaction | null>(null)
-  const [actionError, setActionError] = useState<string | null>(null)
   const [filters, setFilters] = useState(DEFAULT_TRANSACTION_HISTORY_FILTERS)
+  const { showToast } = useToast()
 
   const {
     transactions,
@@ -35,11 +38,10 @@ export default function TransacoesPage() {
     updateTransaction,
     deleteTransaction
   } = useTransactions({ month })
-  const { comparison } = useDashboard({ month })
+  const { comparison, isLoading: isDashboardLoading } = useDashboard({ month })
 
   useEffect(() => {
     setEditingItem(null)
-    setActionError(null)
     setFilters(DEFAULT_TRANSACTION_HISTORY_FILTERS)
   }, [month])
 
@@ -62,12 +64,11 @@ export default function TransacoesPage() {
     description: string
     occurred_on: string
   }) => {
-    setActionError(null)
-
     try {
       await createTransaction.mutateAsync(input)
+      showToast('Transacao criada com sucesso.')
     } catch (mutationError) {
-      setActionError(mutationError instanceof Error ? mutationError.message : 'Falha ao criar transacao.')
+      showToast(mutationError instanceof Error ? mutationError.message : 'Falha ao criar transacao.', 'error')
     }
   }
 
@@ -82,29 +83,27 @@ export default function TransacoesPage() {
       return
     }
 
-    setActionError(null)
-
     try {
       await updateTransaction.mutateAsync({
         id: editingItem.id,
         input
       })
       setEditingItem(null)
+      showToast('Transacao atualizada com sucesso.')
     } catch (mutationError) {
-      setActionError(mutationError instanceof Error ? mutationError.message : 'Falha ao atualizar transacao.')
+      showToast(mutationError instanceof Error ? mutationError.message : 'Falha ao atualizar transacao.', 'error')
     }
   }
 
   const handleDelete = async (transaction: Transaction) => {
-    setActionError(null)
-
     try {
       await deleteTransaction.mutateAsync({
         id: transaction.id,
         occurred_on: transaction.occurred_on
       })
+      showToast('Transacao excluida com sucesso.')
     } catch (mutationError) {
-      setActionError(mutationError instanceof Error ? mutationError.message : 'Falha ao excluir transacao.')
+      showToast(mutationError instanceof Error ? mutationError.message : 'Falha ao excluir transacao.', 'error')
     }
   }
 
@@ -149,11 +148,6 @@ export default function TransacoesPage() {
         onClear={() => setFilters(DEFAULT_TRANSACTION_HISTORY_FILTERS)}
       />
 
-      {actionError ? (
-        <section aria-live="assertive" className="glass-card rounded-2xl border border-rose-200 bg-rose-50/80 p-4" role="alert">
-          <p className="text-sm text-rose-800">{actionError}</p>
-        </section>
-      ) : null}
 
       <ExportButton
         appliedFilters={appliedFilters}
@@ -177,7 +171,7 @@ export default function TransacoesPage() {
       <section className="glass-card rounded-2xl p-4">
         <h2 className="text-sm font-semibold text-slate-900">Comparativo dos últimos 6 meses</h2>
         <div className="mt-3">
-          <MonthlyComparisonChart data={comparison} />
+          {isDashboardLoading ? <Skeleton className="h-56 rounded-2xl" /> : <MonthlyComparisonChart data={comparison} />}
         </div>
       </section>
 
@@ -208,22 +202,18 @@ export default function TransacoesPage() {
       ) : null}
 
       {isLoading ? (
-        <section aria-live="polite" className="glass-card rounded-2xl p-4" role="status">
-          <p className="text-sm text-slate-600">Carregando transacoes...</p>
+        <section aria-live="polite" className="space-y-3" role="status">
+          <Skeleton className="h-20 rounded-2xl" />
+          <Skeleton className="h-20 rounded-2xl" />
+          <Skeleton className="h-20 rounded-2xl" />
         </section>
       ) : isError ? (
-        <section aria-live="assertive" className="glass-card rounded-2xl border border-rose-200 bg-rose-50/80 p-4" role="alert">
-          <p className="text-sm text-rose-800">{error instanceof Error ? error.message : 'Falha ao carregar dados.'}</p>
-          <button
-            className="glass-btn mt-3 rounded-lg border border-rose-300 px-3 py-1.5 text-xs font-medium text-rose-700"
-            onClick={() => {
-              void refetch()
-            }}
-            type="button"
-          >
-            Tentar novamente
-          </button>
-        </section>
+        <ErrorMessage
+          message={error instanceof Error ? error.message : 'Falha ao carregar dados.'}
+          onRetry={() => {
+            void refetch()
+          }}
+        />
       ) : (
         <TransactionsList
           isDeleting={deleteTransaction.isPending}
