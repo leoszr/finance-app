@@ -6,4 +6,4 @@
 - [x] 2.2 Bloquear exportacao para periodos sem dados
 - [x] 3.1 Implementar painel de filtros de historico
 - [x] 3.2 Integrar filtros ao recorte de exportacao
-- [ ] 4.1 Rodar `npm run build` e registrar validacao
+- [x] 4.1 Rodar `npm run build` e registrar validacao

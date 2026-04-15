@@ -27,7 +27,6 @@ export default function TransacoesPage() {
 
   const {
     transactions,
-    summary,
     isLoading,
     isError,
     error,
