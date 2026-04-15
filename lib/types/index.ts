@@ -87,3 +87,37 @@ export type GoalInput = {
   deadline?: string | null
   active?: boolean
 }
+
+export type InvestmentType = 'cdb' | 'tesouro_direto' | 'lci' | 'lca' | 'poupanca' | 'outros_renda_fixa'
+
+export type InvestmentRateType = 'fixed' | 'cdi_pct' | 'selic_pct' | 'ipca_plus'
+
+export type Investment = {
+  id: string
+  user_id: string
+  name: string
+  type: InvestmentType
+  institution: string
+  invested_amount: number
+  rate_type: InvestmentRateType
+  rate_value: number
+  start_date: string
+  maturity_date: string | null
+  notes: string | null
+  active: boolean
+  created_at: string
+  updated_at: string
+}
+
+export type InvestmentInput = {
+  name: string
+  type: InvestmentType
+  institution: string
+  invested_amount: number
+  rate_type: InvestmentRateType
+  rate_value: number
+  start_date: string
+  maturity_date?: string | null
+  notes?: string | null
+  active?: boolean
+}

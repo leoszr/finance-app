@@ -4,9 +4,9 @@ Tracking of all sprint completion status.
 
 ## Current Stage
 
-- **Current branch**: `sprint-4-csv-import`
-- **Current sprint**: Sprint 5 - Investments (next)
-- **Last merged PR**: #7 (`sprint-3-goals-budgets` -> `main`)
+- **Current branch**: `sprint-5-investments`
+- **Current sprint**: Sprint 6 - Export (next)
+- **Last merged PR**: #8 (`sprint-4-csv-import` -> `main`)
 
 ## Sprint Summary
 
@@ -17,15 +17,15 @@ Tracking of all sprint completion status.
 | sprint-2-dashboard | completed | 7 | 7 | 100% |
 | sprint-3-goals-budgets | completed | 7 | 7 | 100% |
 | sprint-4-csv-import | completed | 7 | 7 | 100% |
-| sprint-5-investments | pending | 0 | 8 | 0% |
+| sprint-5-investments | completed | 10 | 10 | 100% |
 | sprint-6-export | pending | 0 | 7 | 0% |
 | sprint-7-polish | pending | 0 | 8 | 0% |
 
 ## Overall Progress
 
-- **Completed**: 38 tasks
-- **Total**: 61 tasks
-- **Percentage**: 62.3%
+- **Completed**: 48 tasks
+- **Total**: 63 tasks
+- **Percentage**: 76.2%
 
 ## Sprint Details
 
@@ -83,8 +83,15 @@ Validacao local:
 - `npm run build` ✅
 - Data: 2026-04-02
 
-### Sprint 5 - Investments (pending)
-- [ ] TASK-020..TASK-024 - See `openspec/changes/sprint-5-investments/tasks.md`
+### Sprint 5 - Investments (completed)
+- [x] TASK-020..TASK-024 - See `openspec/changes/sprint-5-investments/tasks.md`
+
+Validacao local:
+- `npm run lint` ✅
+- `npm run build` ✅
+- Chromium headless ✅ (`openspec/changes/sprint-5-investments/chromium-evidence.md`)
+- OpenSpec: `sprint-5-investments` -> `isComplete: true`
+- Data: 2026-04-15
 
 ### Sprint 6 - Export (pending)
 - [ ] TASK-025..TASK-027 - See `openspec/changes/sprint-6-export/tasks.md`
