@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
 import { MonthlyComparisonChart } from '@/components/charts/monthly-comparison-chart'
+import { ExportButton } from '@/components/transactions/export-button'
 import { MonthPicker } from '@/components/transactions/month-picker'
 import { TransactionForm } from '@/components/transactions/transaction-form'
 import { TransactionsList } from '@/components/transactions/transactions-list'
@@ -125,6 +126,12 @@ export default function TransacoesPage() {
           <p className="text-sm text-rose-800">{actionError}</p>
         </section>
       ) : null}
+
+      <ExportButton
+        month={month}
+        summary={summary}
+        transactions={transactions}
+      />
 
       <TransactionsSummary
         balance={summary.balance}
