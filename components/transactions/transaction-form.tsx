@@ -1,10 +1,11 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
+import { CreateCategoryForm } from '@/components/categories/create-category-form'
 import { useCategories } from '@/lib/hooks/use-categories'
 import type { Transaction, TransactionInput, TransactionType } from '@/lib/types'
 
@@ -49,6 +50,7 @@ export function TransactionForm({
   onSubmit
 }: TransactionFormProps) {
   const defaultType = initialData?.type ?? 'expense'
+  const [showCreateCategory, setShowCreateCategory] = useState(false)
 
   const form = useForm<TransactionFormValues>({
     resolver: zodResolver(transactionSchema),
@@ -147,7 +149,16 @@ export function TransactionForm({
             </option>
           ))}
         </select>
-        <p className="mt-1 text-xs text-slate-500">Categorias de {mapTypeLabel(selectedType)}</p>
+        <div className="mt-1 flex items-center justify-between">
+          <p className="text-xs text-slate-500">Categorias de {mapTypeLabel(selectedType)}</p>
+          <button
+            className="text-xs font-medium text-emerald-700 underline"
+            onClick={() => setShowCreateCategory((current) => !current)}
+            type="button"
+          >
+            {showCreateCategory ? 'Fechar' : 'Nova categoria'}
+          </button>
+        </div>
         {isCategoriesError ? (
           <div className="mt-1 flex items-center gap-2" role="alert">
             <p className="text-xs text-red-600">Nao foi possivel carregar as categorias.</p>
@@ -164,6 +175,16 @@ export function TransactionForm({
         ) : null}
         {form.formState.errors.category_id ? (
           <p className="mt-1 text-xs text-red-600">{form.formState.errors.category_id.message}</p>
+        ) : null}
+
+        {showCreateCategory ? (
+          <CreateCategoryForm
+            defaultKind={selectedType}
+            onCreated={(category) => {
+              form.setValue('category_id', category.id, { shouldValidate: true })
+              setShowCreateCategory(false)
+            }}
+          />
         ) : null}
       </div>
 

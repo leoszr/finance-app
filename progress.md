@@ -2,6 +2,12 @@
 
 Tracking of all sprint completion status.
 
+## Current Stage
+
+- **Current branch**: `sprint-4-csv-import`
+- **Current sprint**: Sprint 5 - Investments (next)
+- **Last merged PR**: #7 (`sprint-3-goals-budgets` -> `main`)
+
 ## Sprint Summary
 
 | Sprint | Status | Completed | Total | Progress |
@@ -10,16 +16,16 @@ Tracking of all sprint completion status.
 | sprint-1-transactions | completed | 8 | 8 | 100% |
 | sprint-2-dashboard | completed | 7 | 7 | 100% |
 | sprint-3-goals-budgets | completed | 7 | 7 | 100% |
-| sprint-4-csv-import | pending | 0 | 7 | 0% |
+| sprint-4-csv-import | completed | 7 | 7 | 100% |
 | sprint-5-investments | pending | 0 | 8 | 0% |
 | sprint-6-export | pending | 0 | 7 | 0% |
 | sprint-7-polish | pending | 0 | 8 | 0% |
 
 ## Overall Progress
 
-- **Completed**: 31 tasks
+- **Completed**: 38 tasks
 - **Total**: 61 tasks
-- **Percentage**: 50.8%
+- **Percentage**: 62.3%
 
 ## Sprint Details
 
@@ -69,8 +75,13 @@ Validacao local:
 - `npm run build` ✅
 - Data: 2026-04-02
 
-### Sprint 4 - CSV Import (pending)
-- [ ] TASK-018..TASK-019 - See `openspec/changes/sprint-4-csv-import/tasks.md`
+### Sprint 4 - CSV Import (completed)
+- [x] TASK-018..TASK-019 - See `openspec/changes/sprint-4-csv-import/tasks.md`
+
+Validacao local:
+- `npm run lint` ✅
+- `npm run build` ✅
+- Data: 2026-04-02
 
 ### Sprint 5 - Investments (pending)
 - [ ] TASK-020..TASK-024 - See `openspec/changes/sprint-5-investments/tasks.md`

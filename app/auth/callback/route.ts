@@ -39,6 +39,12 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(new URL('/login?error=auth_failed', request.url))
   }
 
+  const { error: defaultsError } = await supabase.rpc('ensure_default_categories_for_current_user')
+
+  if (defaultsError) {
+    console.error('Falha ao garantir categorias padrao no login:', defaultsError.message)
+  }
+
   const { error: recurrentError } = await supabase.rpc('generate_monthly_recurrents')
 
   if (recurrentError) {

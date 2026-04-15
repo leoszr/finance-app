@@ -5,6 +5,19 @@
 :root {
   --background: #f6f7f9;
   --foreground: #111827;
+
+  /* glass tokens */
+  --glass-bg-light: rgba(255, 255, 255, 0.08);
+  --glass-bg: rgba(255, 255, 255, 0.15);
+  --glass-bg-heavy: rgba(255, 255, 255, 0.25);
+  --glass-blur-light: blur(8px);
+  --glass-blur: blur(16px);
+  --glass-blur-strong: blur(32px);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.22);
+  --glass-radius: 16px;
+  --glass-radius-lg: 22px;
+  --glass-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
+  --glass-shadow-elevated: 0 14px 40px rgba(15, 23, 42, 0.14);
 }
 
 * {
@@ -15,7 +28,10 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background: var(--background);
+  background:
+    radial-gradient(circle at 10% 10%, rgba(125, 211, 252, 0.2), transparent 40%),
+    radial-gradient(circle at 90% 0%, rgba(196, 181, 253, 0.2), transparent 45%),
+    linear-gradient(180deg, #eef2ff 0%, #f8fafc 35%, #f1f5f9 100%);
   color: var(--foreground);
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif;
 }
@@ -23,4 +39,63 @@ body {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  border-radius: var(--glass-radius);
+  box-shadow: var(--glass-shadow);
+}
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: var(--glass-border);
+  }
+
+  .glass-card-strong {
+    background: var(--glass-bg-heavy);
+    backdrop-filter: var(--glass-blur-strong);
+    -webkit-backdrop-filter: var(--glass-blur-strong);
+    border: var(--glass-border);
+    border-radius: var(--glass-radius-lg);
+    box-shadow: var(--glass-shadow-elevated);
+  }
+}
+
+.glass-btn {
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
+}
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .glass-btn {
+    background: var(--glass-bg-light);
+    backdrop-filter: var(--glass-blur-light);
+    -webkit-backdrop-filter: var(--glass-blur-light);
+    border: var(--glass-border);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .glass-card,
+  .glass-card-strong,
+  .glass-btn {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .glass-card,
+  .glass-card-strong,
+  .glass-btn {
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(15, 23, 42, 0.45);
+  }
 }

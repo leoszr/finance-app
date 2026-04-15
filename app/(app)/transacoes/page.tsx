@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
 import { MonthlyComparisonChart } from '@/components/charts/monthly-comparison-chart'
@@ -108,14 +109,19 @@ export default function TransacoesPage() {
   return (
     <main aria-busy={isBusy} className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-4 px-5 py-6">
       <header>
-        <h1 className="text-xl font-semibold text-slate-900">Transacoes</h1>
+        <div className="flex items-center justify-between gap-3">
+          <h1 className="text-xl font-semibold text-slate-900">Transacoes</h1>
+          <Link className="glass-btn rounded-lg px-3 py-1.5 text-xs font-medium text-slate-800" href="/transacoes/importar">
+            Importar CSV
+          </Link>
+        </div>
         <p className="mt-1 text-sm text-slate-600">Gerencie seus lancamentos e acompanhe o saldo mensal.</p>
       </header>
 
       <MonthPicker onChange={setMonth} value={month} />
 
       {actionError ? (
-        <section aria-live="assertive" className="rounded-2xl border border-rose-200 bg-rose-50 p-4" role="alert">
+        <section aria-live="assertive" className="glass-card rounded-2xl border border-rose-200 bg-rose-50/80 p-4" role="alert">
           <p className="text-sm text-rose-800">{actionError}</p>
         </section>
       ) : null}
@@ -126,14 +132,14 @@ export default function TransacoesPage() {
         income={summary.income}
       />
 
-      <section className="rounded-2xl border border-slate-200 bg-white p-4">
+      <section className="glass-card rounded-2xl p-4">
         <h2 className="text-sm font-semibold text-slate-900">Comparativo dos últimos 6 meses</h2>
         <div className="mt-3">
           <MonthlyComparisonChart data={comparison} />
         </div>
       </section>
 
-      <section className="rounded-2xl border border-slate-200 bg-white p-4">
+      <section className="glass-card rounded-2xl p-4">
         <h2 className="text-sm font-semibold text-slate-900">Nova transacao</h2>
         <div className="mt-3">
           <TransactionForm
@@ -145,7 +151,7 @@ export default function TransacoesPage() {
       </section>
 
       {editingItem ? (
-        <section className="rounded-2xl border border-slate-200 bg-white p-4">
+        <section className="glass-card rounded-2xl p-4">
           <h2 className="text-sm font-semibold text-slate-900">Editar transacao</h2>
           <div className="mt-3">
             <TransactionForm
@@ -160,14 +166,14 @@ export default function TransacoesPage() {
       ) : null}
 
       {isLoading ? (
-        <section aria-live="polite" className="rounded-2xl border border-slate-200 bg-white p-4" role="status">
+        <section aria-live="polite" className="glass-card rounded-2xl p-4" role="status">
           <p className="text-sm text-slate-600">Carregando transacoes...</p>
         </section>
       ) : isError ? (
-        <section aria-live="assertive" className="rounded-2xl border border-rose-200 bg-rose-50 p-4" role="alert">
+        <section aria-live="assertive" className="glass-card rounded-2xl border border-rose-200 bg-rose-50/80 p-4" role="alert">
           <p className="text-sm text-rose-800">{error instanceof Error ? error.message : 'Falha ao carregar dados.'}</p>
           <button
-            className="mt-3 rounded-lg border border-rose-300 bg-white px-3 py-1.5 text-xs font-medium text-rose-700"
+            className="glass-btn mt-3 rounded-lg border border-rose-300 px-3 py-1.5 text-xs font-medium text-rose-700"
             onClick={() => {
               void refetch()
             }}
