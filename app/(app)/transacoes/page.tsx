@@ -1,13 +1,16 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { MonthlyComparisonChart } from '@/components/charts/monthly-comparison-chart'
+import { ExportButton } from '@/components/transactions/export-button'
 import { MonthPicker } from '@/components/transactions/month-picker'
 import { TransactionForm } from '@/components/transactions/transaction-form'
+import { TransactionsFilters } from '@/components/transactions/transactions-filters'
 import { TransactionsList } from '@/components/transactions/transactions-list'
 import { TransactionsSummary } from '@/components/transactions/transactions-summary'
+import { buildTransactionFilterLabels, DEFAULT_TRANSACTION_HISTORY_FILTERS, filterTransactions, summarizeTransactions } from '@/lib/transactions-history'
 import { useDashboard } from '@/lib/hooks/use-dashboard'
 import { useTransactions } from '@/lib/hooks/use-transactions'
 import type { Transaction } from '@/lib/types'
@@ -20,10 +23,10 @@ export default function TransacoesPage() {
   const [month, setMonth] = useState(currentMonth)
   const [editingItem, setEditingItem] = useState<Transaction | null>(null)
   const [actionError, setActionError] = useState<string | null>(null)
+  const [filters, setFilters] = useState(DEFAULT_TRANSACTION_HISTORY_FILTERS)
 
   const {
     transactions,
-    summary,
     isLoading,
     isError,
     error,
@@ -37,6 +40,7 @@ export default function TransacoesPage() {
   useEffect(() => {
     setEditingItem(null)
     setActionError(null)
+    setFilters(DEFAULT_TRANSACTION_HISTORY_FILTERS)
   }, [month])
 
   useEffect(() => {
@@ -104,6 +108,25 @@ export default function TransacoesPage() {
     }
   }
 
+  const filteredTransactions = useMemo(
+    () => filterTransactions(transactions, filters),
+    [filters, transactions]
+  )
+  const filteredSummary = useMemo(
+    () => summarizeTransactions(filteredTransactions),
+    [filteredTransactions]
+  )
+  const selectedCategoryName = useMemo(() => {
+    if (filters.categoryId === 'all') {
+      return null
+    }
+
+    return transactions.find((transaction) => transaction.category_id === filters.categoryId)?.category?.name ?? null
+  }, [filters.categoryId, transactions])
+  const appliedFilters = useMemo(
+    () => buildTransactionFilterLabels(filters, selectedCategoryName),
+    [filters, selectedCategoryName]
+  )
   const isBusy = createTransaction.isPending || updateTransaction.isPending || deleteTransaction.isPending
 
   return (
@@ -120,17 +143,36 @@ export default function TransacoesPage() {
 
       <MonthPicker onChange={setMonth} value={month} />
 
+      <TransactionsFilters
+        filters={filters}
+        onChange={setFilters}
+        onClear={() => setFilters(DEFAULT_TRANSACTION_HISTORY_FILTERS)}
+      />
+
       {actionError ? (
         <section aria-live="assertive" className="glass-card rounded-2xl border border-rose-200 bg-rose-50/80 p-4" role="alert">
           <p className="text-sm text-rose-800">{actionError}</p>
         </section>
       ) : null}
 
-      <TransactionsSummary
-        balance={summary.balance}
-        expense={summary.expense}
-        income={summary.income}
+      <ExportButton
+        appliedFilters={appliedFilters}
+        month={month}
+        summary={filteredSummary}
+        transactions={filteredTransactions}
       />
+
+      <section className="space-y-2">
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="text-sm font-semibold text-slate-900">Resumo do recorte</h2>
+          {appliedFilters.length > 0 ? <p className="text-xs text-slate-500">Filtros ativos: {appliedFilters.length}</p> : null}
+        </div>
+        <TransactionsSummary
+          balance={filteredSummary.balance}
+          expense={filteredSummary.expense}
+          income={filteredSummary.income}
+        />
+      </section>
 
       <section className="glass-card rounded-2xl p-4">
         <h2 className="text-sm font-semibold text-slate-900">Comparativo dos últimos 6 meses</h2>
@@ -187,7 +229,7 @@ export default function TransacoesPage() {
           isDeleting={deleteTransaction.isPending}
           onDelete={handleDelete}
           onEdit={setEditingItem}
-          transactions={transactions}
+          transactions={filteredTransactions}
         />
       )}
     </main>

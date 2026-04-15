@@ -4,9 +4,9 @@ Tracking of all sprint completion status.
 
 ## Current Stage
 
-- **Current branch**: `sprint-5-investments`
-- **Current sprint**: Sprint 6 - Export (next)
-- **Last merged PR**: #8 (`sprint-4-csv-import` -> `main`)
+- **Current branch**: `sprint-6-export`
+- **Current sprint**: Sprint 7 - Polish (next)
+- **Last merged PR**: #9 (`sprint-5-investments` -> `main`)
 
 ## Sprint Summary
 
@@ -18,14 +18,14 @@ Tracking of all sprint completion status.
 | sprint-3-goals-budgets | completed | 7 | 7 | 100% |
 | sprint-4-csv-import | completed | 7 | 7 | 100% |
 | sprint-5-investments | completed | 10 | 10 | 100% |
-| sprint-6-export | pending | 0 | 7 | 0% |
+| sprint-6-export | completed | 7 | 7 | 100% |
 | sprint-7-polish | pending | 0 | 8 | 0% |
 
 ## Overall Progress
 
-- **Completed**: 48 tasks
+- **Completed**: 55 tasks
 - **Total**: 63 tasks
-- **Percentage**: 76.2%
+- **Percentage**: 87.3%
 
 ## Sprint Details
 
@@ -93,8 +93,15 @@ Validacao local:
 - OpenSpec: `sprint-5-investments` -> `isComplete: true`
 - Data: 2026-04-15
 
-### Sprint 6 - Export (pending)
-- [ ] TASK-025..TASK-027 - See `openspec/changes/sprint-6-export/tasks.md`
+### Sprint 6 - Export (completed)
+- [x] TASK-025..TASK-027 - See `openspec/changes/sprint-6-export/tasks.md`
+
+Validacao local:
+- `npm run lint` ✅
+- `npm run build` ✅
+- OpenSpec: `sprint-6-export` -> `isComplete: true`
+- Registro: `openspec/changes/sprint-6-export/validation.md`
+- Data: 2026-04-15
 
 ### Sprint 7 - Polish (pending)
 - [ ] TASK-028..TASK-030 - See `openspec/changes/sprint-7-polish/tasks.md`

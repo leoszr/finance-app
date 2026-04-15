@@ -23,7 +23,7 @@ export function TransactionsList({ transactions, onEdit, onDelete, isDeleting }:
   if (transactions.length === 0) {
     return (
       <section className="rounded-2xl border border-dashed border-slate-300 bg-white p-6 text-center">
-        <p className="text-sm text-slate-600">Nenhuma transacao encontrada para este mes.</p>
+        <p className="text-sm text-slate-600">Nenhuma transacao encontrada para recorte atual.</p>
       </section>
     )
   }
