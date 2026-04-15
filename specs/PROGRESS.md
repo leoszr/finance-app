@@ -1,7 +1,7 @@
 # 🎯 Finance App - Progresso do Projeto (alinhado)
 
-**Status Geral**: 55/63 tasks completas (87.3%)  
-**Sprint Atual**: Sprint 7 - Polish  
+**Status Geral**: 63/63 tasks completas (100%)  
+**Sprint Atual**: Projeto concluído  
 **Última Atualização**: 2026-04-15
 
 ---
@@ -17,35 +17,36 @@
 | sprint-4-csv-import | ✅ completed | 7 | 7 | 100% |
 | sprint-5-investments | ✅ completed | 10 | 10 | 100% |
 | sprint-6-export | ✅ completed | 7 | 7 | 100% |
-| sprint-7-polish | ⏳ pending | 0 | 8 | 0% |
+| sprint-7-polish | ✅ completed | 8 | 8 | 100% |
 
 ---
 
 ## ✅ Concluído recentemente
 
-### Sprint 6 - Export
+### Sprint 7 - Polish
 
-- TASK-025..TASK-027 concluídas (`openspec/changes/sprint-6-export/tasks.md`)
+- TASK-028..TASK-030 concluídas (`openspec/changes/sprint-7-polish/tasks.md`)
 - Entregas principais:
-  - utilitário client-side de exportação PDF com resumo + linhas
-  - utilitário client-side de exportação Excel com abas `Resumo` e `Transacoes`
-  - botão de exportação na página de transações
-  - bloqueio de exportação quando recorte não possui dados
-  - painel de filtros do histórico por tipo, categoria e busca
-  - exportação usando o mesmo recorte filtrado exibido na tela
+  - Edge Function semanal para resumo por e-mail
+  - agendamento via `pg_cron` e documentação de envs da função
+  - skeleton loaders nas telas principais
+  - componente padrão de erro com `Tentar novamente`
+  - toasts de sucesso/erro em fluxos críticos
+  - smoke tests documentados para auth, transações, metas, investimentos, import e export
 - Validação local:
   - `npm run lint` ✅
   - `npm run build` ✅
-  - OpenSpec `sprint-6-export` ✅
-  - Registro: `openspec/changes/sprint-6-export/validation.md`
+  - OpenSpec `sprint-7-polish` ✅
+  - Smoke tests: `openspec/changes/sprint-7-polish/smoke-tests.md`
+  - Registro: `openspec/changes/sprint-7-polish/validation.md`
 
 ---
 
 ## 🔜 Próximo foco
 
-### Sprint 7 - Polish
+### Projeto concluído
 
-- TASK-028..TASK-030 (`openspec/changes/sprint-7-polish/tasks.md`)
+- Todas as sprints previstas foram entregues.
 
 ---
 

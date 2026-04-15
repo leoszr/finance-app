@@ -4,9 +4,9 @@ Tracking of all sprint completion status.
 
 ## Current Stage
 
-- **Current branch**: `sprint-6-export`
-- **Current sprint**: Sprint 7 - Polish (next)
-- **Last merged PR**: #9 (`sprint-5-investments` -> `main`)
+- **Current branch**: `sprint-7-polish`
+- **Current sprint**: Todas as sprints concluidas
+- **Last merged PR**: #10 (`sprint-6-export` -> `main`)
 
 ## Sprint Summary
 
@@ -19,13 +19,13 @@ Tracking of all sprint completion status.
 | sprint-4-csv-import | completed | 7 | 7 | 100% |
 | sprint-5-investments | completed | 10 | 10 | 100% |
 | sprint-6-export | completed | 7 | 7 | 100% |
-| sprint-7-polish | pending | 0 | 8 | 0% |
+| sprint-7-polish | completed | 8 | 8 | 100% |
 
 ## Overall Progress
 
-- **Completed**: 55 tasks
+- **Completed**: 63 tasks
 - **Total**: 63 tasks
-- **Percentage**: 87.3%
+- **Percentage**: 100%
 
 ## Sprint Details
 
@@ -103,8 +103,16 @@ Validacao local:
 - Registro: `openspec/changes/sprint-6-export/validation.md`
 - Data: 2026-04-15
 
-### Sprint 7 - Polish (pending)
-- [ ] TASK-028..TASK-030 - See `openspec/changes/sprint-7-polish/tasks.md`
+### Sprint 7 - Polish (completed)
+- [x] TASK-028..TASK-030 - See `openspec/changes/sprint-7-polish/tasks.md`
+
+Validacao local:
+- `npm run lint` ✅
+- `npm run build` ✅
+- OpenSpec: `sprint-7-polish` -> `isComplete: true`
+- Smoke tests: `openspec/changes/sprint-7-polish/smoke-tests.md`
+- Registro: `openspec/changes/sprint-7-polish/validation.md`
+- Data: 2026-04-15
 
 ---
 

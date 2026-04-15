@@ -7,4 +7,4 @@
 - [x] 2.3 Revisar toasts de sucesso/erro em fluxos criticos
 - [x] 3.1 Executar smoke tests de autenticacao e transacoes
 - [x] 3.2 Executar smoke tests de metas, investimentos, import e export
-- [ ] 4.1 Rodar `npm run build` e registrar validacao final
+- [x] 4.1 Rodar `npm run build` e registrar validacao final
