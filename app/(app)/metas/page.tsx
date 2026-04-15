@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react'
 
 import { BudgetForm } from '@/components/metas/budget-form'
 import { GoalForm } from '@/components/metas/goal-form'
+import { Skeleton } from '@/components/shared/skeleton'
 import { formatCurrencyBRL } from '@/lib/formatters'
 import { useBudgets, type BudgetWithProgress } from '@/lib/hooks/use-budgets'
 import { useGoals, type GoalWithProgress } from '@/lib/hooks/use-goals'
@@ -178,7 +179,12 @@ export default function MetasPage() {
         ) : null}
 
         <div className="mt-3 space-y-3">
-          {isBudgetsLoading ? <p className="text-sm text-slate-600">Carregando orçamentos...</p> : null}
+          {isBudgetsLoading ? (
+            <div className="space-y-3" role="status">
+              <Skeleton className="h-24" />
+              <Skeleton className="h-24" />
+            </div>
+          ) : null}
           {isBudgetsError ? (
             <div className="space-y-2" role="alert">
               <p className="text-sm text-rose-700">{budgetsError instanceof Error ? budgetsError.message : 'Falha ao carregar orçamentos.'}</p>
@@ -275,7 +281,12 @@ export default function MetasPage() {
         ) : null}
 
         <div className="mt-3 space-y-3">
-          {isGoalsLoading ? <p className="text-sm text-slate-600">Carregando metas...</p> : null}
+          {isGoalsLoading ? (
+            <div className="space-y-3" role="status">
+              <Skeleton className="h-20" />
+              <Skeleton className="h-28" />
+            </div>
+          ) : null}
           {isGoalsError ? (
             <div className="space-y-2" role="alert">
               <p className="text-sm text-rose-700">{goalsError instanceof Error ? goalsError.message : 'Falha ao carregar metas.'}</p>

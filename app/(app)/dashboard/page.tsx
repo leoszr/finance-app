@@ -4,6 +4,7 @@ import Link from 'next/link'
 
 import { ExpensesPieChart } from '@/components/charts/expenses-pie-chart'
 import { RecentTransactions } from '@/components/dashboard/recent-transactions'
+import { Skeleton } from '@/components/shared/skeleton'
 import { SummaryCards } from '@/components/dashboard/summary-cards'
 import { useDashboard } from '@/lib/hooks/use-dashboard'
 
@@ -67,14 +68,14 @@ export default function DashboardPage() {
 function DashboardLoading() {
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-md animate-pulse flex-col gap-4 px-5 py-6">
-      <div className="h-8 w-40 rounded-lg bg-slate-200" />
+      <Skeleton className="h-8 w-40 rounded-lg" />
       <div className="grid grid-cols-3 gap-3">
-        <div className="h-24 rounded-2xl bg-slate-200" />
-        <div className="h-24 rounded-2xl bg-slate-200" />
-        <div className="h-24 rounded-2xl bg-slate-200" />
+        <Skeleton className="h-24 rounded-2xl" />
+        <Skeleton className="h-24 rounded-2xl" />
+        <Skeleton className="h-24 rounded-2xl" />
       </div>
-      <div className="h-80 rounded-2xl bg-slate-200" />
-      <div className="h-64 rounded-2xl bg-slate-200" />
+      <Skeleton className="h-80 rounded-2xl" />
+      <Skeleton className="h-64 rounded-2xl" />
     </main>
   )
 }

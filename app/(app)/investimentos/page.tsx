@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { InvestmentForm } from '@/components/investments/investment-form'
 import { InvestmentsCalculator } from '@/components/investments/investments-calculator'
 import { InvestmentsList } from '@/components/investments/investments-list'
+import { Skeleton } from '@/components/shared/skeleton'
 import { formatCurrencyBRL } from '@/lib/formatters'
 import { useInvestments } from '@/lib/hooks/use-investments'
 import { getInvestmentTypeLabel } from '@/lib/investments'
@@ -168,8 +169,8 @@ export default function InvestimentosPage() {
 
             {isLoading ? (
               <div className="mt-3 space-y-3" role="status">
-                <div className="h-16 animate-pulse rounded-xl bg-slate-100" />
-                <div className="h-16 animate-pulse rounded-xl bg-slate-100" />
+                <Skeleton className="h-16" />
+                <Skeleton className="h-16" />
               </div>
             ) : isError ? (
               <div className="mt-3" role="alert">
@@ -210,8 +211,9 @@ export default function InvestimentosPage() {
           </section>
 
           {isLoading ? (
-            <section className="rounded-2xl border border-slate-200 bg-white p-4" role="status">
-              <p className="text-sm text-slate-600">Carregando investimentos...</p>
+            <section className="space-y-3" role="status">
+              <Skeleton className="h-20 rounded-2xl" />
+              <Skeleton className="h-20 rounded-2xl" />
             </section>
           ) : isError ? null : (
             <InvestmentsList

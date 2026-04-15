@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
 
 import { MonthlyComparisonChart } from '@/components/charts/monthly-comparison-chart'
+import { Skeleton } from '@/components/shared/skeleton'
 import { ExportButton } from '@/components/transactions/export-button'
 import { MonthPicker } from '@/components/transactions/month-picker'
 import { TransactionForm } from '@/components/transactions/transaction-form'
@@ -35,7 +36,7 @@ export default function TransacoesPage() {
     updateTransaction,
     deleteTransaction
   } = useTransactions({ month })
-  const { comparison } = useDashboard({ month })
+  const { comparison, isLoading: isDashboardLoading } = useDashboard({ month })
 
   useEffect(() => {
     setEditingItem(null)
@@ -177,7 +178,7 @@ export default function TransacoesPage() {
       <section className="glass-card rounded-2xl p-4">
         <h2 className="text-sm font-semibold text-slate-900">Comparativo dos últimos 6 meses</h2>
         <div className="mt-3">
-          <MonthlyComparisonChart data={comparison} />
+          {isDashboardLoading ? <Skeleton className="h-56 rounded-2xl" /> : <MonthlyComparisonChart data={comparison} />}
         </div>
       </section>
 
@@ -208,8 +209,10 @@ export default function TransacoesPage() {
       ) : null}
 
       {isLoading ? (
-        <section aria-live="polite" className="glass-card rounded-2xl p-4" role="status">
-          <p className="text-sm text-slate-600">Carregando transacoes...</p>
+        <section aria-live="polite" className="space-y-3" role="status">
+          <Skeleton className="h-20 rounded-2xl" />
+          <Skeleton className="h-20 rounded-2xl" />
+          <Skeleton className="h-20 rounded-2xl" />
         </section>
       ) : isError ? (
         <section aria-live="assertive" className="glass-card rounded-2xl border border-rose-200 bg-rose-50/80 p-4" role="alert">
