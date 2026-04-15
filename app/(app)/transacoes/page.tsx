@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { MonthlyComparisonChart } from '@/components/charts/monthly-comparison-chart'
 import { ErrorMessage } from '@/components/shared/error-message'
 import { Skeleton } from '@/components/shared/skeleton'
+import { useToast } from '@/components/ui/toast-provider'
 import { ExportButton } from '@/components/transactions/export-button'
 import { MonthPicker } from '@/components/transactions/month-picker'
 import { TransactionForm } from '@/components/transactions/transaction-form'
@@ -24,8 +25,8 @@ function currentMonth() {
 export default function TransacoesPage() {
   const [month, setMonth] = useState(currentMonth)
   const [editingItem, setEditingItem] = useState<Transaction | null>(null)
-  const [actionError, setActionError] = useState<string | null>(null)
   const [filters, setFilters] = useState(DEFAULT_TRANSACTION_HISTORY_FILTERS)
+  const { showToast } = useToast()
 
   const {
     transactions,
@@ -41,7 +42,6 @@ export default function TransacoesPage() {
 
   useEffect(() => {
     setEditingItem(null)
-    setActionError(null)
     setFilters(DEFAULT_TRANSACTION_HISTORY_FILTERS)
   }, [month])
 
@@ -64,12 +64,11 @@ export default function TransacoesPage() {
     description: string
     occurred_on: string
   }) => {
-    setActionError(null)
-
     try {
       await createTransaction.mutateAsync(input)
+      showToast('Transacao criada com sucesso.')
     } catch (mutationError) {
-      setActionError(mutationError instanceof Error ? mutationError.message : 'Falha ao criar transacao.')
+      showToast(mutationError instanceof Error ? mutationError.message : 'Falha ao criar transacao.', 'error')
     }
   }
 
@@ -84,29 +83,27 @@ export default function TransacoesPage() {
       return
     }
 
-    setActionError(null)
-
     try {
       await updateTransaction.mutateAsync({
         id: editingItem.id,
         input
       })
       setEditingItem(null)
+      showToast('Transacao atualizada com sucesso.')
     } catch (mutationError) {
-      setActionError(mutationError instanceof Error ? mutationError.message : 'Falha ao atualizar transacao.')
+      showToast(mutationError instanceof Error ? mutationError.message : 'Falha ao atualizar transacao.', 'error')
     }
   }
 
   const handleDelete = async (transaction: Transaction) => {
-    setActionError(null)
-
     try {
       await deleteTransaction.mutateAsync({
         id: transaction.id,
         occurred_on: transaction.occurred_on
       })
+      showToast('Transacao excluida com sucesso.')
     } catch (mutationError) {
-      setActionError(mutationError instanceof Error ? mutationError.message : 'Falha ao excluir transacao.')
+      showToast(mutationError instanceof Error ? mutationError.message : 'Falha ao excluir transacao.', 'error')
     }
   }
 
@@ -151,11 +148,6 @@ export default function TransacoesPage() {
         onClear={() => setFilters(DEFAULT_TRANSACTION_HISTORY_FILTERS)}
       />
 
-      {actionError ? (
-        <section aria-live="assertive" className="glass-card rounded-2xl border border-rose-200 bg-rose-50/80 p-4" role="alert">
-          <p className="text-sm text-rose-800">{actionError}</p>
-        </section>
-      ) : null}
 
       <ExportButton
         appliedFilters={appliedFilters}

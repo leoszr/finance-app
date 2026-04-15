@@ -6,6 +6,8 @@ import { BudgetForm } from '@/components/metas/budget-form'
 import { GoalForm } from '@/components/metas/goal-form'
 import { ErrorMessage } from '@/components/shared/error-message'
 import { Skeleton } from '@/components/shared/skeleton'
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
+import { useToast } from '@/components/ui/toast-provider'
 import { formatCurrencyBRL } from '@/lib/formatters'
 import { useBudgets, type BudgetWithProgress } from '@/lib/hooks/use-budgets'
 import { useGoals, type GoalWithProgress } from '@/lib/hooks/use-goals'
@@ -70,25 +72,25 @@ export default function MetasPage() {
   const [showBudgetForm, setShowBudgetForm] = useState(false)
   const [showGoalForm, setShowGoalForm] = useState(false)
   const [goalTopUp, setGoalTopUp] = useState<Record<string, string>>({})
-  const [actionError, setActionError] = useState<string | null>(null)
+  const { showToast } = useToast()
 
   const monthlyGoal = useMemo(() => goals.find((goal) => goal.kind === 'monthly_saving') ?? null, [goals])
   const finalGoals = useMemo(() => goals.filter((goal) => goal.kind === 'final_target'), [goals])
 
   const handleBudgetSubmit = async (input: { category_id: string; month: string; limit_amount: number }) => {
-    setActionError(null)
-
     try {
       if (editingBudget) {
         await updateBudget.mutateAsync({ id: editingBudget.id, input })
+        showToast('Orcamento atualizado com sucesso.')
       } else {
         await createBudget.mutateAsync(input)
+        showToast('Orcamento criado com sucesso.')
       }
 
       setShowBudgetForm(false)
       setEditingBudget(null)
     } catch (error) {
-      setActionError(error instanceof Error ? error.message : 'Falha ao salvar orçamento.')
+      showToast(error instanceof Error ? error.message : 'Falha ao salvar orçamento.', 'error')
     }
   }
 
@@ -100,19 +102,19 @@ export default function MetasPage() {
     deadline?: string | null
     active?: boolean
   }) => {
-    setActionError(null)
-
     try {
       if (editingGoal) {
         await updateGoal.mutateAsync({ id: editingGoal.id, input })
+        showToast('Meta atualizada com sucesso.')
       } else {
         await createGoal.mutateAsync(input)
+        showToast('Meta criada com sucesso.')
       }
 
       setShowGoalForm(false)
       setEditingGoal(null)
     } catch (error) {
-      setActionError(error instanceof Error ? error.message : 'Falha ao salvar meta.')
+      showToast(error instanceof Error ? error.message : 'Falha ao salvar meta.', 'error')
     }
   }
 
@@ -121,17 +123,16 @@ export default function MetasPage() {
     const parsed = Number(rawValue.replace(',', '.'))
 
     if (Number.isNaN(parsed) || parsed <= 0) {
-      setActionError('Informe um aporte valido maior que zero.')
+      showToast('Informe um aporte valido maior que zero.', 'error')
       return
     }
-
-    setActionError(null)
 
     try {
       await addToGoal.mutateAsync({ id: goal.id, amount: parsed })
       setGoalTopUp((current) => ({ ...current, [goal.id]: '' }))
+      showToast('Aporte registrado com sucesso.')
     } catch (error) {
-      setActionError(error instanceof Error ? error.message : 'Falha ao adicionar aporte.')
+      showToast(error instanceof Error ? error.message : 'Falha ao adicionar aporte.', 'error')
     }
   }
 
@@ -142,11 +143,6 @@ export default function MetasPage() {
         <p className="mt-1 text-sm text-slate-600">Planejamento do mês para manter gastos sob controle.</p>
       </header>
 
-      {actionError ? (
-        <section className="rounded-2xl border border-rose-200 bg-rose-50 p-3" role="alert" aria-live="assertive">
-          <p className="text-sm text-rose-700">{actionError}</p>
-        </section>
-      ) : null}
 
       <section className="rounded-2xl border border-slate-200 bg-white p-4">
         <div className="flex items-center justify-between gap-3">
@@ -231,15 +227,38 @@ export default function MetasPage() {
                 >
                   Editar
                 </button>
-                <button
-                  className="rounded-lg border border-rose-300 bg-rose-50 px-3 py-1.5 text-xs font-medium text-rose-700"
-                  onClick={() => {
-                    void deleteBudget.mutateAsync(budget.id)
-                  }}
-                  type="button"
-                >
-                  Excluir
-                </button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <button
+                      className="rounded-lg border border-rose-300 bg-rose-50 px-3 py-1.5 text-xs font-medium text-rose-700"
+                      type="button"
+                    >
+                      Excluir
+                    </button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Excluir orcamento</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Esta acao nao pode ser desfeita. Deseja remover este orcamento?
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={() => {
+                          void deleteBudget.mutateAsync(budget.id).then(() => {
+                            showToast('Orcamento excluido com sucesso.')
+                          }).catch((error) => {
+                            showToast(error instanceof Error ? error.message : 'Falha ao excluir orçamento.', 'error')
+                          })
+                        }}
+                      >
+                        Confirmar exclusao
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </div>
             </article>
           ))}
@@ -359,15 +378,38 @@ export default function MetasPage() {
                   >
                     Editar
                   </button>
-                  <button
-                    className="rounded-lg border border-rose-300 bg-rose-50 px-3 py-1.5 text-xs font-medium text-rose-700"
-                    onClick={() => {
-                      void archiveGoal.mutateAsync(goal.id)
-                    }}
-                    type="button"
-                  >
-                    Arquivar
-                  </button>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <button
+                        className="rounded-lg border border-rose-300 bg-rose-50 px-3 py-1.5 text-xs font-medium text-rose-700"
+                        type="button"
+                      >
+                        Arquivar
+                      </button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Arquivar meta</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Esta acao remove a meta da lista ativa. Deseja continuar?
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={() => {
+                            void archiveGoal.mutateAsync(goal.id).then(() => {
+                              showToast('Meta arquivada com sucesso.')
+                            }).catch((error) => {
+                              showToast(error instanceof Error ? error.message : 'Falha ao arquivar meta.', 'error')
+                            })
+                          }}
+                        >
+                          Confirmar arquivamento
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </div>
               </article>
             ))}

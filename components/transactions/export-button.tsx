@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react'
 
+import { useToast } from '@/components/ui/toast-provider'
 import { exportTransactionsPdf } from '@/lib/export/export-transactions-pdf'
 import { exportTransactionsXlsx } from '@/lib/export/export-transactions-xlsx'
 import { formatExportMonthLabel } from '@/lib/export/transactions-export-shared'
@@ -22,21 +23,18 @@ export function ExportButton({
   appliedFilters = []
 }: ExportButtonProps) {
   const [isExporting, setIsExporting] = useState(false)
-  const [feedback, setFeedback] = useState<string | null>(null)
-  const [feedbackTone, setFeedbackTone] = useState<'success' | 'error'>('success')
+  const { showToast } = useToast()
 
   const disabled = transactions.length === 0 || isExporting
   const monthLabel = useMemo(() => formatExportMonthLabel(month), [month])
 
   const handleExport = async (format: 'pdf' | 'xlsx') => {
     if (transactions.length === 0) {
-      setFeedbackTone('error')
-      setFeedback('Nao ha transacoes no recorte selecionado para exportar.')
+      showToast('Nao ha transacoes no recorte selecionado para exportar.', 'error')
       return
     }
 
     setIsExporting(true)
-    setFeedback(null)
 
     try {
       if (format === 'pdf') {
@@ -55,11 +53,9 @@ export function ExportButton({
         })
       }
 
-      setFeedbackTone('success')
-      setFeedback(`Exportacao ${format.toUpperCase()} iniciada para ${monthLabel}.`)
+      showToast(`Exportacao ${format.toUpperCase()} iniciada para ${monthLabel}.`)
     } catch (error) {
-      setFeedbackTone('error')
-      setFeedback(error instanceof Error ? error.message : 'Nao foi possivel exportar o arquivo.')
+      showToast(error instanceof Error ? error.message : 'Nao foi possivel exportar o arquivo.', 'error')
     } finally {
       setIsExporting(false)
     }
@@ -101,11 +97,6 @@ export function ExportButton({
         <p className="mt-3 text-xs text-amber-700">Sem transacoes no recorte atual. Ajuste filtros para liberar exportacao.</p>
       ) : null}
 
-      {feedback ? (
-        <p className={`mt-3 text-xs ${feedbackTone === 'success' ? 'text-emerald-700' : 'text-rose-700'}`}>
-          {feedback}
-        </p>
-      ) : null}
     </section>
   )
 }

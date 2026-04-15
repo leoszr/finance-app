@@ -6,6 +6,7 @@ import { type ChangeEvent, useMemo, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 
 import { CreateCategoryForm } from '@/components/categories/create-category-form'
+import { useToast } from '@/components/ui/toast-provider'
 import { parseNubankCSV, type ParsedNubankRow, validateCSVFileName } from '@/lib/csv/parse-nubank-csv'
 import { useCategories } from '@/lib/hooks/use-categories'
 import { createClient } from '@/lib/supabase/client'
@@ -30,6 +31,7 @@ export default function ImportarTransacoesPage() {
   const [isParsing, setIsParsing] = useState(false)
   const [isImporting, setIsImporting] = useState(false)
   const [showCreateCategory, setShowCreateCategory] = useState(false)
+  const { showToast } = useToast()
 
   const { categories, isLoading: isLoadingCategories } = useCategories({ kind: 'expense' })
 
@@ -141,8 +143,11 @@ export default function ImportarTransacoesPage() {
       setInfo(`${payload.length} transações importadas com sucesso.`)
       setRows([])
       setStep('upload')
+      showToast('Importacao CSV concluida com sucesso.')
     } catch (error) {
-      setErrors([error instanceof Error ? error.message : 'Falha ao importar transações.'])
+      const message = error instanceof Error ? error.message : 'Falha ao importar transações.'
+      setErrors([message])
+      showToast(message, 'error')
     } finally {
       setIsImporting(false)
     }
