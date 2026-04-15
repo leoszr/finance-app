@@ -5,6 +5,6 @@
 - [x] 2.1 Padronizar loading states com skeleton nas telas principais
 - [x] 2.2 Padronizar error states com botao `Tentar novamente`
 - [x] 2.3 Revisar toasts de sucesso/erro em fluxos criticos
-- [ ] 3.1 Executar smoke tests de autenticacao e transacoes
+- [x] 3.1 Executar smoke tests de autenticacao e transacoes
 - [ ] 3.2 Executar smoke tests de metas, investimentos, import e export
 - [ ] 4.1 Rodar `npm run build` e registrar validacao final
