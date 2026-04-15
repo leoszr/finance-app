@@ -1,6 +1,6 @@
 # Tasks - Sprint 7 Polish
 
-- [ ] 1.1 Implementar Edge Function de resumo semanal
+- [x] 1.1 Implementar Edge Function de resumo semanal
 - [ ] 1.2 Configurar agendamento e variaveis de ambiente da funcao
 - [ ] 2.1 Padronizar loading states com skeleton nas telas principais
 - [ ] 2.2 Padronizar error states com botao `Tentar novamente`
