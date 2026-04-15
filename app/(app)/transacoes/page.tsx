@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
 
 import { MonthlyComparisonChart } from '@/components/charts/monthly-comparison-chart'
+import { ErrorMessage } from '@/components/shared/error-message'
 import { Skeleton } from '@/components/shared/skeleton'
 import { ExportButton } from '@/components/transactions/export-button'
 import { MonthPicker } from '@/components/transactions/month-picker'
@@ -215,18 +216,12 @@ export default function TransacoesPage() {
           <Skeleton className="h-20 rounded-2xl" />
         </section>
       ) : isError ? (
-        <section aria-live="assertive" className="glass-card rounded-2xl border border-rose-200 bg-rose-50/80 p-4" role="alert">
-          <p className="text-sm text-rose-800">{error instanceof Error ? error.message : 'Falha ao carregar dados.'}</p>
-          <button
-            className="glass-btn mt-3 rounded-lg border border-rose-300 px-3 py-1.5 text-xs font-medium text-rose-700"
-            onClick={() => {
-              void refetch()
-            }}
-            type="button"
-          >
-            Tentar novamente
-          </button>
-        </section>
+        <ErrorMessage
+          message={error instanceof Error ? error.message : 'Falha ao carregar dados.'}
+          onRetry={() => {
+            void refetch()
+          }}
+        />
       ) : (
         <TransactionsList
           isDeleting={deleteTransaction.isPending}

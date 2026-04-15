@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react'
 
 import { BudgetForm } from '@/components/metas/budget-form'
 import { GoalForm } from '@/components/metas/goal-form'
+import { ErrorMessage } from '@/components/shared/error-message'
 import { Skeleton } from '@/components/shared/skeleton'
 import { formatCurrencyBRL } from '@/lib/formatters'
 import { useBudgets, type BudgetWithProgress } from '@/lib/hooks/use-budgets'
@@ -186,18 +187,13 @@ export default function MetasPage() {
             </div>
           ) : null}
           {isBudgetsError ? (
-            <div className="space-y-2" role="alert">
-              <p className="text-sm text-rose-700">{budgetsError instanceof Error ? budgetsError.message : 'Falha ao carregar orçamentos.'}</p>
-              <button
-                className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium"
-                onClick={() => {
-                  void refetchBudgets()
-                }}
-                type="button"
-              >
-                Tentar novamente
-              </button>
-            </div>
+            <ErrorMessage
+              className="mt-0"
+              message={budgetsError instanceof Error ? budgetsError.message : 'Falha ao carregar orcamentos.'}
+              onRetry={() => {
+                void refetchBudgets()
+              }}
+            />
           ) : null}
 
           {!isBudgetsLoading && !isBudgetsError && budgets.length === 0 ? (
@@ -288,18 +284,13 @@ export default function MetasPage() {
             </div>
           ) : null}
           {isGoalsError ? (
-            <div className="space-y-2" role="alert">
-              <p className="text-sm text-rose-700">{goalsError instanceof Error ? goalsError.message : 'Falha ao carregar metas.'}</p>
-              <button
-                className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium"
-                onClick={() => {
-                  void refetchGoals()
-                }}
-                type="button"
-              >
-                Tentar novamente
-              </button>
-            </div>
+            <ErrorMessage
+              className="mt-0"
+              message={goalsError instanceof Error ? goalsError.message : 'Falha ao carregar metas.'}
+              onRetry={() => {
+                void refetchGoals()
+              }}
+            />
           ) : null}
 
           {monthlyGoal ? (

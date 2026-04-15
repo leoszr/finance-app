@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { InvestmentForm } from '@/components/investments/investment-form'
 import { InvestmentsCalculator } from '@/components/investments/investments-calculator'
 import { InvestmentsList } from '@/components/investments/investments-list'
+import { ErrorMessage } from '@/components/shared/error-message'
 import { Skeleton } from '@/components/shared/skeleton'
 import { formatCurrencyBRL } from '@/lib/formatters'
 import { useInvestments } from '@/lib/hooks/use-investments'
@@ -173,18 +174,13 @@ export default function InvestimentosPage() {
                 <Skeleton className="h-16" />
               </div>
             ) : isError ? (
-              <div className="mt-3" role="alert">
-                <p className="text-sm text-rose-800">{error instanceof Error ? error.message : 'Falha ao carregar investimentos.'}</p>
-                <button
-                  className="mt-3 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium"
-                  onClick={() => {
-                    void refetch()
-                  }}
-                  type="button"
-                >
-                  Tentar novamente
-                </button>
-              </div>
+              <ErrorMessage
+                className="mt-3"
+                message={error instanceof Error ? error.message : 'Falha ao carregar investimentos.'}
+                onRetry={() => {
+                  void refetch()
+                }}
+              />
             ) : summary.byType.length === 0 ? (
               <p className="mt-3 text-sm text-slate-600">Cadastre investimentos para ver distribuição por tipo.</p>
             ) : (
