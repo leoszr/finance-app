@@ -1,6 +1,6 @@
 # Tasks - Sprint 6 Export
 
-- [ ] 1.1 Implementar utilitario de exportacao PDF
+- [x] 1.1 Implementar utilitario de exportacao PDF
 - [ ] 1.2 Implementar utilitario de exportacao Excel
 - [ ] 2.1 Implementar `ExportButton` na pagina de transacoes
 - [ ] 2.2 Bloquear exportacao para periodos sem dados
