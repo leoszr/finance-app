@@ -6,6 +6,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import type { Transaction, TransactionInput } from '@/lib/types'
 import { createClient } from '@/lib/supabase/client'
+import { AUTH_REQUIRED_ERROR_MESSAGE, hasActiveSession, isAuthError } from '@/lib/supabase/auth-session'
 
 const TRANSACTIONS_KEY = 'transactions'
 
@@ -22,43 +23,6 @@ type UseTransactionsParams = {
 type DeleteTransactionInput = {
   id: string
   occurred_on: string
-}
-
-type SupabaseRequestError = {
-  code?: string
-  message: string
-  status?: number
-}
-
-const AUTH_REQUIRED_ERROR_MESSAGE = 'Sessao expirada. Entre novamente para continuar.'
-
-function isAuthError(error: SupabaseRequestError | null) {
-  if (!error) {
-    return false
-  }
-
-  if (error.status === 401 || error.status === 403) {
-    return true
-  }
-
-  if (error.code === '42501' || error.code === 'PGRST301') {
-    return true
-  }
-
-  return /jwt|auth|session|not authenticated|permission denied|invalid token/i.test(error.message)
-}
-
-async function hasActiveSession(supabase: ReturnType<typeof createClient>) {
-  const {
-    data: { session },
-    error
-  } = await supabase.auth.getSession()
-
-  if (error || !session) {
-    return false
-  }
-
-  return true
 }
 
 function monthKeyFromDate(dateValue: string) {
@@ -103,7 +67,7 @@ async function fetchTransactionsByMonth(month: string): Promise<Transaction[]> {
   const sessionActive = await hasActiveSession(supabase)
 
   if (!sessionActive) {
-    return []
+    throw new Error(AUTH_REQUIRED_ERROR_MESSAGE)
   }
 
   const { data, error } = await supabase
@@ -116,7 +80,7 @@ async function fetchTransactionsByMonth(month: string): Promise<Transaction[]> {
 
   if (error) {
     if (isAuthError(error)) {
-      return []
+      throw new Error(AUTH_REQUIRED_ERROR_MESSAGE)
     }
 
     throw new Error('Nao foi possivel carregar as transacoes.')

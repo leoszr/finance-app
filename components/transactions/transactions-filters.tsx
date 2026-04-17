@@ -14,6 +14,7 @@ export function TransactionsFilters({ filters, onChange, onClear }: Transactions
     categories,
     isLoading,
     isError,
+    error,
     refetch
   } = useCategories()
 
@@ -82,7 +83,7 @@ export function TransactionsFilters({ filters, onChange, onClear }: Transactions
           </select>
           {isError ? (
             <div className="mt-1 flex items-center gap-2" role="alert">
-              <p className="text-xs text-red-600">Nao foi possivel carregar categorias.</p>
+              <p className="text-xs text-red-600">{error instanceof Error ? error.message : 'Nao foi possivel carregar categorias.'}</p>
               <button
                 className="text-xs font-medium text-slate-700 underline"
                 onClick={() => {

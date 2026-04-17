@@ -3,6 +3,7 @@
 import { useQuery } from '@tanstack/react-query'
 
 import { createClient } from '@/lib/supabase/client'
+import { AUTH_REQUIRED_ERROR_MESSAGE, hasActiveSession, isAuthError } from '@/lib/supabase/auth-session'
 import type { Transaction } from '@/lib/types'
 
 const DASHBOARD_KEY = 'dashboard'
@@ -37,41 +38,6 @@ export type DashboardData = {
 
 type UseDashboardParams = {
   month?: string
-}
-
-type SupabaseRequestError = {
-  code?: string
-  message: string
-  status?: number
-}
-
-function isAuthError(error: SupabaseRequestError | null) {
-  if (!error) {
-    return false
-  }
-
-  if (error.status === 401 || error.status === 403) {
-    return true
-  }
-
-  if (error.code === '42501' || error.code === 'PGRST301') {
-    return true
-  }
-
-  return /jwt|auth|session|not authenticated|permission denied|invalid token/i.test(error.message)
-}
-
-async function hasActiveSession(supabase: ReturnType<typeof createClient>) {
-  const {
-    data: { session },
-    error
-  } = await supabase.auth.getSession()
-
-  if (error || !session) {
-    return false
-  }
-
-  return true
 }
 
 function currentMonth() {
@@ -186,12 +152,7 @@ async function fetchDashboard(month: string): Promise<DashboardData> {
   const sessionActive = await hasActiveSession(supabase)
 
   if (!sessionActive) {
-    return {
-      summary: { income: 0, expense: 0, balance: 0 },
-      expensesByCategory: [],
-      recentTransactions: [],
-      comparison: buildComparison(month, [])
-    }
+    throw new Error(AUTH_REQUIRED_ERROR_MESSAGE)
   }
 
   const { data, error } = await supabase
@@ -204,12 +165,7 @@ async function fetchDashboard(month: string): Promise<DashboardData> {
 
   if (error) {
     if (isAuthError(error)) {
-      return {
-        summary: { income: 0, expense: 0, balance: 0 },
-        expensesByCategory: [],
-        recentTransactions: [],
-        comparison: buildComparison(month, [])
-      }
+      throw new Error(AUTH_REQUIRED_ERROR_MESSAGE)
     }
 
     throw new Error('Nao foi possivel carregar os dados do dashboard.')

@@ -3,6 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { createClient } from '@/lib/supabase/client'
+import { AUTH_REQUIRED_ERROR_MESSAGE, isAuthError } from '@/lib/supabase/auth-session'
 import type { Category, CategoryInput, CategoryKind } from '@/lib/types'
 
 const CATEGORIES_KEY = 'categories'
@@ -37,22 +38,6 @@ const DEFAULT_CATEGORIES: DefaultCategoryTemplate[] = [
   { name: 'Assinaturas', kind: 'expense', color: '#7c3aed', icon: 'Tv' },
   { name: 'Reserva', kind: 'investment', color: '#0f766e', icon: 'PiggyBank' }
 ]
-
-function isAuthError(error: SupabaseRequestError | null) {
-  if (!error) {
-    return false
-  }
-
-  if (error.status === 401 || error.status === 403) {
-    return true
-  }
-
-  if (error.code === '42501' || error.code === 'PGRST301') {
-    return true
-  }
-
-  return /jwt|auth|session|not authenticated|permission denied|invalid token/i.test(error.message)
-}
 
 function isRpcMissingError(error: SupabaseRequestError | null) {
   if (!error) {
@@ -108,14 +93,14 @@ async function fetchCategories(kind?: CategoryKind): Promise<Category[]> {
   const userId = await getCurrentUserId()
 
   if (!userId) {
-    return []
+    throw new Error(AUTH_REQUIRED_ERROR_MESSAGE)
   }
 
   const { data, error } = await queryCategories(kind)
 
   if (error) {
     if (isAuthError(error)) {
-      return []
+      throw new Error(AUTH_REQUIRED_ERROR_MESSAGE)
     }
 
     throw new Error('Nao foi possivel carregar as categorias.')
@@ -132,7 +117,7 @@ async function fetchCategories(kind?: CategoryKind): Promise<Category[]> {
 
   if (ensureDefaultsError) {
     if (isAuthError(ensureDefaultsError)) {
-      return []
+      throw new Error(AUTH_REQUIRED_ERROR_MESSAGE)
     }
 
     if (!isRpcMissingError(ensureDefaultsError)) {
@@ -146,7 +131,7 @@ async function fetchCategories(kind?: CategoryKind): Promise<Category[]> {
 
   if (fallbackError) {
     if (isAuthError(fallbackError)) {
-      return []
+      throw new Error(AUTH_REQUIRED_ERROR_MESSAGE)
     }
 
     throw new Error('Nao foi possivel carregar as categorias.')
@@ -169,7 +154,7 @@ export function useCategories({ kind }: UseCategoriesParams = {}) {
       const userId = await getCurrentUserId()
 
       if (!userId) {
-        throw new Error('Usuario nao autenticado.')
+        throw new Error(AUTH_REQUIRED_ERROR_MESSAGE)
       }
 
       const { data, error } = await supabase
@@ -185,6 +170,10 @@ export function useCategories({ kind }: UseCategoriesParams = {}) {
         .single()
 
       if (error) {
+        if (isAuthError(error)) {
+          throw new Error(AUTH_REQUIRED_ERROR_MESSAGE)
+        }
+
         if (error.code === '23505') {
           throw new Error('Ja existe uma categoria com esse nome.')
         }

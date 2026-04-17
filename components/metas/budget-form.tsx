@@ -49,7 +49,7 @@ export function BudgetForm({ month, mode, initialData, isSaving, onCancel, onSub
     })
   }, [form, initialData, month])
 
-  const { categories, isLoading, isError, refetch } = useCategories({ kind: 'expense' })
+  const { categories, isLoading, isError, error, refetch } = useCategories({ kind: 'expense' })
 
   const handleSubmit = form.handleSubmit(async (values) => {
     await onSubmit({
@@ -78,15 +78,18 @@ export function BudgetForm({ month, mode, initialData, isSaving, onCancel, onSub
           ))}
         </select>
         {isError ? (
-          <button
-            className="mt-1 text-xs font-medium text-slate-700 underline"
-            onClick={() => {
-              void refetch()
-            }}
-            type="button"
-          >
-            Tentar novamente
-          </button>
+          <div className="mt-1" role="alert">
+            <p className="text-xs text-rose-600">{error instanceof Error ? error.message : 'Nao foi possivel carregar categorias.'}</p>
+            <button
+              className="mt-1 text-xs font-medium text-slate-700 underline"
+              onClick={() => {
+                void refetch()
+              }}
+              type="button"
+            >
+              Tentar novamente
+            </button>
+          </div>
         ) : null}
         {form.formState.errors.category_id ? (
           <p className="mt-1 text-xs text-rose-600">{form.formState.errors.category_id.message}</p>

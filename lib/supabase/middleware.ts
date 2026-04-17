@@ -1,6 +1,18 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
+import { hasSupabaseAuthCookie } from '@/lib/supabase/auth-session'
+
+function createLoginRedirect(request: NextRequest) {
+  const loginUrl = new URL('/login', request.url)
+
+  if (hasSupabaseAuthCookie(request.cookies.getAll().map((cookie) => cookie.name))) {
+    loginUrl.searchParams.set('error', 'session_ended')
+  }
+
+  return NextResponse.redirect(loginUrl)
+}
+
 export async function updateSession(request: NextRequest) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -14,7 +26,7 @@ export async function updateSession(request: NextRequest) {
   if (!supabaseUrl || !supabaseKey) {
     console.error('Supabase env vars missing in middleware')
     if (isProtectedRoute) {
-      return NextResponse.redirect(new URL('/login', request.url))
+      return createLoginRedirect(request)
     }
 
     return NextResponse.next()
@@ -64,7 +76,7 @@ export async function updateSession(request: NextRequest) {
     const isAuthRoute = pathname.startsWith('/login')
 
     if (!user && isProtectedRoute) {
-      return NextResponse.redirect(new URL('/login', request.url))
+      return createLoginRedirect(request)
     }
 
     if (user && isAuthRoute) {
@@ -75,7 +87,7 @@ export async function updateSession(request: NextRequest) {
   } catch (error) {
     console.error('Middleware auth check failed:', error)
     if (isProtectedRoute) {
-      return NextResponse.redirect(new URL('/login', request.url))
+      return createLoginRedirect(request)
     }
 
     return NextResponse.next()

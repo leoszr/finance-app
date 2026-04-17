@@ -78,6 +78,7 @@ export function TransactionForm({
     categories,
     isLoading: isLoadingCategories,
     isError: isCategoriesError,
+    error: categoriesError,
     refetch: refetchCategories
   } = useCategories({ kind: selectedType })
   const typeOptions = useMemo(
@@ -161,7 +162,9 @@ export function TransactionForm({
         </div>
         {isCategoriesError ? (
           <div className="mt-1 flex items-center gap-2" role="alert">
-            <p className="text-xs text-red-600">Nao foi possivel carregar as categorias.</p>
+            <p className="text-xs text-red-600">
+              {categoriesError instanceof Error ? categoriesError.message : 'Nao foi possivel carregar as categorias.'}
+            </p>
             <button
               className="text-xs font-medium text-slate-700 underline"
               onClick={() => {

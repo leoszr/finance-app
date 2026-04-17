@@ -33,7 +33,13 @@ export default function ImportarTransacoesPage() {
   const [showCreateCategory, setShowCreateCategory] = useState(false)
   const { showToast } = useToast()
 
-  const { categories, isLoading: isLoadingCategories } = useCategories({ kind: 'expense' })
+  const {
+    categories,
+    isLoading: isLoadingCategories,
+    isError: isCategoriesError,
+    error: categoriesError,
+    refetch: refetchCategories
+  } = useCategories({ kind: 'expense' })
 
   const previewStats = useMemo(() => {
     return rows.reduce(
@@ -177,6 +183,23 @@ export default function ImportarTransacoesPage() {
       {info ? (
         <section className="glass-card rounded-2xl border border-emerald-200 bg-emerald-50/80 p-3">
           <p className="text-sm text-emerald-800">{info}</p>
+        </section>
+      ) : null}
+
+      {isCategoriesError ? (
+        <section className="glass-card rounded-2xl border border-rose-200 bg-rose-50/80 p-3" role="alert">
+          <p className="text-sm text-rose-700">
+            {categoriesError instanceof Error ? categoriesError.message : 'Nao foi possivel carregar categorias.'}
+          </p>
+          <button
+            className="mt-2 text-xs font-medium text-slate-700 underline"
+            onClick={() => {
+              void refetchCategories()
+            }}
+            type="button"
+          >
+            Tentar novamente
+          </button>
         </section>
       ) : null}
 
