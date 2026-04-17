@@ -24,6 +24,43 @@ type DeleteTransactionInput = {
   occurred_on: string
 }
 
+type SupabaseRequestError = {
+  code?: string
+  message: string
+  status?: number
+}
+
+const AUTH_REQUIRED_ERROR_MESSAGE = 'Sessao expirada. Entre novamente para continuar.'
+
+function isAuthError(error: SupabaseRequestError | null) {
+  if (!error) {
+    return false
+  }
+
+  if (error.status === 401 || error.status === 403) {
+    return true
+  }
+
+  if (error.code === '42501' || error.code === 'PGRST301') {
+    return true
+  }
+
+  return /jwt|auth|session|not authenticated|permission denied|invalid token/i.test(error.message)
+}
+
+async function hasActiveSession(supabase: ReturnType<typeof createClient>) {
+  const {
+    data: { session },
+    error
+  } = await supabase.auth.getSession()
+
+  if (error || !session) {
+    return false
+  }
+
+  return true
+}
+
 function monthKeyFromDate(dateValue: string) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(dateValue)) {
     return null
@@ -63,6 +100,11 @@ function sortTransactions(items: Transaction[]) {
 async function fetchTransactionsByMonth(month: string): Promise<Transaction[]> {
   const supabase = createClient()
   const { start, end } = monthRange(month)
+  const sessionActive = await hasActiveSession(supabase)
+
+  if (!sessionActive) {
+    return []
+  }
 
   const { data, error } = await supabase
     .from('transactions')
@@ -73,6 +115,10 @@ async function fetchTransactionsByMonth(month: string): Promise<Transaction[]> {
     .order('created_at', { ascending: false })
 
   if (error) {
+    if (isAuthError(error)) {
+      return []
+    }
+
     throw new Error('Nao foi possivel carregar as transacoes.')
   }
 
@@ -123,6 +169,12 @@ export function useTransactions({ month }: UseTransactionsParams) {
   const createTransaction = useMutation({
     mutationFn: async (input: TransactionInput) => {
       const supabase = createClient()
+      const sessionActive = await hasActiveSession(supabase)
+
+      if (!sessionActive) {
+        throw new Error(AUTH_REQUIRED_ERROR_MESSAGE)
+      }
+
       const { data, error } = await supabase
         .from('transactions')
         .insert({
@@ -137,6 +189,10 @@ export function useTransactions({ month }: UseTransactionsParams) {
         .single()
 
       if (error) {
+        if (isAuthError(error)) {
+          throw new Error(AUTH_REQUIRED_ERROR_MESSAGE)
+        }
+
         throw new Error('Nao foi possivel criar a transacao.')
       }
 
@@ -159,6 +215,12 @@ export function useTransactions({ month }: UseTransactionsParams) {
   const updateTransaction = useMutation({
     mutationFn: async (payload: { id: string; input: TransactionInput }) => {
       const supabase = createClient()
+      const sessionActive = await hasActiveSession(supabase)
+
+      if (!sessionActive) {
+        throw new Error(AUTH_REQUIRED_ERROR_MESSAGE)
+      }
+
       const { data, error } = await supabase
         .from('transactions')
         .update(payload.input)
@@ -167,6 +229,10 @@ export function useTransactions({ month }: UseTransactionsParams) {
         .single()
 
       if (error) {
+        if (isAuthError(error)) {
+          throw new Error(AUTH_REQUIRED_ERROR_MESSAGE)
+        }
+
         throw new Error('Nao foi possivel atualizar a transacao.')
       }
 
@@ -194,9 +260,19 @@ export function useTransactions({ month }: UseTransactionsParams) {
   const deleteTransaction = useMutation({
     mutationFn: async (payload: DeleteTransactionInput) => {
       const supabase = createClient()
+      const sessionActive = await hasActiveSession(supabase)
+
+      if (!sessionActive) {
+        throw new Error(AUTH_REQUIRED_ERROR_MESSAGE)
+      }
+
       const { error } = await supabase.from('transactions').delete().eq('id', payload.id)
 
       if (error) {
+        if (isAuthError(error)) {
+          throw new Error(AUTH_REQUIRED_ERROR_MESSAGE)
+        }
+
         throw new Error('Nao foi possivel excluir a transacao.')
       }
 

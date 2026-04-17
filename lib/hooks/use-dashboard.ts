@@ -39,6 +39,41 @@ type UseDashboardParams = {
   month?: string
 }
 
+type SupabaseRequestError = {
+  code?: string
+  message: string
+  status?: number
+}
+
+function isAuthError(error: SupabaseRequestError | null) {
+  if (!error) {
+    return false
+  }
+
+  if (error.status === 401 || error.status === 403) {
+    return true
+  }
+
+  if (error.code === '42501' || error.code === 'PGRST301') {
+    return true
+  }
+
+  return /jwt|auth|session|not authenticated|permission denied|invalid token/i.test(error.message)
+}
+
+async function hasActiveSession(supabase: ReturnType<typeof createClient>) {
+  const {
+    data: { session },
+    error
+  } = await supabase.auth.getSession()
+
+  if (error || !session) {
+    return false
+  }
+
+  return true
+}
+
 function currentMonth() {
   return new Date().toISOString().slice(0, 7)
 }
@@ -148,6 +183,16 @@ async function fetchDashboard(month: string): Promise<DashboardData> {
   const supabase = createClient()
   const { start, startDate, endDate } = monthBounds(month)
   const historyStart = new Date(Date.UTC(start.getUTCFullYear(), start.getUTCMonth() - 5, 1))
+  const sessionActive = await hasActiveSession(supabase)
+
+  if (!sessionActive) {
+    return {
+      summary: { income: 0, expense: 0, balance: 0 },
+      expensesByCategory: [],
+      recentTransactions: [],
+      comparison: buildComparison(month, [])
+    }
+  }
 
   const { data, error } = await supabase
     .from('transactions')
@@ -158,6 +203,15 @@ async function fetchDashboard(month: string): Promise<DashboardData> {
     .order('created_at', { ascending: false })
 
   if (error) {
+    if (isAuthError(error)) {
+      return {
+        summary: { income: 0, expense: 0, balance: 0 },
+        expensesByCategory: [],
+        recentTransactions: [],
+        comparison: buildComparison(month, [])
+      }
+    }
+
     throw new Error('Nao foi possivel carregar os dados do dashboard.')
   }
 

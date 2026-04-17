@@ -18,6 +18,12 @@ type DefaultCategoryTemplate = {
   icon: string
 }
 
+type SupabaseRequestError = {
+  code?: string
+  message: string
+  status?: number
+}
+
 const DEFAULT_CATEGORIES: DefaultCategoryTemplate[] = [
   { name: 'Salario', kind: 'income', color: '#16a34a', icon: 'Wallet' },
   { name: 'Freelance', kind: 'income', color: '#15803d', icon: 'Briefcase' },
@@ -31,6 +37,34 @@ const DEFAULT_CATEGORIES: DefaultCategoryTemplate[] = [
   { name: 'Assinaturas', kind: 'expense', color: '#7c3aed', icon: 'Tv' },
   { name: 'Reserva', kind: 'investment', color: '#0f766e', icon: 'PiggyBank' }
 ]
+
+function isAuthError(error: SupabaseRequestError | null) {
+  if (!error) {
+    return false
+  }
+
+  if (error.status === 401 || error.status === 403) {
+    return true
+  }
+
+  if (error.code === '42501' || error.code === 'PGRST301') {
+    return true
+  }
+
+  return /jwt|auth|session|not authenticated|permission denied|invalid token/i.test(error.message)
+}
+
+function isRpcMissingError(error: SupabaseRequestError | null) {
+  if (!error) {
+    return false
+  }
+
+  if (error.status === 404 || error.code === 'PGRST202') {
+    return true
+  }
+
+  return /could not find the function|function.*does not exist/i.test(error.message)
+}
 
 async function getCurrentUserId() {
   const supabase = createClient()
@@ -71,9 +105,19 @@ async function ensureDefaultCategoriesFallback() {
 }
 
 async function fetchCategories(kind?: CategoryKind): Promise<Category[]> {
+  const userId = await getCurrentUserId()
+
+  if (!userId) {
+    return []
+  }
+
   const { data, error } = await queryCategories(kind)
 
   if (error) {
+    if (isAuthError(error)) {
+      return []
+    }
+
     throw new Error('Nao foi possivel carregar as categorias.')
   }
 
@@ -87,12 +131,24 @@ async function fetchCategories(kind?: CategoryKind): Promise<Category[]> {
   const { error: ensureDefaultsError } = await supabase.rpc('ensure_default_categories_for_current_user')
 
   if (ensureDefaultsError) {
+    if (isAuthError(ensureDefaultsError)) {
+      return []
+    }
+
+    if (!isRpcMissingError(ensureDefaultsError)) {
+      console.error('Falha ao executar RPC de categorias padrao, aplicando fallback:', ensureDefaultsError.message)
+    }
+
     await ensureDefaultCategoriesFallback()
   }
 
   const { data: fallbackData, error: fallbackError } = await queryCategories(kind)
 
   if (fallbackError) {
+    if (isAuthError(fallbackError)) {
+      return []
+    }
+
     throw new Error('Nao foi possivel carregar as categorias.')
   }
 
