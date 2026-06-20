@@ -11,7 +11,7 @@
 
 ### Sprint 00 — Fundação do projeto
 
-- Status: todo
+- Status: done
 - Branch: `feature/sprint-00-project-foundation`
 - Tasks: `docs/sprint-00/TASK.md`
 - Progresso: `docs/sprint-00/PROGRESS.md`
