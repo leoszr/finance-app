@@ -1,0 +1,21 @@
+{
+  "expo": {
+    "name": "Finance App",
+    "slug": "finance-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "financeapp",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "predictiveBackGestureEnabled": false
+    },
+    "plugins": ["expo-router"],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    }
+  }
+}
