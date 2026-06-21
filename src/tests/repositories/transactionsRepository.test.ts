@@ -64,4 +64,19 @@ describe('Sprint 03 transactionsRepository', () => {
       error: { code: 'transaction_not_found', message: 'Transação não encontrada.', field: 'id' },
     });
   });
+
+  it('supports destructured create and update methods', async () => {
+    const { repository, account, expenseCategory } = await setup();
+    const { createTransaction, updateTransaction } = repository;
+
+    const created = await createTransaction({ accountId: account.id, categoryId: expenseCategory.id, type: 'expense', amountCents: 100, transactionDate: '2026-06-21' });
+    expect(created.ok).toBe(true);
+    if (!created.ok) return;
+
+    await expect(updateTransaction(created.value.id, { accountId: account.id, categoryId: expenseCategory.id, type: 'expense', amountCents: 250, transactionDate: '2026-06-22' })).resolves.toMatchObject({
+      ok: true,
+      value: { amountCents: 250, transactionDate: '2026-06-22' },
+    });
+  });
+
 });

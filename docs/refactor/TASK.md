@@ -4,7 +4,7 @@ Arquivo para achados fora do escopo da sprint atual. Não executar automaticamen
 
 ## R001 — Remover acoplamento com `this` nos repositories
 
-- Status: todo
+- Status: done
 - Origem: review pós Sprint 04
 - Prioridade sugerida: média
 - Escopo: camada local de repositórios
@@ -34,16 +34,16 @@ await createAccount(input); // `this` pode ficar undefined dentro do método
 
 ### Critérios de aceite
 
-- [ ] `createAccount`/`updateAccount` funcionam após destructuring.
-- [ ] `createCategory`/`updateCategory` funcionam após destructuring.
-- [ ] `createTransaction`/`updateTransaction` funcionam após destructuring.
-- [ ] `npm test` passa.
-- [ ] `npm run lint` passa.
-- [ ] `npm run typecheck` passa.
+- [x] `createAccount`/`updateAccount` funcionam após destructuring.
+- [x] `createCategory`/`updateCategory` funcionam após destructuring.
+- [x] `createTransaction`/`updateTransaction` funcionam após destructuring.
+- [x] `npm test` passa.
+- [x] `npm run lint` passa.
+- [x] `npm run typecheck` passa.
 
 ## R002 — Fortalecer teste de integração da navegação por abas
 
-- Status: todo
+- Status: done
 - Origem: review pós Sprint 04
 - Prioridade sugerida: baixa/média
 - Escopo: testes de navegação Expo Router
@@ -67,16 +67,16 @@ O teste atual da Sprint 04 valida constantes e renderização de telas, mas não
 
 ### Critérios de aceite
 
-- [ ] Teste renderiza `TabsLayout` ou harness equivalente do Expo Router.
-- [ ] Teste simula navegação entre pelo menos duas abas reais.
-- [ ] Teste valida as seis labels principais no navigator.
-- [ ] Não há warning recorrente de `overlapping act()` na suíte.
-- [ ] `npm test` passa.
-- [ ] `npm run lint` passa.
+- [x] Teste renderiza `TabsLayout` ou harness equivalente do Expo Router.
+- [x] Teste simula navegação entre pelo menos duas abas reais.
+- [x] Teste valida as seis labels principais no navigator.
+- [x] Não há warning recorrente de `overlapping act()` na suíte.
+- [x] `npm test` passa.
+- [x] `npm run lint` passa.
 
 ## R003 — Tratar falhas FK/race em exclusões de repositories
 
-- Status: todo
+- Status: done
 - Origem: review pós Sprint 05
 - Prioridade sugerida: média
 - Escopo: hardening de repositories locais
@@ -98,7 +98,7 @@ O teste atual da Sprint 04 valida constantes e renderização de telas, mas não
 
 ## R004 — Criar testes UI estáveis para managers da Sprint 05
 
-- Status: todo
+- Status: done
 - Origem: review pós Sprint 05
 - Prioridade sugerida: baixa/média
 - Escopo: testes React Native Testing Library
@@ -112,3 +112,12 @@ Testes atuais da Sprint 05 cobrem repositories/validators. A UI dos managers ain
 - Renderizar `AccountsManager` e `CategoriesManager` com repositories injetados estáveis.
 - Cobrir criação via formulário, validação visual, edição e Alert de exclusão.
 - Evitar warnings recorrentes de `act` no setup.
+
+
+## Evidências de execução
+
+- R001: removido acoplamento com `this` em `accountsRepository`, `categoriesRepository` e `transactionsRepository`; adicionados testes de métodos destruturados.
+- R002: teste de navegação renderiza `TabsLayout` com mock de `expo-router` e valida labels das seis abas sem warning recorrente de `act`.
+- R003: exclusões de conta/categoria capturam erro FK e retornam `account_in_use`/`category_in_use`; adicionados testes.
+- R004: adicionados testes UI estáveis para `AccountsManager` e `CategoriesManager` com repositories injetados.
+- Validação: `npm test -- --runInBand` passou com 17 suítes e 65 testes; `npm run lint` passou; `npm run typecheck` passou.

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Alert, StyleSheet, Text, View } from 'react-native';
 
 import { createAccountsRepository, type AccountRecord } from '@/db/repositories/accountsRepository';
@@ -8,7 +8,12 @@ import type { AccountType } from '@/types/finance';
 import { Button, Card, EmptyState, MoneyInput, TextInput } from '@/components/ui';
 
 type AccountsRepository = ReturnType<typeof createAccountsRepository>;
-const defaultAccountsRepository = createAccountsRepository();
+let defaultAccountsRepository: AccountsRepository | undefined;
+
+function getDefaultAccountsRepository() {
+  defaultAccountsRepository ??= createAccountsRepository();
+  return defaultAccountsRepository;
+}
 
 type FormState = { id?: number; name: string; type: AccountType; initialBalance: string };
 const emptyForm: FormState = { name: '', type: 'checking', initialBalance: '0,00' };
@@ -26,44 +31,58 @@ function parseMoneyToCents(value: string) {
   return Number.isFinite(number) ? Math.round(number * 100) : Number.NaN;
 }
 
-export function AccountsManager({ repository = defaultAccountsRepository }: { repository?: AccountsRepository }) {
+export function AccountsManager({ repository }: { repository?: AccountsRepository }) {
+  const activeRepository = useMemo(() => repository ?? getDefaultAccountsRepository(), [repository]);
   const [accounts, setAccounts] = useState<AccountRecord[]>([]);
   const [form, setForm] = useState<FormState>(emptyForm);
   const [error, setError] = useState<string | null>(null);
   const [fieldError, setFieldError] = useState<string | undefined>();
+  const [isSaving, setIsSaving] = useState(false);
+  const isSavingRef = useRef(false);
+  const loadRequestRef = useRef(0);
 
-  async function loadAccounts() {
-    setAccounts(await repository.getAccounts());
-  }
+  const loadAccounts = useCallback(async () => {
+    const requestId = ++loadRequestRef.current;
+    const nextAccounts = await activeRepository.getAccounts();
+    if (requestId === loadRequestRef.current) setAccounts(nextAccounts);
+  }, [activeRepository]);
 
   useEffect(() => {
-    void repository.getAccounts().then(setAccounts);
-  }, [repository]);
+    void loadAccounts();
+  }, [loadAccounts]);
 
   async function saveAccount() {
-    setError(null); setFieldError(undefined);
-    const input: AccountInput = {
-      name: form.name,
-      type: form.type,
-      currency: 'BRL',
-      initialBalanceCents: parseMoneyToCents(form.initialBalance),
-    };
-    const result: RepositoryResult<AccountRecord> = form.id
-      ? await repository.updateAccount(form.id, input)
-      : await repository.createAccount(input);
-    if (!result.ok) {
-      setError(result.error.message);
-      if (result.error.field === 'name') setFieldError(result.error.message);
-      return;
+    if (isSavingRef.current) return;
+    isSavingRef.current = true;
+    setIsSaving(true);
+    try {
+      setError(null); setFieldError(undefined);
+      const input: AccountInput = {
+        name: form.name,
+        type: form.type,
+        currency: 'BRL',
+        initialBalanceCents: parseMoneyToCents(form.initialBalance),
+      };
+      const result: RepositoryResult<AccountRecord> = form.id
+        ? await activeRepository.updateAccount(form.id, input)
+        : await activeRepository.createAccount(input);
+      if (!result.ok) {
+        setError(result.error.message);
+        if (result.error.field === 'name') setFieldError(result.error.message);
+        return;
+      }
+      setForm(emptyForm);
+      await loadAccounts();
+    } finally {
+      isSavingRef.current = false;
+      setIsSaving(false);
     }
-    setForm(emptyForm);
-    await loadAccounts();
   }
 
   async function deleteAccount(account: AccountRecord) {
     const remove = async () => {
       setError(null);
-      const result = await repository.deleteAccount(account.id);
+      const result = await activeRepository.deleteAccount(account.id);
       if (!result.ok) { setError(result.error.message); return; }
       setFieldError(undefined);
       await loadAccounts();
@@ -88,8 +107,8 @@ export function AccountsManager({ repository = defaultAccountsRepository }: { re
             ))}
           </View>
           <MoneyInput testID="account-balance-input" label="Saldo inicial" value={form.initialBalance} onChangeText={(initialBalance) => setForm((current) => ({ ...current, initialBalance }))} />
-          {error ? <Text accessibilityRole="alert" style={styles.error}>{error}</Text> : null}
-          <Button testID="save-account-button" onPress={saveAccount}>Salvar conta</Button>
+          {error && !fieldError ? <Text accessibilityRole="alert" style={styles.error}>{error}</Text> : null}
+          <Button testID="save-account-button" onPress={saveAccount} disabled={isSaving}>Salvar conta</Button>
         </View>
       </Card>
 
