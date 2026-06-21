@@ -14,4 +14,15 @@ describe('Sprint 02 account validation', () => {
       value: { name: 'Conta corrente', type: 'checking', currency: 'BRL', initialBalanceCents: 0 },
     });
   });
+
+  it('rejects unsafe initial balance cents', () => {
+    expect(validateAccount({ name: 'Conta', initialBalanceCents: Number.MAX_SAFE_INTEGER + 1 })).toEqual({
+      ok: false,
+      error: {
+        code: 'account_initial_balance_invalid',
+        message: 'Saldo inicial deve ser inteiro seguro em centavos.',
+        field: 'initialBalanceCents',
+      },
+    });
+  });
 });

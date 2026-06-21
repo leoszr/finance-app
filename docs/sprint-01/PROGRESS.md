@@ -10,7 +10,7 @@
 
 - Dependências locais adicionadas: `expo-sqlite` e `drizzle-orm`.
 - Camada `src/db` criada com client SQLite/Drizzle, schema tipado e migration inicial.
-- Tabelas locais criadas por migration: `accounts`, `categories`, `transactions`, `settings`.
+- Tabelas locais criadas por migration: `accounts`, `categories`, `transactions`, `settings`; índices para consultas de transações.
 - Inicialização do banco conectada em `app/_layout.tsx` com erro controlado.
 - Testes da sprint adicionados em `src/tests/db/`.
 

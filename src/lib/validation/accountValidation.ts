@@ -27,8 +27,8 @@ export function validateAccount(input: AccountInput): Result<ValidAccount> {
   }
 
   const initialBalanceCents = input.initialBalanceCents ?? 0;
-  if (!Number.isInteger(initialBalanceCents)) {
-    return err('account_initial_balance_invalid', 'Saldo inicial deve ser inteiro em centavos.', 'initialBalanceCents');
+  if (!Number.isInteger(initialBalanceCents) || !Number.isSafeInteger(initialBalanceCents)) {
+    return err('account_initial_balance_invalid', 'Saldo inicial deve ser inteiro seguro em centavos.', 'initialBalanceCents');
   }
 
   return ok({

@@ -38,4 +38,7 @@ export const initialMigrationStatements = [
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
   );`,
+  `CREATE INDEX IF NOT EXISTS transactions_account_id_idx ON transactions(account_id);`,
+  `CREATE INDEX IF NOT EXISTS transactions_category_id_idx ON transactions(category_id);`,
+  `CREATE INDEX IF NOT EXISTS transactions_transaction_date_idx ON transactions(transaction_date);`,
 ] as const;
