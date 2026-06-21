@@ -73,3 +73,42 @@ O teste atual da Sprint 04 valida constantes e renderização de telas, mas não
 - [ ] Não há warning recorrente de `overlapping act()` na suíte.
 - [ ] `npm test` passa.
 - [ ] `npm run lint` passa.
+
+## R003 — Tratar falhas FK/race em exclusões de repositories
+
+- Status: todo
+- Origem: review pós Sprint 05
+- Prioridade sugerida: média
+- Escopo: hardening de repositories locais
+
+### Problema
+
+`deleteAccount` e `deleteCategory` fazem `COUNT(*)` antes de `DELETE`. Se uma transação for inserida entre a checagem e o delete, SQLite pode lançar erro de FK em vez de retornar `account_in_use`/`category_in_use`.
+
+### Arquivos candidatos
+
+- `src/db/repositories/accountsRepository.ts`
+- `src/db/repositories/categoriesRepository.ts`
+
+### Resultado esperado
+
+- Usar estratégia atômica/transação ou capturar violação FK.
+- Retornar erro de domínio consistente: `account_in_use` ou `category_in_use`.
+- Cobrir com testes de repository.
+
+## R004 — Criar testes UI estáveis para managers da Sprint 05
+
+- Status: todo
+- Origem: review pós Sprint 05
+- Prioridade sugerida: baixa/média
+- Escopo: testes React Native Testing Library
+
+### Problema
+
+Testes atuais da Sprint 05 cobrem repositories/validators. A UI dos managers ainda precisa de testes estáveis sem ruído de `act` para formulários, Alert e integração com tabs.
+
+### Resultado esperado
+
+- Renderizar `AccountsManager` e `CategoriesManager` com repositories injetados estáveis.
+- Cobrir criação via formulário, validação visual, edição e Alert de exclusão.
+- Evitar warnings recorrentes de `act` no setup.

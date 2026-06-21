@@ -69,13 +69,25 @@ export function createCategoriesRepository(database: RepositoryDatabase = getRep
       const valid = validateCategory(input);
       if (!valid.ok) return valid;
 
+      const existing = await database.getFirstAsync<CategoryRow>(`SELECT * FROM categories WHERE id = ?`, [id]);
+      if (!existing) {
+        return repoErr('category_not_found', 'Categoria não encontrada.', 'id');
+      }
+
+      if (existing.type !== valid.value.type) {
+        const usage = await database.getFirstAsync<{ total: number }>(`SELECT COUNT(*) AS total FROM transactions WHERE category_id = ?`, [id]);
+        if ((usage?.total ?? 0) > 0) {
+          return repoErr('category_type_in_use', 'Categoria usada em transações não pode mudar de tipo.', 'type');
+        }
+      }
+
       await database.runAsync(
         `UPDATE categories SET name = ?, type = ?, color = ?, icon = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
         [valid.value.name, valid.value.type, valid.value.color ?? null, valid.value.icon ?? null, id],
       );
 
-      const category = await this.getCategoryById(id);
-      return category ? repoOk(category) : repoErr('category_not_found', 'Categoria não encontrada.', 'id');
+      const category = await database.getFirstAsync<CategoryRow>(`SELECT * FROM categories WHERE id = ?`, [id]);
+      return category ? repoOk(mapCategory(category)) : repoErr('category_not_found', 'Categoria não encontrada.', 'id');
     },
 
     async deleteCategory(id: number): Promise<RepositoryResult<null>> {

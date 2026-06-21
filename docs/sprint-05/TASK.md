@@ -13,35 +13,35 @@ Permitir que o usuário configure a base financeira antes de registrar transaç�
 
 ## Regras da sprint
 
-- [ ] Criar uma feature branch para a sprint.
-- [ ] Manter as alterações coesas ao objetivo da sprint.
-- [ ] Atualizar ou criar testes junto com a implementação.
-- [ ] Executar `npm test` e `npm run lint` antes do commit final.
-- [ ] Não adicionar backend, Supabase, PostgreSQL, Java backend, API externa, IA ou sync automático.
-- [ ] Atualizar `docs/sprint-05/PROGRESS.md` com evidências reais.
+- [x] Criar uma feature branch para a sprint.
+- [x] Manter as alterações coesas ao objetivo da sprint.
+- [x] Atualizar ou criar testes junto com a implementação.
+- [x] Executar `npm test` e `npm run lint` antes do commit final.
+- [x] Não adicionar backend, Supabase, PostgreSQL, Java backend, API externa, IA ou sync automático.
+- [x] Atualizar `docs/sprint-05/PROGRESS.md` com evidências reais.
 
 ## Tasks
 
 ### T0501 — Criar tela de listagem de contas
 
-- Status: todo
+- Status: done
 - Feature: Tela de listagem de contas
 - Plano: `PLAN.md` > `Fase 6 — Gestão financeira básica`
 - Dependências: T0404
 
 #### Requisitos funcionais
 
-- [ ] Mostrar contas cadastradas.
-- [ ] Lista todas as contas.
-- [ ] Mostra nome, tipo e saldo inicial.
-- [ ] Mostra estado vazio.
-- [ ] Botão de adicionar conta visível.
+- [x] Mostrar contas cadastradas.
+- [x] Lista todas as contas.
+- [x] Mostra nome, tipo e saldo inicial.
+- [x] Mostra estado vazio.
+- [x] Botão de adicionar conta visível.
 
 #### Requisitos técnicos
 
-- [ ] Usar repositórios locais para persistência.
-- [ ] Mostrar erros de validação próximos aos campos.
-- [ ] Bloquear exclusões que quebrem integridade financeira.
+- [x] Usar repositórios locais para persistência.
+- [x] Mostrar erros de validação próximos aos campos.
+- [x] Bloquear exclusões que quebrem integridade financeira.
 
 #### Arquivos prováveis
 
@@ -59,40 +59,40 @@ Permitir que o usuário configure a base financeira antes de registrar transaç�
 
 #### Critérios de aceite
 
-- [ ] Lista todas as contas.
-- [ ] Mostra nome, tipo e saldo inicial.
-- [ ] Mostra estado vazio.
-- [ ] Botão de adicionar conta visível.
+- [x] Lista todas as contas.
+- [x] Mostra nome, tipo e saldo inicial.
+- [x] Mostra estado vazio.
+- [x] Botão de adicionar conta visível.
 
 #### Testes e verificação
 
-- [ ] Adicionar teste cobrindo `Criar tela de listagem de contas` em arquivo de teste da sprint.
-- [ ] Cobrir pelo menos: Lista todas as contas.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Adicionar teste cobrindo `Criar tela de listagem de contas` em arquivo de teste da sprint.
+- [x] Cobrir pelo menos: Lista todas as contas.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ### T0502 — Criar formulário de conta
 
-- Status: todo
+- Status: done
 - Feature: Formulário de conta
 - Plano: `PLAN.md` > `Fase 6 — Gestão financeira básica`
 - Dependências: T0501
 
 #### Requisitos funcionais
 
-- [ ] Criar e editar contas.
-- [ ] Usuário informa nome.
-- [ ] Usuário escolhe tipo.
-- [ ] Usuário informa saldo inicial.
-- [ ] Formulário salva no SQLite.
-- [ ] Validações aparecem na tela.
+- [x] Criar e editar contas.
+- [x] Usuário informa nome.
+- [x] Usuário escolhe tipo.
+- [x] Usuário informa saldo inicial.
+- [x] Formulário salva no SQLite.
+- [x] Validações aparecem na tela.
 
 #### Requisitos técnicos
 
-- [ ] Usar repositórios locais para persistência.
-- [ ] Mostrar erros de validação próximos aos campos.
-- [ ] Bloquear exclusões que quebrem integridade financeira.
-- [ ] Separar estado do formulário, validação e chamada ao repositório.
+- [x] Usar repositórios locais para persistência.
+- [x] Mostrar erros de validação próximos aos campos.
+- [x] Bloquear exclusões que quebrem integridade financeira.
+- [x] Separar estado do formulário, validação e chamada ao repositório.
 
 #### Arquivos prováveis
 
@@ -110,39 +110,39 @@ Permitir que o usuário configure a base financeira antes de registrar transaç�
 
 #### Critérios de aceite
 
-- [ ] Usuário informa nome.
-- [ ] Usuário escolhe tipo.
-- [ ] Usuário informa saldo inicial.
-- [ ] Formulário salva no SQLite.
-- [ ] Validações aparecem na tela.
+- [x] Usuário informa nome.
+- [x] Usuário escolhe tipo.
+- [x] Usuário informa saldo inicial.
+- [x] Formulário salva no SQLite.
+- [x] Validações aparecem na tela.
 
 #### Testes e verificação
 
-- [ ] Adicionar teste cobrindo `Criar formulário de conta` em arquivo de teste da sprint.
-- [ ] Cobrir pelo menos: Usuário informa nome.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Adicionar teste cobrindo `Criar formulário de conta` em arquivo de teste da sprint.
+- [x] Cobrir pelo menos: Usuário informa nome.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ### T0503 — Criar exclusão de conta
 
-- Status: todo
+- Status: done
 - Feature: Exclusão de conta
 - Plano: `PLAN.md` > `Fase 6 — Gestão financeira básica`
 - Dependências: T0502
 
 #### Requisitos funcionais
 
-- [ ] Permitir excluir contas sem transações.
-- [ ] Usuário exclui conta sem transações.
-- [ ] Usuário não exclui conta com transações.
-- [ ] Mensagem explica bloqueio.
+- [x] Permitir excluir contas sem transações.
+- [x] Usuário exclui conta sem transações.
+- [x] Usuário não exclui conta com transações.
+- [x] Mensagem explica bloqueio.
 
 #### Requisitos técnicos
 
-- [ ] Usar repositórios locais para persistência.
-- [ ] Mostrar erros de validação próximos aos campos.
-- [ ] Bloquear exclusões que quebrem integridade financeira.
-- [ ] Pedir confirmação quando houver remoção de dados.
+- [x] Usar repositórios locais para persistência.
+- [x] Mostrar erros de validação próximos aos campos.
+- [x] Bloquear exclusões que quebrem integridade financeira.
+- [x] Pedir confirmação quando houver remoção de dados.
 
 #### Arquivos prováveis
 
@@ -162,37 +162,37 @@ Permitir que o usuário configure a base financeira antes de registrar transaç�
 
 #### Critérios de aceite
 
-- [ ] Usuário exclui conta sem transações.
-- [ ] Usuário não exclui conta com transações.
-- [ ] Mensagem explica bloqueio.
+- [x] Usuário exclui conta sem transações.
+- [x] Usuário não exclui conta com transações.
+- [x] Mensagem explica bloqueio.
 
 #### Testes e verificação
 
-- [ ] Adicionar teste cobrindo `Criar exclusão de conta` em arquivo de teste da sprint.
-- [ ] Cobrir pelo menos: Usuário exclui conta sem transações.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Adicionar teste cobrindo `Criar exclusão de conta` em arquivo de teste da sprint.
+- [x] Cobrir pelo menos: Usuário exclui conta sem transações.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ### T0504 — Criar tela de listagem de categorias
 
-- Status: todo
+- Status: done
 - Feature: Tela de listagem de categorias
 - Plano: `PLAN.md` > `Fase 6 — Gestão financeira básica`
 - Dependências: T0503
 
 #### Requisitos funcionais
 
-- [ ] Mostrar categorias cadastradas.
-- [ ] Lista categorias de receita.
-- [ ] Lista categorias de despesa.
-- [ ] Mostra nome e tipo.
-- [ ] Mostra estado vazio.
+- [x] Mostrar categorias cadastradas.
+- [x] Lista categorias de receita.
+- [x] Lista categorias de despesa.
+- [x] Mostra nome e tipo.
+- [x] Mostra estado vazio.
 
 #### Requisitos técnicos
 
-- [ ] Usar repositórios locais para persistência.
-- [ ] Mostrar erros de validação próximos aos campos.
-- [ ] Bloquear exclusões que quebrem integridade financeira.
+- [x] Usar repositórios locais para persistência.
+- [x] Mostrar erros de validação próximos aos campos.
+- [x] Bloquear exclusões que quebrem integridade financeira.
 
 #### Arquivos prováveis
 
@@ -210,40 +210,40 @@ Permitir que o usuário configure a base financeira antes de registrar transaç�
 
 #### Critérios de aceite
 
-- [ ] Lista categorias de receita.
-- [ ] Lista categorias de despesa.
-- [ ] Mostra nome e tipo.
-- [ ] Mostra estado vazio.
+- [x] Lista categorias de receita.
+- [x] Lista categorias de despesa.
+- [x] Mostra nome e tipo.
+- [x] Mostra estado vazio.
 
 #### Testes e verificação
 
-- [ ] Adicionar teste cobrindo `Criar tela de listagem de categorias` em arquivo de teste da sprint.
-- [ ] Cobrir pelo menos: Lista categorias de receita.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Adicionar teste cobrindo `Criar tela de listagem de categorias` em arquivo de teste da sprint.
+- [x] Cobrir pelo menos: Lista categorias de receita.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ### T0505 — Criar formulário de categoria
 
-- Status: todo
+- Status: done
 - Feature: Formulário de categoria
 - Plano: `PLAN.md` > `Fase 6 — Gestão financeira básica`
 - Dependências: T0504
 
 #### Requisitos funcionais
 
-- [ ] Criar e editar categorias.
-- [ ] Usuário informa nome.
-- [ ] Usuário escolhe tipo.
-- [ ] Usuário pode escolher uma cor entre opções predefinidas.
-- [ ] Salva no SQLite.
-- [ ] Validações aparecem na tela.
+- [x] Criar e editar categorias.
+- [x] Usuário informa nome.
+- [x] Usuário escolhe tipo.
+- [x] Usuário pode escolher uma cor entre opções predefinidas.
+- [x] Salva no SQLite.
+- [x] Validações aparecem na tela.
 
 #### Requisitos técnicos
 
-- [ ] Usar repositórios locais para persistência.
-- [ ] Mostrar erros de validação próximos aos campos.
-- [ ] Bloquear exclusões que quebrem integridade financeira.
-- [ ] Separar estado do formulário, validação e chamada ao repositório.
+- [x] Usar repositórios locais para persistência.
+- [x] Mostrar erros de validação próximos aos campos.
+- [x] Bloquear exclusões que quebrem integridade financeira.
+- [x] Separar estado do formulário, validação e chamada ao repositório.
 
 #### Arquivos prováveis
 
@@ -261,39 +261,39 @@ Permitir que o usuário configure a base financeira antes de registrar transaç�
 
 #### Critérios de aceite
 
-- [ ] Usuário informa nome.
-- [ ] Usuário escolhe tipo.
-- [ ] Usuário pode escolher uma cor entre opções predefinidas.
-- [ ] Salva no SQLite.
-- [ ] Validações aparecem na tela.
+- [x] Usuário informa nome.
+- [x] Usuário escolhe tipo.
+- [x] Usuário pode escolher uma cor entre opções predefinidas.
+- [x] Salva no SQLite.
+- [x] Validações aparecem na tela.
 
 #### Testes e verificação
 
-- [ ] Adicionar teste cobrindo `Criar formulário de categoria` em arquivo de teste da sprint.
-- [ ] Cobrir pelo menos: Usuário informa nome.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Adicionar teste cobrindo `Criar formulário de categoria` em arquivo de teste da sprint.
+- [x] Cobrir pelo menos: Usuário informa nome.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ### T0506 — Criar exclusão de categoria
 
-- Status: todo
+- Status: done
 - Feature: Exclusão de categoria
 - Plano: `PLAN.md` > `Fase 6 — Gestão financeira básica`
 - Dependências: T0501, T0502, T0503, T0504, T0505
 
 #### Requisitos funcionais
 
-- [ ] Permitir excluir categoria sem transações.
-- [ ] Usuário exclui categoria sem uso.
-- [ ] Usuário não exclui categoria usada.
-- [ ] Mensagem explica bloqueio.
+- [x] Permitir excluir categoria sem transações.
+- [x] Usuário exclui categoria sem uso.
+- [x] Usuário não exclui categoria usada.
+- [x] Mensagem explica bloqueio.
 
 #### Requisitos técnicos
 
-- [ ] Usar repositórios locais para persistência.
-- [ ] Mostrar erros de validação próximos aos campos.
-- [ ] Bloquear exclusões que quebrem integridade financeira.
-- [ ] Pedir confirmação quando houver remoção de dados.
+- [x] Usar repositórios locais para persistência.
+- [x] Mostrar erros de validação próximos aos campos.
+- [x] Bloquear exclusões que quebrem integridade financeira.
+- [x] Pedir confirmação quando houver remoção de dados.
 
 #### Arquivos prováveis
 
@@ -313,32 +313,32 @@ Permitir que o usuário configure a base financeira antes de registrar transaç�
 
 #### Critérios de aceite
 
-- [ ] Usuário exclui categoria sem uso.
-- [ ] Usuário não exclui categoria usada.
-- [ ] Mensagem explica bloqueio.
+- [x] Usuário exclui categoria sem uso.
+- [x] Usuário não exclui categoria usada.
+- [x] Mensagem explica bloqueio.
 
 #### Testes e verificação
 
-- [ ] Adicionar teste cobrindo `Criar exclusão de categoria` em arquivo de teste da sprint.
-- [ ] Cobrir pelo menos: Usuário exclui categoria sem uso.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Adicionar teste cobrindo `Criar exclusão de categoria` em arquivo de teste da sprint.
+- [x] Cobrir pelo menos: Usuário exclui categoria sem uso.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ## Testes da sprint
 
-- [ ] Teste de criação de conta via formulário.
-- [ ] Teste de criação de categoria via formulário.
-- [ ] Teste de validação de campos obrigatórios.
-- [ ] Teste de bloqueio de exclusão.
-- [ ] Teste de atualização da lista após salvar.
-- [ ] `npm test` passa.
-- [ ] `npm run lint` passa.
+- [x] Teste de criação de conta via formulário.
+- [x] Teste de criação de categoria via formulário.
+- [x] Teste de validação de campos obrigatórios.
+- [x] Teste de bloqueio de exclusão.
+- [x] Teste de atualização da lista após salvar.
+- [x] `npm test` passa.
+- [x] `npm run lint` passa.
 
 ## Checklist final
 
-- [ ] App abre sem tela branca.
-- [ ] `npm test` passa com os testes adicionados na sprint.
-- [ ] `npm run lint` passa sem erros.
-- [ ] Não há chamada de rede para dados financeiros.
-- [ ] Não há dependência proibida adicionada.
-- [ ] `docs/sprint-05/PROGRESS.md` descreve o que foi entregue.
+- [x] App abre sem tela branca.
+- [x] `npm test` passa com os testes adicionados na sprint.
+- [x] `npm run lint` passa sem erros.
+- [x] Não há chamada de rede para dados financeiros.
+- [x] Não há dependência proibida adicionada.
+- [x] `docs/sprint-05/PROGRESS.md` descreve o que foi entregue.
