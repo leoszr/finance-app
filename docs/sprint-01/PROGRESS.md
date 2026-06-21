@@ -2,131 +2,151 @@
 
 ## Resumo
 
-- Status geral: todo
+- Status geral: concluído
 - Branch: `feature/sprint-01-local-database`
 - Commit final sugerido: `feat(db): add local sqlite schema and migrations`
-- Use este arquivo para registrar evidências curtas e evitar reler todo o TASK.md.
 
 ## Entregue nesta sprint
 
-- Nada entregue ainda.
+- Dependências locais adicionadas: `expo-sqlite` e `drizzle-orm`.
+- Camada `src/db` criada com client SQLite/Drizzle, schema tipado e migration inicial.
+- Tabelas locais criadas por migration: `accounts`, `categories`, `transactions`, `settings`.
+- Inicialização do banco conectada em `app/_layout.tsx` com erro controlado.
+- Testes da sprint adicionados em `src/tests/db/`.
 
 ## Progresso por task
 
 ### T0101 — Instalar SQLite e Drizzle
 
-- Status: todo
+- Status: done
 - Feature: SQLite e Drizzle
 
 #### Desenvolvido
 
-- A preencher ao concluir a task.
+- `expo-sqlite` e `drizzle-orm` instalados.
+- `src/db/client.ts` criado com `openDatabaseSync` e `drizzle`.
 
 #### Evidências
 
-- A preencher com arquivos alterados, testes e comandos executados.
+- Arquivos: `package.json`, `package-lock.json`, `src/db/client.ts`.
+- Teste: `src/tests/db/schema.test.ts` cobre dependências instaladas.
 
 #### Pendências
 
-- Implementar task.
+- Nenhuma.
 
 ### T0102 — Criar schema de contas
 
-- Status: todo
+- Status: done
 - Feature: Schema de contas
 
 #### Desenvolvido
 
-- A preencher ao concluir a task.
+- Tabela `accounts` com `id`, `name`, `type`, `currency`, `initial_balance_cents`, `created_at`, `updated_at`.
+- `currency` padrão `BRL`; dinheiro em centavos inteiros.
 
 #### Evidências
 
-- A preencher com arquivos alterados, testes e comandos executados.
+- Arquivos: `src/db/schema.ts`, `src/db/migrations/0001_initial.ts`, `src/types/finance.ts`.
+- Teste: `src/tests/db/schema.test.ts`.
 
 #### Pendências
 
-- Implementar task.
+- Nenhuma.
 
 ### T0103 — Criar schema de categorias
 
-- Status: todo
+- Status: done
 - Feature: Schema de categorias
 
 #### Desenvolvido
 
-- A preencher ao concluir a task.
+- Tabela `categories` com `id`, `name`, `type`, `color`, `icon`, `created_at`, `updated_at`.
+- `type` limitado a `income` ou `expense` na migration.
 
 #### Evidências
 
-- A preencher com arquivos alterados, testes e comandos executados.
+- Arquivos: `src/db/schema.ts`, `src/db/migrations/0001_initial.ts`.
+- Teste: `src/tests/db/schema.test.ts`.
 
 #### Pendências
 
-- Implementar task.
+- Nenhuma.
 
 ### T0104 — Criar schema de transações
 
-- Status: todo
+- Status: done
 - Feature: Schema de transações
 
 #### Desenvolvido
 
-- A preencher ao concluir a task.
+- Tabela `transactions` com FKs para `accounts` e `categories`.
+- `amount_cents` obrigatório e inteiro; `type` limitado a `income` ou `expense`.
 
 #### Evidências
 
-- A preencher com arquivos alterados, testes e comandos executados.
+- Arquivos: `src/db/schema.ts`, `src/db/migrations/0001_initial.ts`.
+- Teste: `src/tests/db/schema.test.ts`.
 
 #### Pendências
 
-- Implementar task.
+- Nenhuma.
 
 ### T0105 — Criar schema de configurações
 
-- Status: todo
+- Status: done
 - Feature: Schema de configurações
 
 #### Desenvolvido
 
-- A preencher ao concluir a task.
+- Tabela `settings` com chave única e valor string.
 
 #### Evidências
 
-- A preencher com arquivos alterados, testes e comandos executados.
+- Arquivos: `src/db/schema.ts`, `src/db/migrations/0001_initial.ts`.
+- Teste: `src/tests/db/schema.test.ts`.
 
 #### Pendências
 
-- Implementar task.
+- Nenhuma.
 
 ### T0106 — Criar inicialização do banco
 
-- Status: todo
+- Status: done
 - Feature: Inicialização do banco
 
 #### Desenvolvido
 
-- A preencher ao concluir a task.
+- `applyMigrations` e `initDatabase` criados.
+- `app/_layout.tsx` chama inicialização ao abrir app e só renderiza rotas após o banco estar pronto.
+- Falha retorna erro controlado e renderiza mensagem, sem tela branca.
 
 #### Evidências
 
-- A preencher com arquivos alterados, testes e comandos executados.
+- Arquivos: `src/db/initDatabase.ts`, `app/_layout.tsx`, `src/db/migrations/0001_initial.ts`.
+- Teste: `src/tests/db/initDatabase.test.ts`.
 
 #### Pendências
 
-- Implementar task.
+- Nenhuma.
 
 ## Testes executados
 
-- Nenhum teste executado ainda.
+- `npm install` — executado; dependências instaladas.
+- `npm test` — passou: 4 suites, 14 testes.
+- `npm run lint` — passou sem warnings.
+- `npm run typecheck` — passou.
 
 ## Decisões técnicas
 
-- Nenhuma decisão registrada ainda.
+- Migration inicial mantida em SQL explícito para aplicação simples via `expo-sqlite`, aplicada em transação.
+- Drizzle usado para schema tipado e client local; SQLite abre de forma lazy para erro controlado.
+- Valores monetários modelados em campos `*_cents` como `INTEGER`.
 
 ## Problemas / riscos encontrados
 
-- Nenhum problema registrado ainda.
+- `npm install` reportou 36 vulnerabilidades moderadas em dependências transitivas existentes; não alterado por estar fora do escopo da sprint.
 
 ## Próximo passo
 
-- Iniciar a primeira task pendente em `docs/sprint-01/TASK.md`.
+- Revisar diff e fazer commit sugerido: `feat(db): add local sqlite schema and migrations`.
