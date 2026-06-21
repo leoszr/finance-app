@@ -10,7 +10,8 @@
     "web": "expo start --web",
     "lint": "eslint . --max-warnings=0",
     "test": "jest --watchAll=false",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "commit-pr": "../scripts/commit-pr.sh"
   },
   "dependencies": {
     "drizzle-orm": "^0.45.2",

@@ -13,18 +13,18 @@ Permitir registrar, editar e excluir receitas e despesas.
 
 ## Regras da sprint
 
-- [ ] Criar uma feature branch para a sprint.
-- [ ] Manter as alterações coesas ao objetivo da sprint.
-- [ ] Atualizar ou criar testes junto com a implementação.
-- [ ] Executar `npm test` e `npm run lint` antes do commit final.
-- [ ] Não adicionar backend, Supabase, PostgreSQL, Java backend, API externa, IA ou sync automático.
-- [ ] Atualizar `docs/sprint-06/PROGRESS.md` com evidências reais.
+- [x] Criar uma feature branch para a sprint.
+- [x] Manter as alterações coesas ao objetivo da sprint.
+- [x] Atualizar ou criar testes junto com a implementação.
+- [x] Executar `npm test` e `npm run lint` antes do commit final.
+- [x] Não adicionar backend, Supabase, PostgreSQL, Java backend, API externa, IA ou sync automático.
+- [x] Atualizar `docs/sprint-06/PROGRESS.md` com evidências reais.
 
 ## Tasks
 
 ### T0601 — Criar tela de listagem de transações
 
-- Status: todo
+- Status: done
 - Feature: Tela de listagem de transações
 - Plano: `PLAN.md` > `Fase 6 — Gestão financeira básica`
 - Dependências: T0506
@@ -32,16 +32,16 @@ Permitir registrar, editar e excluir receitas e despesas.
 #### Requisitos funcionais
 
 - [ ] Mostrar transações recentes.
-- [ ] Lista transações ordenadas por data.
-- [ ] Mostra descrição, categoria, conta, data e valor.
-- [ ] Receitas e despesas visualmente distinguíveis.
-- [ ] Estado vazio quando não há transações.
+- [x] Lista transações ordenadas por data.
+- [x] Mostra descrição, categoria, conta, data e valor.
+- [x] Receitas e despesas visualmente distinguíveis.
+- [x] Estado vazio quando não há transações.
 
 #### Requisitos técnicos
 
-- [ ] Persistir transações via repositório local.
-- [ ] Validar tipo, categoria, conta, data e valor antes de salvar.
-- [ ] Manter receitas e despesas visualmente distinguíveis.
+- [x] Persistir transações via repositório local.
+- [x] Validar tipo, categoria, conta, data e valor antes de salvar.
+- [x] Manter receitas e despesas visualmente distinguíveis.
 
 #### Arquivos prováveis
 
@@ -61,21 +61,21 @@ Permitir registrar, editar e excluir receitas e despesas.
 
 #### Critérios de aceite
 
-- [ ] Lista transações ordenadas por data.
-- [ ] Mostra descrição, categoria, conta, data e valor.
-- [ ] Receitas e despesas visualmente distinguíveis.
-- [ ] Estado vazio quando não há transações.
+- [x] Lista transações ordenadas por data.
+- [x] Mostra descrição, categoria, conta, data e valor.
+- [x] Receitas e despesas visualmente distinguíveis.
+- [x] Estado vazio quando não há transações.
 
 #### Testes e verificação
 
-- [ ] Adicionar teste cobrindo `Criar tela de listagem de transações` em arquivo de teste da sprint.
-- [ ] Cobrir pelo menos: Lista transações ordenadas por data.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Adicionar teste cobrindo `Criar tela de listagem de transações` em arquivo de teste da sprint.
+- [x] Cobrir pelo menos: Lista transações ordenadas por data.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ### T0602 — Criar formulário de nova transação
 
-- Status: todo
+- Status: done
 - Feature: Formulário de nova transação
 - Plano: `PLAN.md` > `Fase 6 — Gestão financeira básica`
 - Dependências: T0601
@@ -83,20 +83,20 @@ Permitir registrar, editar e excluir receitas e despesas.
 #### Requisitos funcionais
 
 - [ ] Permitir inserir receita ou despesa.
-- [ ] Usuário escolhe tipo.
-- [ ] Usuário informa valor.
-- [ ] Usuário escolhe conta.
-- [ ] Usuário escolhe categoria compatível com o tipo.
-- [ ] Usuário informa data.
-- [ ] Descrição opcional.
-- [ ] Salva no SQLite.
+- [x] Usuário escolhe tipo.
+- [x] Usuário informa valor.
+- [x] Usuário escolhe conta.
+- [x] Usuário escolhe categoria compatível com o tipo.
+- [x] Usuário informa data.
+- [x] Descrição opcional.
+- [x] Salva no SQLite.
 
 #### Requisitos técnicos
 
-- [ ] Persistir transações via repositório local.
-- [ ] Validar tipo, categoria, conta, data e valor antes de salvar.
-- [ ] Manter receitas e despesas visualmente distinguíveis.
-- [ ] Separar estado do formulário, validação e chamada ao repositório.
+- [x] Persistir transações via repositório local.
+- [x] Validar tipo, categoria, conta, data e valor antes de salvar.
+- [x] Manter receitas e despesas visualmente distinguíveis.
+- [x] Separar estado do formulário, validação e chamada ao repositório.
 
 #### Arquivos prováveis
 
@@ -116,24 +116,24 @@ Permitir registrar, editar e excluir receitas e despesas.
 
 #### Critérios de aceite
 
-- [ ] Usuário escolhe tipo.
-- [ ] Usuário informa valor.
-- [ ] Usuário escolhe conta.
-- [ ] Usuário escolhe categoria compatível com o tipo.
-- [ ] Usuário informa data.
-- [ ] Descrição opcional.
-- [ ] Salva no SQLite.
+- [x] Usuário escolhe tipo.
+- [x] Usuário informa valor.
+- [x] Usuário escolhe conta.
+- [x] Usuário escolhe categoria compatível com o tipo.
+- [x] Usuário informa data.
+- [x] Descrição opcional.
+- [x] Salva no SQLite.
 
 #### Testes e verificação
 
-- [ ] Adicionar teste cobrindo `Criar formulário de nova transação` em arquivo de teste da sprint.
-- [ ] Cobrir pelo menos: Usuário escolhe tipo.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Adicionar teste cobrindo `Criar formulário de nova transação` em arquivo de teste da sprint.
+- [x] Cobrir pelo menos: Usuário escolhe tipo.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ### T0603 — Criar edição de transação
 
-- Status: todo
+- Status: done
 - Feature: Edição de transação
 - Plano: `PLAN.md` > `Fase 6 — Gestão financeira básica`
 - Dependências: T0602
@@ -141,16 +141,16 @@ Permitir registrar, editar e excluir receitas e despesas.
 #### Requisitos funcionais
 
 - [ ] Permitir alterar transação existente.
-- [ ] Formulário carrega dados existentes.
-- [ ] Usuário altera campos.
-- [ ] Alteração persiste no SQLite.
-- [ ] Lista reflete atualização.
+- [x] Formulário carrega dados existentes.
+- [x] Usuário altera campos.
+- [x] Alteração persiste no SQLite.
+- [x] Lista reflete atualização.
 
 #### Requisitos técnicos
 
-- [ ] Persistir transações via repositório local.
-- [ ] Validar tipo, categoria, conta, data e valor antes de salvar.
-- [ ] Manter receitas e despesas visualmente distinguíveis.
+- [x] Persistir transações via repositório local.
+- [x] Validar tipo, categoria, conta, data e valor antes de salvar.
+- [x] Manter receitas e despesas visualmente distinguíveis.
 
 #### Arquivos prováveis
 
@@ -170,21 +170,21 @@ Permitir registrar, editar e excluir receitas e despesas.
 
 #### Critérios de aceite
 
-- [ ] Formulário carrega dados existentes.
-- [ ] Usuário altera campos.
-- [ ] Alteração persiste no SQLite.
-- [ ] Lista reflete atualização.
+- [x] Formulário carrega dados existentes.
+- [x] Usuário altera campos.
+- [x] Alteração persiste no SQLite.
+- [x] Lista reflete atualização.
 
 #### Testes e verificação
 
-- [ ] Adicionar teste cobrindo `Criar edição de transação` em arquivo de teste da sprint.
-- [ ] Cobrir pelo menos: Formulário carrega dados existentes.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Adicionar teste cobrindo `Criar edição de transação` em arquivo de teste da sprint.
+- [x] Cobrir pelo menos: Formulário carrega dados existentes.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ### T0604 — Criar exclusão de transação
 
-- Status: todo
+- Status: done
 - Feature: Exclusão de transação
 - Plano: `PLAN.md` > `Fase 6 — Gestão financeira básica`
 - Dependências: T0603
@@ -192,16 +192,16 @@ Permitir registrar, editar e excluir receitas e despesas.
 #### Requisitos funcionais
 
 - [ ] Permitir remover transação.
-- [ ] Usuário confirma exclusão.
-- [ ] Transação removida do SQLite.
-- [ ] Lista atualiza após exclusão.
+- [x] Usuário confirma exclusão.
+- [x] Transação removida do SQLite.
+- [x] Lista atualiza após exclusão.
 
 #### Requisitos técnicos
 
-- [ ] Persistir transações via repositório local.
-- [ ] Validar tipo, categoria, conta, data e valor antes de salvar.
-- [ ] Manter receitas e despesas visualmente distinguíveis.
-- [ ] Pedir confirmação quando houver remoção de dados.
+- [x] Persistir transações via repositório local.
+- [x] Validar tipo, categoria, conta, data e valor antes de salvar.
+- [x] Manter receitas e despesas visualmente distinguíveis.
+- [x] Pedir confirmação quando houver remoção de dados.
 
 #### Arquivos prováveis
 
@@ -221,20 +221,20 @@ Permitir registrar, editar e excluir receitas e despesas.
 
 #### Critérios de aceite
 
-- [ ] Usuário confirma exclusão.
-- [ ] Transação removida do SQLite.
-- [ ] Lista atualiza após exclusão.
+- [x] Usuário confirma exclusão.
+- [x] Transação removida do SQLite.
+- [x] Lista atualiza após exclusão.
 
 #### Testes e verificação
 
-- [ ] Adicionar teste cobrindo `Criar exclusão de transação` em arquivo de teste da sprint.
-- [ ] Cobrir pelo menos: Usuário confirma exclusão.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Adicionar teste cobrindo `Criar exclusão de transação` em arquivo de teste da sprint.
+- [x] Cobrir pelo menos: Usuário confirma exclusão.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ### T0605 — Criar validação cruzada de tipo e categoria
 
-- Status: todo
+- Status: done
 - Feature: Validação cruzada de tipo e categoria
 - Plano: `PLAN.md` > `Fase 6 — Gestão financeira básica`
 - Dependências: T0604
@@ -242,16 +242,16 @@ Permitir registrar, editar e excluir receitas e despesas.
 #### Requisitos funcionais
 
 - [ ] Impedir inconsistências.
-- [ ] Despesa só aceita categoria de despesa.
-- [ ] Receita só aceita categoria de receita.
-- [ ] Troca de tipo limpa categoria incompatível.
-- [ ] Tentativa inválida bloqueada.
+- [x] Despesa só aceita categoria de despesa.
+- [x] Receita só aceita categoria de receita.
+- [x] Troca de tipo limpa categoria incompatível.
+- [x] Tentativa inválida bloqueada.
 
 #### Requisitos técnicos
 
-- [ ] Persistir transações via repositório local.
-- [ ] Validar tipo, categoria, conta, data e valor antes de salvar.
-- [ ] Manter receitas e despesas visualmente distinguíveis.
+- [x] Persistir transações via repositório local.
+- [x] Validar tipo, categoria, conta, data e valor antes de salvar.
+- [x] Manter receitas e despesas visualmente distinguíveis.
 
 #### Arquivos prováveis
 
@@ -270,35 +270,35 @@ Permitir registrar, editar e excluir receitas e despesas.
 
 #### Critérios de aceite
 
-- [ ] Despesa só aceita categoria de despesa.
-- [ ] Receita só aceita categoria de receita.
-- [ ] Troca de tipo limpa categoria incompatível.
-- [ ] Tentativa inválida bloqueada.
+- [x] Despesa só aceita categoria de despesa.
+- [x] Receita só aceita categoria de receita.
+- [x] Troca de tipo limpa categoria incompatível.
+- [x] Tentativa inválida bloqueada.
 
 #### Testes e verificação
 
-- [ ] Adicionar teste cobrindo `Criar validação cruzada de tipo e categoria` em arquivo de teste da
+- [x] Adicionar teste cobrindo `Criar validação cruzada de tipo e categoria` em arquivo de teste da
   sprint.
-- [ ] Cobrir pelo menos: Despesa só aceita categoria de despesa.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Cobrir pelo menos: Despesa só aceita categoria de despesa.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ## Testes da sprint
 
-- [ ] Teste de criação de receita.
-- [ ] Teste de criação de despesa.
-- [ ] Teste de edição.
-- [ ] Teste de exclusão.
-- [ ] Teste de categoria incompatível.
-- [ ] Teste de persistência após recarregar dados.
-- [ ] `npm test` passa.
-- [ ] `npm run lint` passa.
+- [x] Teste de criação de receita.
+- [x] Teste de criação de despesa.
+- [x] Teste de edição.
+- [x] Teste de exclusão.
+- [x] Teste de categoria incompatível.
+- [x] Teste de persistência após recarregar dados.
+- [x] `npm test` passa.
+- [x] `npm run lint` passa.
 
 ## Checklist final
 
-- [ ] App abre sem tela branca.
-- [ ] `npm test` passa com os testes adicionados na sprint.
-- [ ] `npm run lint` passa sem erros.
-- [ ] Não há chamada de rede para dados financeiros.
-- [ ] Não há dependência proibida adicionada.
-- [ ] `docs/sprint-06/PROGRESS.md` descreve o que foi entregue.
+- [x] App abre sem tela branca.
+- [x] `npm test` passa com os testes adicionados na sprint.
+- [x] `npm run lint` passa sem erros.
+- [x] Não há chamada de rede para dados financeiros.
+- [x] Não há dependência proibida adicionada.
+- [x] `docs/sprint-06/PROGRESS.md` descreve o que foi entregue.

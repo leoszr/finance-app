@@ -4,6 +4,15 @@ type Table = Record<string, unknown>;
 
 const now = '2026-06-21 00:00:00';
 
+function sortTransactions(rows: Table[]) {
+  return [...rows].sort((left, right) => {
+    const leftDate = String(left.transaction_date);
+    const rightDate = String(right.transaction_date);
+    if (leftDate !== rightDate) return rightDate.localeCompare(leftDate);
+    return Number(right.id) - Number(left.id);
+  });
+}
+
 export function createFakeRepositoryDatabase(): RepositoryDatabase {
   const tables: Record<string, Table[]> = {
     accounts: [],
@@ -23,9 +32,9 @@ export function createFakeRepositoryDatabase(): RepositoryDatabase {
       if (source.includes('FROM categories WHERE type = ?')) return tables.categories.filter((row) => row.type === params[0]) as T[];
       if (source.includes('FROM categories')) return [...tables.categories] as T[];
       if (source.includes('FROM transactions WHERE transaction_date')) {
-        return tables.transactions.filter((row) => String(row.transaction_date) >= String(params[0]) && String(row.transaction_date) <= String(params[1])) as T[];
+        return sortTransactions(tables.transactions.filter((row) => String(row.transaction_date) >= String(params[0]) && String(row.transaction_date) <= String(params[1]))) as T[];
       }
-      if (source.includes('FROM transactions')) return [...tables.transactions].reverse() as T[];
+      if (source.includes('FROM transactions')) return sortTransactions(tables.transactions) as T[];
       return [];
     },
 
