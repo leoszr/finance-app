@@ -40,7 +40,7 @@ describe('Sprint 06 transactions CRUD', () => {
     await act(async () => { fireEvent.changeText(screen.getByTestId('transaction-amount-input'), '25,90'); });
     await act(async () => { fireEvent.changeText(screen.getByTestId('transaction-date-input'), '2026-06-20'); });
     await act(async () => { fireEvent.changeText(screen.getByTestId('transaction-description-input'), 'Mercado novo'); });
-    await act(async () => { fireEvent.press(screen.getByText('Carteira')); });
+    await act(async () => { fireEvent.press(screen.getAllByText('Carteira')[0]); });
     await act(async () => { fireEvent.press(screen.getByText('Mercado')); });
     await act(async () => { fireEvent.press(screen.getByTestId('save-transaction-button')); });
 
@@ -53,10 +53,10 @@ describe('Sprint 06 transactions CRUD', () => {
     const { accountsRepository, categoriesRepository, transactionsRepository } = await seedRepositories();
     const screen = await render(<TransactionsManager accountsRepository={accountsRepository} categoriesRepository={categoriesRepository} transactionsRepository={transactionsRepository} />);
 
-    await waitFor(() => expect(screen.getByText('Carteira')).toBeTruthy());
+    await waitFor(() => expect(screen.getAllByText('Carteira').length).toBeGreaterThan(0));
     await act(async () => { fireEvent.changeText(screen.getByTestId('transaction-amount-input'), '12,345'); });
     await act(async () => { fireEvent.changeText(screen.getByTestId('transaction-date-input'), '2026-06-21'); });
-    await act(async () => { fireEvent.press(screen.getByText('Carteira')); });
+    await act(async () => { fireEvent.press(screen.getAllByText('Carteira')[0]); });
     await act(async () => { fireEvent.press(screen.getByText('Mercado')); });
     await act(async () => { fireEvent.press(screen.getByTestId('save-transaction-button')); });
 
@@ -93,7 +93,7 @@ describe('Sprint 06 transactions CRUD', () => {
     expect(screen.getByText('Salário')).toBeTruthy();
     await act(async () => { fireEvent.changeText(screen.getByTestId('transaction-amount-input'), '10,00'); });
     await act(async () => { fireEvent.changeText(screen.getByTestId('transaction-date-input'), '2026-06-21'); });
-    await act(async () => { fireEvent.press(screen.getByText('Carteira')); });
+    await act(async () => { fireEvent.press(screen.getAllByText('Carteira')[0]); });
     await act(async () => { fireEvent.press(screen.getByTestId('save-transaction-button')); });
 
     await waitFor(() => expect(screen.getAllByText('Categoria válida é obrigatória.').length).toBeGreaterThan(0));
