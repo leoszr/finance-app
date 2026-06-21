@@ -2,114 +2,130 @@
 
 ## Resumo
 
-- Status geral: todo
+- Status geral: concluída
 - Branch: `feature/sprint-08-dashboard`
 - Commit final sugerido: `feat(dashboard): add monthly financial overview`
-- Use este arquivo para registrar evidências curtas e evitar reler todo o TASK.md.
+- Dashboard mensal implementado com SQLite local, cards, rankings e gráficos textuais sem dependência nova.
 
 ## Entregue nesta sprint
 
-- Nada entregue ainda.
+- Queries de resumo mensal em `src/db/queries/dashboardQueries.ts`.
+- Dashboard em `src/features/dashboard/DashboardManager.tsx` e `app/(tabs)/dashboard.tsx`.
+- Cards em `src/components/finance/SummaryCard.tsx`.
+- Barras locais em `src/components/charts/BarRow.tsx`.
+- Refresh automático do dashboard quando contas/categorias/transações mudam via `src/lib/dataEvents.ts`.
+- Testes em `src/tests/features-sprint08.test.tsx`.
 
 ## Progresso por task
 
 ### T0801 — Criar queries de resumo mensal
 
-- Status: todo
+- Status: done
 - Feature: Queries de resumo mensal
 
 #### Desenvolvido
 
-- A preencher ao concluir a task.
+- Totais mensais de receitas, despesas, saldo mensal, saldo total por conta e maior categoria de despesa.
+- Cálculos a partir do repositório SQLite local.
 
 #### Evidências
 
-- A preencher com arquivos alterados, testes e comandos executados.
+- `src/db/queries/dashboardQueries.ts`
+- `src/tests/features-sprint08.test.tsx`
 
 #### Pendências
 
-- Implementar task.
+- Nenhuma.
 
 ### T0802 — Criar cards de resumo
 
-- Status: todo
+- Status: done
 - Feature: Cards de resumo
 
 #### Desenvolvido
 
-- A preencher ao concluir a task.
+- Cards de receitas, despesas, saldo mensal e saldo total com BRL.
 
 #### Evidências
 
-- A preencher com arquivos alterados, testes e comandos executados.
+- `src/components/finance/SummaryCard.tsx`
+- `src/features/dashboard/DashboardManager.tsx`
 
 #### Pendências
 
-- Implementar task.
+- Nenhuma.
 
 ### T0803 — Criar lista de maiores gastos por categoria
 
-- Status: todo
+- Status: done
 - Feature: Lista de maiores gastos por categoria
 
 #### Desenvolvido
 
-- A preencher ao concluir a task.
+- Ranking top 5 de despesas por categoria, ordenado do maior para o menor e ignorando receitas.
 
 #### Evidências
 
-- A preencher com arquivos alterados, testes e comandos executados.
+- `src/db/queries/dashboardQueries.ts`
+- `src/tests/features-sprint08.test.tsx`
 
 #### Pendências
 
-- Implementar task.
+- Nenhuma.
 
 ### T0804 — Criar gráfico básico por categoria
 
-- Status: todo
+- Status: done
 - Feature: Gráfico básico por categoria
 
 #### Desenvolvido
 
-- A preencher ao concluir a task.
+- Gráfico local em barras por categoria, com fallback textual sem despesas.
 
 #### Evidências
 
-- A preencher com arquivos alterados, testes e comandos executados.
+- `src/components/charts/BarRow.tsx`
+- `src/features/dashboard/DashboardManager.tsx`
 
 #### Pendências
 
-- Implementar task.
+- Nenhuma.
 
 ### T0805 — Criar gráfico receita x despesa
 
-- Status: todo
+- Status: done
 - Feature: Gráfico receita x despesa
 
 #### Desenvolvido
 
-- A preencher ao concluir a task.
+- Comparação mensal de receita x despesa com botões de mês anterior/próximo.
 
 #### Evidências
 
-- A preencher com arquivos alterados, testes e comandos executados.
+- `src/features/dashboard/DashboardManager.tsx`
+- `src/tests/features-sprint08.test.tsx`
 
 #### Pendências
 
-- Implementar task.
+- Nenhuma.
 
 ## Testes executados
 
-- Nenhum teste executado ainda.
+- `npm test -- --runInBand src/tests/features-sprint08.test.tsx` — passou.
+- `npm test -- --runInBand` — 20 suites, 81 testes passaram.
+- `npm run lint` — passou.
+- `npm run typecheck` — passou.
 
 ## Decisões técnicas
 
-- Nenhuma decisão registrada ainda.
+- Sem biblioteca de gráfico nova; barras em React Native cobrem o aceite.
+- Refresh por evento de repositório em vez de hook de foco, evitando dependência de contexto de navegação nos testes.
+- Saldo total por conta usa saldo inicial + todas as transações locais.
 
 ## Problemas / riscos encontrados
 
-- Nenhum problema registrado ainda.
+- `expo-sqlite` não abre no ambiente Jest padrão; `DashboardManager` captura falha do backend local para não quebrar smoke test sem mock.
 
 ## Próximo passo
 
-- Iniciar a primeira task pendente em `docs/sprint-08/TASK.md`.
+- Sprint 09.

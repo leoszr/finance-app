@@ -112,7 +112,8 @@
 - `npm run typecheck` — passou.
 - `npm run lint` — passou.
 - `npm test -- --runInBand src/tests/features-sprint07.test.tsx` — passou.
-- `npm test -- --runInBand` — passou: 19 suítes, 74 testes.
+- `npm test -- --runInBand` — passou: 19 suítes, 75 testes.
+- `npx expo export --platform ios --output-dir /tmp/finance-app-sprint7-export-check` — passou.
 
 ## Decisões técnicas
 

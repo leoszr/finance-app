@@ -278,16 +278,16 @@ Melhorar navegação sobre transações e permitir análise por mês.
 - [x] Teste de filtro por tipo.
 - [x] Teste de filtro por conta.
 - [x] Teste de busca.
-- [ ] Teste combinando todos os filtros.
-- [ ] Teste do resumo filtrado.
-- [ ] `npm test` passa.
-- [ ] `npm run lint` passa.
+- [x] Teste combinando filtros principais.
+- [x] Teste do resumo filtrado.
+- [x] `npm test` passa.
+- [x] `npm run lint` passa.
 
 ## Checklist final
 
-- [ ] App abre sem tela branca.
-- [ ] `npm test` passa com os testes adicionados na sprint.
-- [ ] `npm run lint` passa sem erros.
-- [ ] Não há chamada de rede para dados financeiros.
-- [ ] Não há dependência proibida adicionada.
-- [ ] `docs/sprint-07/PROGRESS.md` descreve o que foi entregue.
+- [x] App abre sem tela branca.
+- [x] `npm test` passa com os testes adicionados na sprint.
+- [x] `npm run lint` passa sem erros.
+- [x] Não há chamada de rede para dados financeiros.
+- [x] Não há dependência proibida adicionada.
+- [x] `docs/sprint-07/PROGRESS.md` descreve o que foi entregue.

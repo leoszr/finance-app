@@ -1,4 +1,5 @@
 import { getRepositoryDatabase } from '@/db/repositories/database';
+import { notifyFinanceDataChanged } from '@/lib/dataEvents';
 import { repoErr, repoOk, type RepositoryDatabase, type RepositoryResult } from '@/db/repositories/types';
 import { validateCategory, type CategoryInput } from '@/lib/validation/categoryValidation';
 import type { TransactionType } from '@/types/finance';
@@ -55,6 +56,7 @@ export function createCategoriesRepository(database: RepositoryDatabase = getRep
     );
 
     const category = await getCategoryById(result.lastInsertRowId ?? 0);
+    if (category) notifyFinanceDataChanged();
     return category ? repoOk(category) : repoErr('category_create_failed', 'Categoria não foi criada.');
   }
 
@@ -90,6 +92,7 @@ export function createCategoriesRepository(database: RepositoryDatabase = getRep
     );
 
     const category = await getCategoryById(id);
+    if (category) notifyFinanceDataChanged();
     return category ? repoOk(category) : repoErr('category_not_found', 'Categoria não encontrada.', 'id');
   }
 
@@ -101,6 +104,7 @@ export function createCategoriesRepository(database: RepositoryDatabase = getRep
 
     try {
       const result = await database.runAsync(`DELETE FROM categories WHERE id = ?`, [id]);
+      if ((result.changes ?? 0) > 0) notifyFinanceDataChanged();
       return result.changes === 0 ? repoErr('category_not_found', 'Categoria não encontrada.', 'id') : repoOk(null);
     } catch (error) {
       if (isForeignKeyConstraintError(error)) {

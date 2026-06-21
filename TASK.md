@@ -18,56 +18,56 @@
 
 ### Sprint 01 — Banco local SQLite e migrations
 
-- Status: todo
+- Status: done
 - Branch: `feature/sprint-01-local-database`
 - Tasks: `docs/sprint-01/TASK.md`
 - Progresso: `docs/sprint-01/PROGRESS.md`
 
 ### Sprint 02 — Camada de domínio financeiro
 
-- Status: todo
+- Status: done
 - Branch: `feature/sprint-02-finance-domain`
 - Tasks: `docs/sprint-02/TASK.md`
 - Progresso: `docs/sprint-02/PROGRESS.md`
 
 ### Sprint 03 — Repositórios locais
 
-- Status: todo
+- Status: done
 - Branch: `feature/sprint-03-local-repositories`
 - Tasks: `docs/sprint-03/TASK.md`
 - Progresso: `docs/sprint-03/PROGRESS.md`
 
 ### Sprint 04 — Navegação principal e layout base
 
-- Status: todo
+- Status: done
 - Branch: `feature/sprint-04-navigation-layout`
 - Tasks: `docs/sprint-04/TASK.md`
 - Progresso: `docs/sprint-04/PROGRESS.md`
 
 ### Sprint 05 — Cadastro de contas e categorias
 
-- Status: todo
+- Status: done
 - Branch: `feature/sprint-05-accounts-categories`
 - Tasks: `docs/sprint-05/TASK.md`
 - Progresso: `docs/sprint-05/PROGRESS.md`
 
 ### Sprint 06 — CRUD de transações
 
-- Status: todo
+- Status: done
 - Branch: `feature/sprint-06-transactions-crud`
 - Tasks: `docs/sprint-06/TASK.md`
 - Progresso: `docs/sprint-06/PROGRESS.md`
 
 ### Sprint 07 — Filtros, busca e visão mensal
 
-- Status: todo
+- Status: done
 - Branch: `feature/sprint-07-transactions-filtering`
 - Tasks: `docs/sprint-07/TASK.md`
 - Progresso: `docs/sprint-07/PROGRESS.md`
 
 ### Sprint 08 — Dashboard financeiro
 
-- Status: todo
+- Status: doing
 - Branch: `feature/sprint-08-dashboard`
 - Tasks: `docs/sprint-08/TASK.md`
 - Progresso: `docs/sprint-08/PROGRESS.md`
@@ -132,4 +132,5 @@
 
 ## Próxima Task
 
-- Começar por `docs/sprint-00/TASK.md`.
+- Sprint atual: `docs/sprint-08/TASK.md`.
+- Começar por T0801 — Criar queries de resumo mensal.
