@@ -13,35 +13,35 @@ Melhorar navegação sobre transações e permitir análise por mês.
 
 ## Regras da sprint
 
-- [ ] Criar uma feature branch para a sprint.
-- [ ] Manter as alterações coesas ao objetivo da sprint.
-- [ ] Atualizar ou criar testes junto com a implementação.
-- [ ] Executar `npm test` e `npm run lint` antes do commit final.
-- [ ] Não adicionar backend, Supabase, PostgreSQL, Java backend, API externa, IA ou sync automático.
-- [ ] Atualizar `docs/sprint-07/PROGRESS.md` com evidências reais.
+- [x] Criar uma feature branch para a sprint.
+- [x] Manter as alterações coesas ao objetivo da sprint.
+- [x] Atualizar ou criar testes junto com a implementação.
+- [x] Executar `npm test` e `npm run lint` antes do commit final.
+- [x] Não adicionar backend, Supabase, PostgreSQL, Java backend, API externa, IA ou sync automático.
+- [x] Atualizar `docs/sprint-07/PROGRESS.md` com evidências reais.
 
 ## Tasks
 
 ### T0701 — Criar seletor de mês
 
-- Status: todo
+- Status: done
 - Feature: Seletor de mês
 - Plano: `PLAN.md` > `Fase 7 — Consulta mensal e dashboard`
 - Dependências: T0605
 
 #### Requisitos funcionais
 
-- [ ] Filtrar transações por mês.
-- [ ] Usuário vê mês atual por padrão.
-- [ ] Usuário vai para mês anterior.
-- [ ] Usuário vai para mês seguinte.
-- [ ] Lista atualiza conforme o mês.
+- [x] Filtrar transações por mês.
+- [x] Usuário vê mês atual por padrão.
+- [x] Usuário vai para mês anterior.
+- [x] Usuário vai para mês seguinte.
+- [x] Lista atualiza conforme o mês.
 
 #### Requisitos técnicos
 
-- [ ] Aplicar filtros em dados locais.
-- [ ] Combinar mês, tipo, conta e busca sem perder consistência.
-- [ ] Recalcular totais a partir do recorte filtrado.
+- [x] Aplicar filtros em dados locais.
+- [x] Combinar mês, tipo, conta e busca sem perder consistência.
+- [x] Recalcular totais a partir do recorte filtrado.
 
 #### Arquivos prováveis
 
@@ -61,38 +61,38 @@ Melhorar navegação sobre transações e permitir análise por mês.
 
 #### Critérios de aceite
 
-- [ ] Usuário vê mês atual por padrão.
-- [ ] Usuário vai para mês anterior.
-- [ ] Usuário vai para mês seguinte.
-- [ ] Lista atualiza conforme o mês.
+- [x] Usuário vê mês atual por padrão.
+- [x] Usuário vai para mês anterior.
+- [x] Usuário vai para mês seguinte.
+- [x] Lista atualiza conforme o mês.
 
 #### Testes e verificação
 
-- [ ] Adicionar teste cobrindo `Criar seletor de mês` em arquivo de teste da sprint.
-- [ ] Cobrir pelo menos: Usuário vê mês atual por padrão.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Adicionar teste cobrindo `Criar seletor de mês` em arquivo de teste da sprint.
+- [x] Cobrir pelo menos: Usuário vê mês atual por padrão.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ### T0702 — Criar filtro por tipo
 
-- Status: todo
+- Status: done
 - Feature: Filtro por tipo
 - Plano: `PLAN.md` > `Fase 7 — Consulta mensal e dashboard`
 - Dependências: T0701
 
 #### Requisitos funcionais
 
-- [ ] Filtrar receitas e despesas.
-- [ ] Filtro Todos mostra tudo.
-- [ ] Filtro Receitas mostra apenas receitas.
-- [ ] Filtro Despesas mostra apenas despesas.
-- [ ] Filtro combina com mês selecionado.
+- [x] Filtrar receitas e despesas.
+- [x] Filtro Todos mostra tudo.
+- [x] Filtro Receitas mostra apenas receitas.
+- [x] Filtro Despesas mostra apenas despesas.
+- [x] Filtro combina com mês selecionado.
 
 #### Requisitos técnicos
 
-- [ ] Aplicar filtros em dados locais.
-- [ ] Combinar mês, tipo, conta e busca sem perder consistência.
-- [ ] Recalcular totais a partir do recorte filtrado.
+- [x] Aplicar filtros em dados locais.
+- [x] Combinar mês, tipo, conta e busca sem perder consistência.
+- [x] Recalcular totais a partir do recorte filtrado.
 
 #### Arquivos prováveis
 
@@ -110,37 +110,37 @@ Melhorar navegação sobre transações e permitir análise por mês.
 
 #### Critérios de aceite
 
-- [ ] Filtro Todos mostra tudo.
-- [ ] Filtro Receitas mostra apenas receitas.
-- [ ] Filtro Despesas mostra apenas despesas.
-- [ ] Filtro combina com mês selecionado.
+- [x] Filtro Todos mostra tudo.
+- [x] Filtro Receitas mostra apenas receitas.
+- [x] Filtro Despesas mostra apenas despesas.
+- [x] Filtro combina com mês selecionado.
 
 #### Testes e verificação
 
-- [ ] Adicionar teste cobrindo `Criar filtro por tipo` em arquivo de teste da sprint.
-- [ ] Cobrir pelo menos: Filtro Todos mostra tudo.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Adicionar teste cobrindo `Criar filtro por tipo` em arquivo de teste da sprint.
+- [x] Cobrir pelo menos: Filtro Todos mostra tudo.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ### T0703 — Criar filtro por conta
 
-- Status: todo
+- Status: done
 - Feature: Filtro por conta
 - Plano: `PLAN.md` > `Fase 7 — Consulta mensal e dashboard`
 - Dependências: T0702
 
 #### Requisitos funcionais
 
-- [ ] Filtrar transações de uma conta específica.
-- [ ] Usuário escolhe uma conta.
-- [ ] Lista mostra apenas transações daquela conta.
-- [ ] Opção Todas as contas restaura lista completa.
+- [x] Filtrar transações de uma conta específica.
+- [x] Usuário escolhe uma conta.
+- [x] Lista mostra apenas transações daquela conta.
+- [x] Opção Todas as contas restaura lista completa.
 
 #### Requisitos técnicos
 
-- [ ] Aplicar filtros em dados locais.
-- [ ] Combinar mês, tipo, conta e busca sem perder consistência.
-- [ ] Recalcular totais a partir do recorte filtrado.
+- [x] Aplicar filtros em dados locais.
+- [x] Combinar mês, tipo, conta e busca sem perder consistência.
+- [x] Recalcular totais a partir do recorte filtrado.
 
 #### Arquivos prováveis
 
@@ -162,36 +162,36 @@ Melhorar navegação sobre transações e permitir análise por mês.
 
 #### Critérios de aceite
 
-- [ ] Usuário escolhe uma conta.
-- [ ] Lista mostra apenas transações daquela conta.
-- [ ] Opção Todas as contas restaura lista completa.
+- [x] Usuário escolhe uma conta.
+- [x] Lista mostra apenas transações daquela conta.
+- [x] Opção Todas as contas restaura lista completa.
 
 #### Testes e verificação
 
-- [ ] Adicionar teste cobrindo `Criar filtro por conta` em arquivo de teste da sprint.
-- [ ] Cobrir pelo menos: Usuário escolhe uma conta.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Adicionar teste cobrindo `Criar filtro por conta` em arquivo de teste da sprint.
+- [x] Cobrir pelo menos: Usuário escolhe uma conta.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ### T0704 — Criar busca por descrição
 
-- Status: todo
+- Status: done
 - Feature: Busca por descrição
 - Plano: `PLAN.md` > `Fase 7 — Consulta mensal e dashboard`
 - Dependências: T0703
 
 #### Requisitos funcionais
 
-- [ ] Encontrar transações por texto.
-- [ ] Busca filtra por descrição.
-- [ ] Busca ignora maiúsculas/minúsculas.
-- [ ] Busca combina com mês, tipo e conta.
+- [x] Encontrar transações por texto.
+- [x] Busca filtra por descrição.
+- [x] Busca ignora maiúsculas/minúsculas.
+- [x] Busca combina com mês, tipo e conta.
 
 #### Requisitos técnicos
 
-- [ ] Aplicar filtros em dados locais.
-- [ ] Combinar mês, tipo, conta e busca sem perder consistência.
-- [ ] Recalcular totais a partir do recorte filtrado.
+- [x] Aplicar filtros em dados locais.
+- [x] Combinar mês, tipo, conta e busca sem perder consistência.
+- [x] Recalcular totais a partir do recorte filtrado.
 
 #### Arquivos prováveis
 
@@ -211,37 +211,37 @@ Melhorar navegação sobre transações e permitir análise por mês.
 
 #### Critérios de aceite
 
-- [ ] Busca filtra por descrição.
-- [ ] Busca ignora maiúsculas/minúsculas.
-- [ ] Busca combina com mês, tipo e conta.
+- [x] Busca filtra por descrição.
+- [x] Busca ignora maiúsculas/minúsculas.
+- [x] Busca combina com mês, tipo e conta.
 
 #### Testes e verificação
 
-- [ ] Adicionar teste cobrindo `Criar busca por descrição` em arquivo de teste da sprint.
-- [ ] Cobrir pelo menos: Busca filtra por descrição.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Adicionar teste cobrindo `Criar busca por descrição` em arquivo de teste da sprint.
+- [x] Cobrir pelo menos: Busca filtra por descrição.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ### T0705 — Criar resumo da lista filtrada
 
-- Status: todo
+- Status: done
 - Feature: Resumo da lista filtrada
 - Plano: `PLAN.md` > `Fase 7 — Consulta mensal e dashboard`
 - Dependências: T0704
 
 #### Requisitos funcionais
 
-- [ ] Mostrar totais do recorte atual.
-- [ ] Mostra total de receitas.
-- [ ] Mostra total de despesas.
-- [ ] Mostra saldo do período filtrado.
-- [ ] Atualiza quando filtros mudam.
+- [x] Mostrar totais do recorte atual.
+- [x] Mostra total de receitas.
+- [x] Mostra total de despesas.
+- [x] Mostra saldo do período filtrado.
+- [x] Atualiza quando filtros mudam.
 
 #### Requisitos técnicos
 
-- [ ] Aplicar filtros em dados locais.
-- [ ] Combinar mês, tipo, conta e busca sem perder consistência.
-- [ ] Recalcular totais a partir do recorte filtrado.
+- [x] Aplicar filtros em dados locais.
+- [x] Combinar mês, tipo, conta e busca sem perder consistência.
+- [x] Recalcular totais a partir do recorte filtrado.
 
 #### Arquivos prováveis
 
@@ -260,24 +260,24 @@ Melhorar navegação sobre transações e permitir análise por mês.
 
 #### Critérios de aceite
 
-- [ ] Mostra total de receitas.
-- [ ] Mostra total de despesas.
-- [ ] Mostra saldo do período filtrado.
-- [ ] Atualiza quando filtros mudam.
+- [x] Mostra total de receitas.
+- [x] Mostra total de despesas.
+- [x] Mostra saldo do período filtrado.
+- [x] Atualiza quando filtros mudam.
 
 #### Testes e verificação
 
-- [ ] Adicionar teste cobrindo `Criar resumo da lista filtrada` em arquivo de teste da sprint.
-- [ ] Cobrir pelo menos: Mostra total de receitas.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Adicionar teste cobrindo `Criar resumo da lista filtrada` em arquivo de teste da sprint.
+- [x] Cobrir pelo menos: Mostra total de receitas.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ## Testes da sprint
 
-- [ ] Teste de filtro por mês.
-- [ ] Teste de filtro por tipo.
-- [ ] Teste de filtro por conta.
-- [ ] Teste de busca.
+- [x] Teste de filtro por mês.
+- [x] Teste de filtro por tipo.
+- [x] Teste de filtro por conta.
+- [x] Teste de busca.
 - [ ] Teste combinando todos os filtros.
 - [ ] Teste do resumo filtrado.
 - [ ] `npm test` passa.

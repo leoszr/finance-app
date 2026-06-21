@@ -2,114 +2,128 @@
 
 ## Resumo
 
-- Status geral: todo
+- Status geral: done
 - Branch: `feature/sprint-07-transactions-filtering`
 - Commit final sugerido: `feat(transactions): add monthly filters and search`
-- Use este arquivo para registrar evidências curtas e evitar reler todo o TASK.md.
 
 ## Entregue nesta sprint
 
-- Nada entregue ainda.
+- Filtro mensal com mês atual por padrão, mês anterior e mês seguinte.
+- Filtro por tipo: todos, receitas e despesas.
+- Filtro por conta com opção todas as contas.
+- Busca por descrição sem diferenciar maiúsculas/minúsculas.
+- Resumo do recorte filtrado com receitas, despesas e saldo.
 
 ## Progresso por task
 
 ### T0701 — Criar seletor de mês
 
-- Status: todo
+- Status: done
 - Feature: Seletor de mês
 
 #### Desenvolvido
 
-- A preencher ao concluir a task.
+- Seletor mensal em `TransactionsManager`.
+- Lista filtra pelo mês atual por padrão e muda com botões anterior/seguinte.
 
 #### Evidências
 
-- A preencher com arquivos alterados, testes e comandos executados.
+- `src/features/transactions/TransactionsManager.tsx`
+- `src/tests/features-sprint07.test.tsx`
 
 #### Pendências
 
-- Implementar task.
+- Nenhuma.
 
 ### T0702 — Criar filtro por tipo
 
-- Status: todo
+- Status: done
 - Feature: Filtro por tipo
 
 #### Desenvolvido
 
-- A preencher ao concluir a task.
+- Filtros todos/receitas/despesas combinados com mês.
 
 #### Evidências
 
-- A preencher com arquivos alterados, testes e comandos executados.
+- `src/features/transactions/TransactionsManager.tsx`
+- Teste T0702 em `src/tests/features-sprint07.test.tsx`.
 
 #### Pendências
 
-- Implementar task.
+- Nenhuma.
 
 ### T0703 — Criar filtro por conta
 
-- Status: todo
+- Status: done
 - Feature: Filtro por conta
 
 #### Desenvolvido
 
-- A preencher ao concluir a task.
+- Filtro por conta e opção todas as contas.
 
 #### Evidências
 
-- A preencher com arquivos alterados, testes e comandos executados.
+- `src/features/transactions/TransactionsManager.tsx`
+- Teste T0703 em `src/tests/features-sprint07.test.tsx`.
 
 #### Pendências
 
-- Implementar task.
+- Nenhuma.
 
 ### T0704 — Criar busca por descrição
 
-- Status: todo
+- Status: done
 - Feature: Busca por descrição
 
 #### Desenvolvido
 
-- A preencher ao concluir a task.
+- Campo de busca por descrição, case-insensitive, combinado com filtros ativos.
 
 #### Evidências
 
-- A preencher com arquivos alterados, testes e comandos executados.
+- `src/features/transactions/TransactionsManager.tsx`
+- Teste T0704 em `src/tests/features-sprint07.test.tsx`.
 
 #### Pendências
 
-- Implementar task.
+- Nenhuma.
 
 ### T0705 — Criar resumo da lista filtrada
 
-- Status: todo
+- Status: done
 - Feature: Resumo da lista filtrada
 
 #### Desenvolvido
 
-- A preencher ao concluir a task.
+- Totais de receitas, despesas e saldo do recorte filtrado.
 
 #### Evidências
 
-- A preencher com arquivos alterados, testes e comandos executados.
+- `src/features/transactions/TransactionsManager.tsx`
+- Teste T0705 em `src/tests/features-sprint07.test.tsx`.
 
 #### Pendências
 
-- Implementar task.
+- Nenhuma.
 
 ## Testes executados
 
-- Nenhum teste executado ainda.
+- `npm run typecheck` — passou.
+- `npm run lint` — passou.
+- `npm test -- --runInBand src/tests/features-sprint07.test.tsx` — passou.
+- `npm test -- --runInBand` — passou: 19 suítes, 74 testes.
 
 ## Decisões técnicas
 
-- Nenhuma decisão registrada ainda.
+- Filtros aplicados localmente sobre dados já carregados para manter escopo pequeno.
+- Sem nova dependência.
+- Virtualização/paginação continua deferida para futura melhoria de performance.
 
 ## Problemas / riscos encontrados
 
-- Nenhum problema registrado ainda.
+- A UI de filtros ainda usa botões simples; pode virar picker/segmented control em sprint de polish.
 
 ## Próximo passo
 
-- Iniciar a primeira task pendente em `docs/sprint-07/TASK.md`.
+- Revisar Sprint 07 e commitar com `feat(transactions): add monthly filters and search`.
