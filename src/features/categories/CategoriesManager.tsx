@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Alert, StyleSheet, Text, View } from 'react-native';
 
 import { createCategoriesRepository, type CategoryRecord } from '@/db/repositories/categoriesRepository';
@@ -8,40 +8,61 @@ import type { TransactionType } from '@/types/finance';
 import { Button, Card, EmptyState, TextInput } from '@/components/ui';
 
 type CategoriesRepository = ReturnType<typeof createCategoriesRepository>;
-const defaultCategoriesRepository = createCategoriesRepository();
+let defaultCategoriesRepository: CategoriesRepository | undefined;
+
+function getDefaultCategoriesRepository() {
+  defaultCategoriesRepository ??= createCategoriesRepository();
+  return defaultCategoriesRepository;
+}
 type FormState = { id?: number; name: string; type: TransactionType; color: string };
 const emptyForm: FormState = { name: '', type: 'expense', color: '#0f766e' };
 const colors = ['#0f766e', '#2563eb', '#c2410c', '#7c3aed'];
 const typeLabels: Record<TransactionType, string> = { income: 'Receita', expense: 'Despesa' };
 
-export function CategoriesManager({ repository = defaultCategoriesRepository }: { repository?: CategoriesRepository }) {
+export function CategoriesManager({ repository }: { repository?: CategoriesRepository }) {
+  const activeRepository = useMemo(() => repository ?? getDefaultCategoriesRepository(), [repository]);
   const [categories, setCategories] = useState<CategoryRecord[]>([]);
   const [form, setForm] = useState<FormState>(emptyForm);
   const [error, setError] = useState<string | null>(null);
   const [fieldError, setFieldError] = useState<string | undefined>();
+  const [isSaving, setIsSaving] = useState(false);
+  const isSavingRef = useRef(false);
+  const loadRequestRef = useRef(0);
 
-  async function loadCategories() { setCategories(await repository.getCategories()); }
+  const loadCategories = useCallback(async () => {
+    const requestId = ++loadRequestRef.current;
+    const nextCategories = await activeRepository.getCategories();
+    if (requestId === loadRequestRef.current) setCategories(nextCategories);
+  }, [activeRepository]);
   useEffect(() => {
-    void repository.getCategories().then(setCategories);
-  }, [repository]);
+    void loadCategories();
+  }, [loadCategories]);
 
   async function saveCategory() {
-    setError(null); setFieldError(undefined);
-    const input: CategoryInput = { name: form.name, type: form.type, color: form.color };
-    const result: RepositoryResult<CategoryRecord> = form.id ? await repository.updateCategory(form.id, input) : await repository.createCategory(input);
-    if (!result.ok) {
-      setError(result.error.message);
-      if (result.error.field === 'name') setFieldError(result.error.message);
-      return;
+    if (isSavingRef.current) return;
+    isSavingRef.current = true;
+    setIsSaving(true);
+    try {
+      setError(null); setFieldError(undefined);
+      const input: CategoryInput = { name: form.name, type: form.type, color: form.color };
+      const result: RepositoryResult<CategoryRecord> = form.id ? await activeRepository.updateCategory(form.id, input) : await activeRepository.createCategory(input);
+      if (!result.ok) {
+        setError(result.error.message);
+        if (result.error.field === 'name') setFieldError(result.error.message);
+        return;
+      }
+      setForm(emptyForm);
+      await loadCategories();
+    } finally {
+      isSavingRef.current = false;
+      setIsSaving(false);
     }
-    setForm(emptyForm);
-    await loadCategories();
   }
 
   async function deleteCategory(category: CategoryRecord) {
     const remove = async () => {
       setError(null);
-      const result = await repository.deleteCategory(category.id);
+      const result = await activeRepository.deleteCategory(category.id);
       if (!result.ok) { setError(result.error.message); return; }
       setFieldError(undefined);
       await loadCategories();
@@ -71,8 +92,8 @@ export function CategoriesManager({ repository = defaultCategoriesRepository }: 
           <View style={styles.rowActions}>
             {colors.map((color) => <Button key={color} onPress={() => { setFieldError(undefined); setForm((current) => ({ ...current, color })); }} disabled={form.color === color}>{color}</Button>)}
           </View>
-          {error ? <Text accessibilityRole="alert" style={styles.error}>{error}</Text> : null}
-          <Button testID="save-category-button" onPress={saveCategory}>Salvar categoria</Button>
+          {error && !fieldError ? <Text accessibilityRole="alert" style={styles.error}>{error}</Text> : null}
+          <Button testID="save-category-button" onPress={saveCategory} disabled={isSaving}>Salvar categoria</Button>
         </View>
       </Card>
 

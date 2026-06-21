@@ -61,79 +61,85 @@ async function validateLinks(database: RepositoryDatabase, accountId: number, ca
 }
 
 export function createTransactionsRepository(database: RepositoryDatabase = getRepositoryDatabase()) {
+  async function getTransactionById(id: number): Promise<TransactionRecord | null> {
+    const row = await database.getFirstAsync<TransactionRow>(`SELECT * FROM transactions WHERE id = ?`, [id]);
+    return row ? mapTransaction(row) : null;
+  }
+
+  async function createTransaction(input: TransactionInput): Promise<RepositoryResult<TransactionRecord>> {
+    const valid = validateTransaction(input);
+    if (!valid.ok) return valid;
+
+    const links = await validateLinks(database, valid.value.accountId, valid.value.categoryId, valid.value.type);
+    if (!links.ok) return links;
+
+    const result = await database.runAsync(
+      `INSERT INTO transactions (account_id, category_id, type, amount_cents, description, transaction_date) VALUES (?, ?, ?, ?, ?, ?)`,
+      [
+        valid.value.accountId,
+        valid.value.categoryId,
+        valid.value.type,
+        valid.value.amountCents,
+        valid.value.description ?? null,
+        valid.value.transactionDate,
+      ],
+    );
+
+    const transaction = await getTransactionById(result.lastInsertRowId ?? 0);
+    return transaction ? repoOk(transaction) : repoErr('transaction_create_failed', 'Transação não foi criada.');
+  }
+
+  async function getTransactions(): Promise<TransactionRecord[]> {
+    const rows = await database.getAllAsync<TransactionRow>(`SELECT * FROM transactions ORDER BY transaction_date DESC, id DESC`);
+    return rows.map(mapTransaction);
+  }
+
+  async function getTransactionsByMonth(year: number, month: number): Promise<RepositoryResult<TransactionRecord[]>> {
+    const range = getMonthRange(year, month);
+    if (!range.ok) return range;
+
+    const rows = await database.getAllAsync<TransactionRow>(
+      `SELECT * FROM transactions WHERE transaction_date >= ? AND transaction_date <= ? ORDER BY transaction_date DESC, id DESC`,
+      [range.value.start, range.value.end],
+    );
+    return repoOk(rows.map(mapTransaction));
+  }
+
+  async function updateTransaction(id: number, input: TransactionInput): Promise<RepositoryResult<TransactionRecord>> {
+    const valid = validateTransaction(input);
+    if (!valid.ok) return valid;
+
+    const links = await validateLinks(database, valid.value.accountId, valid.value.categoryId, valid.value.type);
+    if (!links.ok) return links;
+
+    await database.runAsync(
+      `UPDATE transactions SET account_id = ?, category_id = ?, type = ?, amount_cents = ?, description = ?, transaction_date = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
+      [
+        valid.value.accountId,
+        valid.value.categoryId,
+        valid.value.type,
+        valid.value.amountCents,
+        valid.value.description ?? null,
+        valid.value.transactionDate,
+        id,
+      ],
+    );
+
+    const transaction = await getTransactionById(id);
+    return transaction ? repoOk(transaction) : repoErr('transaction_not_found', 'Transação não encontrada.', 'id');
+  }
+
+  async function deleteTransaction(id: number): Promise<RepositoryResult<null>> {
+    const result = await database.runAsync(`DELETE FROM transactions WHERE id = ?`, [id]);
+    return result.changes === 0 ? repoErr('transaction_not_found', 'Transação não encontrada.', 'id') : repoOk(null);
+  }
+
   return {
-    async createTransaction(input: TransactionInput): Promise<RepositoryResult<TransactionRecord>> {
-      const valid = validateTransaction(input);
-      if (!valid.ok) return valid;
-
-      const links = await validateLinks(database, valid.value.accountId, valid.value.categoryId, valid.value.type);
-      if (!links.ok) return links;
-
-      const result = await database.runAsync(
-        `INSERT INTO transactions (account_id, category_id, type, amount_cents, description, transaction_date) VALUES (?, ?, ?, ?, ?, ?)`,
-        [
-          valid.value.accountId,
-          valid.value.categoryId,
-          valid.value.type,
-          valid.value.amountCents,
-          valid.value.description ?? null,
-          valid.value.transactionDate,
-        ],
-      );
-
-      const transaction = await this.getTransactionById(result.lastInsertRowId ?? 0);
-      return transaction ? repoOk(transaction) : repoErr('transaction_create_failed', 'Transação não foi criada.');
-    },
-
-    async getTransactions(): Promise<TransactionRecord[]> {
-      const rows = await database.getAllAsync<TransactionRow>(`SELECT * FROM transactions ORDER BY transaction_date DESC, id DESC`);
-      return rows.map(mapTransaction);
-    },
-
-    async getTransactionsByMonth(year: number, month: number): Promise<RepositoryResult<TransactionRecord[]>> {
-      const range = getMonthRange(year, month);
-      if (!range.ok) return range;
-
-      const rows = await database.getAllAsync<TransactionRow>(
-        `SELECT * FROM transactions WHERE transaction_date >= ? AND transaction_date <= ? ORDER BY transaction_date DESC, id DESC`,
-        [range.value.start, range.value.end],
-      );
-      return repoOk(rows.map(mapTransaction));
-    },
-
-    async getTransactionById(id: number): Promise<TransactionRecord | null> {
-      const row = await database.getFirstAsync<TransactionRow>(`SELECT * FROM transactions WHERE id = ?`, [id]);
-      return row ? mapTransaction(row) : null;
-    },
-
-    async updateTransaction(id: number, input: TransactionInput): Promise<RepositoryResult<TransactionRecord>> {
-      const valid = validateTransaction(input);
-      if (!valid.ok) return valid;
-
-      const links = await validateLinks(database, valid.value.accountId, valid.value.categoryId, valid.value.type);
-      if (!links.ok) return links;
-
-      await database.runAsync(
-        `UPDATE transactions SET account_id = ?, category_id = ?, type = ?, amount_cents = ?, description = ?, transaction_date = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
-        [
-          valid.value.accountId,
-          valid.value.categoryId,
-          valid.value.type,
-          valid.value.amountCents,
-          valid.value.description ?? null,
-          valid.value.transactionDate,
-          id,
-        ],
-      );
-
-      const transaction = await this.getTransactionById(id);
-      return transaction ? repoOk(transaction) : repoErr('transaction_not_found', 'Transação não encontrada.', 'id');
-    },
-
-    async deleteTransaction(id: number): Promise<RepositoryResult<null>> {
-      const result = await database.runAsync(`DELETE FROM transactions WHERE id = ?`, [id]);
-      return result.changes === 0 ? repoErr('transaction_not_found', 'Transação não encontrada.', 'id') : repoOk(null);
-    },
+    createTransaction,
+    getTransactions,
+    getTransactionsByMonth,
+    getTransactionById,
+    updateTransaction,
+    deleteTransaction,
   };
 }
-

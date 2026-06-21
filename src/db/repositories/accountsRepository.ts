@@ -23,6 +23,10 @@ type AccountRow = {
   updated_at: string;
 };
 
+function isForeignKeyConstraintError(error: unknown) {
+  return error instanceof Error && /foreign key|constraint/i.test(error.message);
+}
+
 function mapAccount(row: AccountRow): AccountRecord {
   return {
     id: row.id,
@@ -36,52 +40,58 @@ function mapAccount(row: AccountRow): AccountRecord {
 }
 
 export function createAccountsRepository(database: RepositoryDatabase = getRepositoryDatabase()) {
-  return {
-    async createAccount(input: AccountInput): Promise<RepositoryResult<AccountRecord>> {
-      const valid = validateAccount(input);
-      if (!valid.ok) return valid;
+  async function getAccountById(id: number): Promise<AccountRecord | null> {
+    const row = await database.getFirstAsync<AccountRow>(`SELECT * FROM accounts WHERE id = ?`, [id]);
+    return row ? mapAccount(row) : null;
+  }
 
-      const result = await database.runAsync(
-        `INSERT INTO accounts (name, type, currency, initial_balance_cents) VALUES (?, ?, ?, ?)`,
-        [valid.value.name, valid.value.type, valid.value.currency, valid.value.initialBalanceCents],
-      );
+  async function createAccount(input: AccountInput): Promise<RepositoryResult<AccountRecord>> {
+    const valid = validateAccount(input);
+    if (!valid.ok) return valid;
 
-      const account = await this.getAccountById(result.lastInsertRowId ?? 0);
-      return account ? repoOk(account) : repoErr('account_create_failed', 'Conta não foi criada.');
-    },
+    const result = await database.runAsync(
+      `INSERT INTO accounts (name, type, currency, initial_balance_cents) VALUES (?, ?, ?, ?)`,
+      [valid.value.name, valid.value.type, valid.value.currency, valid.value.initialBalanceCents],
+    );
 
-    async getAccounts(): Promise<AccountRecord[]> {
-      const rows = await database.getAllAsync<AccountRow>(`SELECT * FROM accounts ORDER BY created_at ASC, id ASC`);
-      return rows.map(mapAccount);
-    },
+    const account = await getAccountById(result.lastInsertRowId ?? 0);
+    return account ? repoOk(account) : repoErr('account_create_failed', 'Conta não foi criada.');
+  }
 
-    async getAccountById(id: number): Promise<AccountRecord | null> {
-      const row = await database.getFirstAsync<AccountRow>(`SELECT * FROM accounts WHERE id = ?`, [id]);
-      return row ? mapAccount(row) : null;
-    },
+  async function getAccounts(): Promise<AccountRecord[]> {
+    const rows = await database.getAllAsync<AccountRow>(`SELECT * FROM accounts ORDER BY created_at ASC, id ASC`);
+    return rows.map(mapAccount);
+  }
 
-    async updateAccount(id: number, input: AccountInput): Promise<RepositoryResult<AccountRecord>> {
-      const valid = validateAccount(input);
-      if (!valid.ok) return valid;
+  async function updateAccount(id: number, input: AccountInput): Promise<RepositoryResult<AccountRecord>> {
+    const valid = validateAccount(input);
+    if (!valid.ok) return valid;
 
-      await database.runAsync(
-        `UPDATE accounts SET name = ?, type = ?, currency = ?, initial_balance_cents = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
-        [valid.value.name, valid.value.type, valid.value.currency, valid.value.initialBalanceCents, id],
-      );
+    await database.runAsync(
+      `UPDATE accounts SET name = ?, type = ?, currency = ?, initial_balance_cents = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
+      [valid.value.name, valid.value.type, valid.value.currency, valid.value.initialBalanceCents, id],
+    );
 
-      const account = await this.getAccountById(id);
-      return account ? repoOk(account) : repoErr('account_not_found', 'Conta não encontrada.', 'id');
-    },
+    const account = await getAccountById(id);
+    return account ? repoOk(account) : repoErr('account_not_found', 'Conta não encontrada.', 'id');
+  }
 
-    async deleteAccount(id: number): Promise<RepositoryResult<null>> {
-      const usage = await database.getFirstAsync<{ total: number }>(`SELECT COUNT(*) AS total FROM transactions WHERE account_id = ?`, [id]);
-      if ((usage?.total ?? 0) > 0) {
-        return repoErr('account_in_use', 'Conta possui transações associadas.', 'id');
-      }
+  async function deleteAccount(id: number): Promise<RepositoryResult<null>> {
+    const usage = await database.getFirstAsync<{ total: number }>(`SELECT COUNT(*) AS total FROM transactions WHERE account_id = ?`, [id]);
+    if ((usage?.total ?? 0) > 0) {
+      return repoErr('account_in_use', 'Conta possui transações associadas.', 'id');
+    }
 
+    try {
       const result = await database.runAsync(`DELETE FROM accounts WHERE id = ?`, [id]);
       return result.changes === 0 ? repoErr('account_not_found', 'Conta não encontrada.', 'id') : repoOk(null);
-    },
-  };
-}
+    } catch (error) {
+      if (isForeignKeyConstraintError(error)) {
+        return repoErr('account_in_use', 'Conta possui transações associadas.', 'id');
+      }
+      throw error;
+    }
+  }
 
+  return { createAccount, getAccounts, getAccountById, updateAccount, deleteAccount };
+}

@@ -47,4 +47,37 @@ describe('Sprint 03 accountsRepository', () => {
       error: { code: 'account_not_found', message: 'Conta não encontrada.', field: 'id' },
     });
   });
+
+  it('supports destructured create and update methods', async () => {
+    const repository = createAccountsRepository(createFakeRepositoryDatabase());
+    const { createAccount, updateAccount } = repository;
+
+    const created = await createAccount({ name: 'Carteira', type: 'cash', initialBalanceCents: 0 });
+    expect(created.ok).toBe(true);
+    if (!created.ok) return;
+
+    await expect(updateAccount(created.value.id, { name: 'Carteira física', type: 'cash', initialBalanceCents: 500 })).resolves.toMatchObject({
+      ok: true,
+      value: { name: 'Carteira física', initialBalanceCents: 500 },
+    });
+  });
+
+  it('maps foreign key delete failures to account_in_use', async () => {
+    const db = createFakeRepositoryDatabase();
+    const repository = createAccountsRepository({
+      ...db,
+      async runAsync(source, params) {
+        if (source.startsWith('DELETE FROM accounts')) throw new Error('FOREIGN KEY constraint failed');
+        return db.runAsync(source, params);
+      },
+    });
+    const created = await repository.createAccount({ name: 'Banco', type: 'checking' });
+    if (!created.ok) return;
+
+    await expect(repository.deleteAccount(created.value.id)).resolves.toEqual({
+      ok: false,
+      error: { code: 'account_in_use', message: 'Conta possui transações associadas.', field: 'id' },
+    });
+  });
+
 });

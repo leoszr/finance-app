@@ -47,4 +47,37 @@ describe('Sprint 03 categoriesRepository', () => {
       error: { code: 'category_not_found', message: 'Categoria não encontrada.', field: 'id' },
     });
   });
+
+  it('supports destructured create and update methods', async () => {
+    const repository = createCategoriesRepository(createFakeRepositoryDatabase());
+    const { createCategory, updateCategory } = repository;
+
+    const created = await createCategory({ name: 'Mercado', type: 'expense' });
+    expect(created.ok).toBe(true);
+    if (!created.ok) return;
+
+    await expect(updateCategory(created.value.id, { name: 'Supermercado', type: 'expense', color: '#0f766e' })).resolves.toMatchObject({
+      ok: true,
+      value: { name: 'Supermercado', type: 'expense', color: '#0f766e' },
+    });
+  });
+
+  it('maps foreign key delete failures to category_in_use', async () => {
+    const db = createFakeRepositoryDatabase();
+    const repository = createCategoriesRepository({
+      ...db,
+      async runAsync(source, params) {
+        if (source.startsWith('DELETE FROM categories')) throw new Error('FOREIGN KEY constraint failed');
+        return db.runAsync(source, params);
+      },
+    });
+    const created = await repository.createCategory({ name: 'Mercado', type: 'expense' });
+    if (!created.ok) return;
+
+    await expect(repository.deleteCategory(created.value.id)).resolves.toEqual({
+      ok: false,
+      error: { code: 'category_in_use', message: 'Categoria possui transações associadas.', field: 'id' },
+    });
+  });
+
 });
