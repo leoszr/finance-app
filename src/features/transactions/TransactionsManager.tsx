@@ -1,0 +1,232 @@
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Alert, StyleSheet, Text, View } from 'react-native';
+
+import { Button, Card, EmptyState, MoneyInput, TextInput } from '@/components/ui';
+import { createAccountsRepository, type AccountRecord } from '@/db/repositories/accountsRepository';
+import { createCategoriesRepository, type CategoryRecord } from '@/db/repositories/categoriesRepository';
+import { createTransactionsRepository, type TransactionRecord } from '@/db/repositories/transactionsRepository';
+import type { RepositoryResult } from '@/db/repositories/types';
+import { parseCurrencyToCents } from '@/lib/money';
+import type { TransactionInput } from '@/lib/validation/transactionValidation';
+import type { TransactionType } from '@/types/finance';
+
+type TransactionsRepository = ReturnType<typeof createTransactionsRepository>;
+type AccountsRepository = ReturnType<typeof createAccountsRepository>;
+type CategoriesRepository = ReturnType<typeof createCategoriesRepository>;
+
+type FormState = {
+  id?: number;
+  type: TransactionType;
+  amount: string;
+  accountId?: number;
+  categoryId?: number;
+  transactionDate: string;
+  description: string;
+};
+
+type FieldErrors = Partial<Record<keyof TransactionInput, string>>;
+
+let defaultTransactionsRepository: TransactionsRepository | undefined;
+let defaultAccountsRepository: AccountsRepository | undefined;
+let defaultCategoriesRepository: CategoriesRepository | undefined;
+
+const emptyForm: FormState = { type: 'expense', amount: '0,00', transactionDate: todayIsoDate(), description: '' };
+const typeLabels: Record<TransactionType, string> = { income: 'Receita', expense: 'Despesa' };
+
+function todayIsoDate() {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function getDefaultTransactionsRepository() {
+  defaultTransactionsRepository ??= createTransactionsRepository();
+  return defaultTransactionsRepository;
+}
+
+function getDefaultAccountsRepository() {
+  defaultAccountsRepository ??= createAccountsRepository();
+  return defaultAccountsRepository;
+}
+
+function getDefaultCategoriesRepository() {
+  defaultCategoriesRepository ??= createCategoriesRepository();
+  return defaultCategoriesRepository;
+}
+
+function centsToMoney(cents: number) {
+  return (cents / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+}
+
+export function TransactionsManager({
+  transactionsRepository,
+  accountsRepository,
+  categoriesRepository,
+}: {
+  transactionsRepository?: TransactionsRepository;
+  accountsRepository?: AccountsRepository;
+  categoriesRepository?: CategoriesRepository;
+}) {
+  const activeTransactionsRepository = useMemo(() => transactionsRepository ?? getDefaultTransactionsRepository(), [transactionsRepository]);
+  const activeAccountsRepository = useMemo(() => accountsRepository ?? getDefaultAccountsRepository(), [accountsRepository]);
+  const activeCategoriesRepository = useMemo(() => categoriesRepository ?? getDefaultCategoriesRepository(), [categoriesRepository]);
+  const [transactions, setTransactions] = useState<TransactionRecord[]>([]);
+  const [accounts, setAccounts] = useState<AccountRecord[]>([]);
+  const [categories, setCategories] = useState<CategoryRecord[]>([]);
+  const [form, setForm] = useState<FormState>(emptyForm);
+  const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const [isSaving, setIsSaving] = useState(false);
+  const isSavingRef = useRef(false);
+  const loadRequestRef = useRef(0);
+
+  const compatibleCategories = categories.filter((category) => category.type === form.type);
+
+  const loadData = useCallback(async () => {
+    const requestId = ++loadRequestRef.current;
+    const [nextTransactions, nextAccounts, nextCategories] = await Promise.all([
+      activeTransactionsRepository.getTransactions(),
+      activeAccountsRepository.getAccounts(),
+      activeCategoriesRepository.getCategories(),
+    ]);
+    if (requestId !== loadRequestRef.current) return;
+    setTransactions(nextTransactions);
+    setAccounts(nextAccounts);
+    setCategories(nextCategories);
+  }, [activeAccountsRepository, activeCategoriesRepository, activeTransactionsRepository]);
+
+  useEffect(() => {
+    void loadData();
+  }, [loadData]);
+
+  function setType(type: TransactionType) {
+    setFieldErrors((current) => ({ ...current, type: undefined, categoryId: undefined }));
+    setForm((current) => ({ ...current, type, categoryId: undefined }));
+  }
+
+  function applyResultError(result: RepositoryResult<TransactionRecord>) {
+    if (result.ok) return;
+    setError(result.error.message);
+    setFieldErrors((current) => ({ ...current, [result.error.field ?? 'amountCents']: result.error.message }));
+  }
+
+  async function saveTransaction() {
+    if (isSavingRef.current) return;
+    isSavingRef.current = true;
+    setIsSaving(true);
+    try {
+      setError(null);
+      setFieldErrors({});
+      const amount = parseCurrencyToCents(form.amount);
+      if (!amount.ok) {
+        setError(amount.error.message);
+        setFieldErrors({ amountCents: amount.error.message });
+        return;
+      }
+      const input: TransactionInput = {
+        accountId: form.accountId,
+        categoryId: form.categoryId,
+        type: form.type,
+        amountCents: amount.value,
+        transactionDate: form.transactionDate,
+        description: form.description,
+      };
+      const result = form.id
+        ? await activeTransactionsRepository.updateTransaction(form.id, input)
+        : await activeTransactionsRepository.createTransaction(input);
+      if (!result.ok) {
+        applyResultError(result);
+        return;
+      }
+      setForm({ ...emptyForm, transactionDate: todayIsoDate() });
+      await loadData();
+    } finally {
+      isSavingRef.current = false;
+      setIsSaving(false);
+    }
+  }
+
+  async function deleteTransaction(transaction: TransactionRecord) {
+    const remove = async () => {
+      setError(null);
+      const result = await activeTransactionsRepository.deleteTransaction(transaction.id);
+      if (!result.ok) { setError(result.error.message); return; }
+      await loadData();
+    };
+    if (Alert.alert) {
+      Alert.alert('Excluir transação', `Remover ${transaction.description || centsToMoney(transaction.amountCents)}?`, [{ text: 'Cancelar' }, { text: 'Excluir', style: 'destructive', onPress: remove }]);
+      return;
+    }
+    await remove();
+  }
+
+  function editTransaction(transaction: TransactionRecord) {
+    setError(null);
+    setFieldErrors({});
+    setForm({
+      id: transaction.id,
+      type: transaction.type,
+      accountId: transaction.accountId,
+      categoryId: transaction.categoryId,
+      amount: String(transaction.amountCents / 100).replace('.', ','),
+      transactionDate: transaction.transactionDate,
+      description: transaction.description ?? '',
+    });
+  }
+
+  function findAccountName(id: number) {
+    return accounts.find((account) => account.id === id)?.name ?? `Conta #${id}`;
+  }
+
+  function findCategoryName(id: number) {
+    return categories.find((category) => category.id === id)?.name ?? `Categoria #${id}`;
+  }
+
+  return (
+    <View style={styles.stack}>
+      <Card>
+        <Text style={styles.sectionTitle}>{form.id ? 'Editar transação' : 'Nova transação'}</Text>
+        <View style={styles.form}>
+          <View style={styles.rowActions}>
+            <Button onPress={() => setType('income')} disabled={form.type === 'income'}>Receita</Button>
+            <Button onPress={() => setType('expense')} disabled={form.type === 'expense'}>Despesa</Button>
+          </View>
+          <MoneyInput testID="transaction-amount-input" label="Valor" value={form.amount} onChangeText={(amount) => { setFieldErrors((current) => ({ ...current, amountCents: undefined })); setForm((current) => ({ ...current, amount })); }} error={fieldErrors.amountCents} />
+          <TextInput testID="transaction-date-input" label="Data" value={form.transactionDate} onChangeText={(transactionDate) => { setFieldErrors((current) => ({ ...current, transactionDate: undefined })); setForm((current) => ({ ...current, transactionDate })); }} error={fieldErrors.transactionDate} />
+          <TextInput testID="transaction-description-input" label="Descrição" value={form.description} onChangeText={(description) => setForm((current) => ({ ...current, description }))} />
+          <Text style={styles.label}>Conta</Text>
+          <View style={styles.rowActions}>{accounts.map((account) => <Button key={account.id} onPress={() => { setFieldErrors((current) => ({ ...current, accountId: undefined })); setForm((current) => ({ ...current, accountId: account.id })); }} disabled={form.accountId === account.id}>{account.name}</Button>)}</View>
+          {fieldErrors.accountId ? <Text accessibilityRole="alert" style={styles.error}>{fieldErrors.accountId}</Text> : null}
+          <Text style={styles.label}>Categoria</Text>
+          <View style={styles.rowActions}>{compatibleCategories.map((category) => <Button key={category.id} onPress={() => { setFieldErrors((current) => ({ ...current, categoryId: undefined })); setForm((current) => ({ ...current, categoryId: category.id })); }} disabled={form.categoryId === category.id}>{category.name}</Button>)}</View>
+          {fieldErrors.categoryId ? <Text accessibilityRole="alert" style={styles.error}>{fieldErrors.categoryId}</Text> : null}
+          {error ? <Text accessibilityRole="alert" style={styles.error}>{error}</Text> : null}
+          <Button testID="save-transaction-button" onPress={saveTransaction} disabled={isSaving}>Salvar transação</Button>
+        </View>
+      </Card>
+
+      <Text style={styles.sectionTitleLight}>Transações recentes</Text>
+      {transactions.length === 0 ? <EmptyState title="Nenhuma transação" message="Receitas e despesas aparecerão aqui." /> : transactions.map((transaction) => (
+        <Card key={transaction.id}>
+          <Text style={styles.itemTitle}>{transaction.description || typeLabels[transaction.type]}</Text>
+          <Text style={styles.itemMeta}>{findCategoryName(transaction.categoryId)} · {findAccountName(transaction.accountId)} · {transaction.transactionDate}</Text>
+          <Text style={[styles.amount, transaction.type === 'income' ? styles.income : styles.expense]}>{transaction.type === 'income' ? '+' : '-'} {centsToMoney(transaction.amountCents)}</Text>
+          <View style={styles.rowActions}>
+            <Button onPress={() => editTransaction(transaction)}>Editar</Button>
+            <Button testID={`delete-transaction-${transaction.id}`} onPress={() => void deleteTransaction(transaction)}>Excluir</Button>
+          </View>
+        </Card>
+      ))}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  stack: { gap: 16 }, form: { gap: 12 }, rowActions: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
+  sectionTitle: { color: '#0f172a', fontSize: 20, fontWeight: '900' }, sectionTitleLight: { color: '#f8fafc', fontSize: 20, fontWeight: '900' },
+  label: { color: '#1e293b', fontWeight: '800' }, itemTitle: { color: '#0f172a', fontSize: 18, fontWeight: '900' },
+  itemMeta: { marginTop: 6, color: '#475569', fontSize: 15, fontWeight: '700' }, amount: { marginTop: 8, fontSize: 18, fontWeight: '900' },
+  income: { color: '#047857' }, expense: { color: '#b91c1c' }, error: { color: '#b91c1c', fontWeight: '800' },
+});
