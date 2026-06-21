@@ -1,39 +1,53 @@
 import type { ReactNode } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+export const SCREEN_PADDING = { horizontal: 20, vertical: 24 } as const;
 
 type ScreenProps = {
   children: ReactNode;
+  centered?: boolean;
+  testID?: string;
 };
 
-export function Screen({ children }: ScreenProps) {
+export function Screen({ children, centered = false, testID }: ScreenProps) {
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.content}>
-        <View style={styles.card}>{children}</View>
-      </ScrollView>
+    <SafeAreaView style={styles.safeArea} testID={testID}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={styles.keyboardAvoiding}
+      >
+        <ScrollView
+          contentContainerStyle={[styles.content, centered && styles.centered]}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={styles.body}>{children}</View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
 
+
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#0f172a',
+    backgroundColor: '#0b1220',
+  },
+  keyboardAvoiding: {
+    flex: 1,
   },
   content: {
     flexGrow: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 32,
+    paddingHorizontal: SCREEN_PADDING.horizontal,
+    paddingVertical: SCREEN_PADDING.vertical,
   },
-  card: {
+  centered: {
+    justifyContent: 'center',
+  },
+  body: {
     width: '100%',
-    maxWidth: 520,
+    maxWidth: 720,
     alignSelf: 'center',
-    borderRadius: 28,
-    backgroundColor: '#f8fafc',
-    paddingHorizontal: 24,
-    paddingVertical: 28,
   },
 });

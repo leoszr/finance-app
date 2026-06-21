@@ -13,34 +13,34 @@ Criar a estrutura visual principal do app.
 
 ## Regras da sprint
 
-- [ ] Criar uma feature branch para a sprint.
-- [ ] Manter as alterações coesas ao objetivo da sprint.
-- [ ] Atualizar ou criar testes junto com a implementação.
-- [ ] Executar `npm test` e `npm run lint` antes do commit final.
-- [ ] Não adicionar backend, Supabase, PostgreSQL, Java backend, API externa, IA ou sync automático.
-- [ ] Atualizar `docs/sprint-04/PROGRESS.md` com evidências reais.
+- [x] Criar uma feature branch para a sprint.
+- [x] Manter as alterações coesas ao objetivo da sprint.
+- [x] Atualizar ou criar testes junto com a implementação.
+- [x] Executar `npm test` e `npm run lint` antes do commit final.
+- [x] Não adicionar backend, Supabase, PostgreSQL, Java backend, API externa, IA ou sync automático.
+- [x] Atualizar `docs/sprint-04/PROGRESS.md` com evidências reais.
 
 ## Tasks
 
 ### T0401 — Configurar navegação por abas
 
-- Status: todo
+- Status: done
 - Feature: Navegação por abas
 - Plano: `PLAN.md` > `Fase 5 — Navegação e layout base`
 - Dependências: T0304
 
 #### Requisitos funcionais
 
-- [ ] Criar navegação principal.
-- [ ] Usuário alterna entre Dashboard, Transações, Categorias, Contas, Relatórios e Configurações.
-- [ ] Abas têm nomes claros.
-- [ ] Navegação alterna abas em viewport iOS 375px e Android 412px sem erro.
+- [x] Criar navegação principal.
+- [x] Usuário alterna entre Dashboard, Transações, Categorias, Contas, Relatórios e Configurações.
+- [x] Abas têm nomes claros.
+- [x] Navegação alterna abas em viewport iOS 375px e Android 412px sem erro.
 
 #### Requisitos técnicos
 
-- [ ] Respeitar safe area e teclado mobile.
-- [ ] Criar componentes reutilizáveis e testáveis.
-- [ ] Manter navegação local e sem login obrigatório.
+- [x] Respeitar safe area e teclado mobile.
+- [x] Criar componentes reutilizáveis e testáveis.
+- [x] Manter navegação local e sem login obrigatório.
 
 #### Arquivos prováveis
 
@@ -62,39 +62,39 @@ Criar a estrutura visual principal do app.
 
 #### Critérios de aceite
 
-- [ ] Usuário alterna entre Dashboard, Transações, Categorias, Contas, Relatórios e Configurações.
-- [ ] Abas têm nomes claros.
-- [ ] Navegação não corta conteúdo em largura 375px e 414px.
+- [x] Usuário alterna entre Dashboard, Transações, Categorias, Contas, Relatórios e Configurações.
+- [x] Abas têm nomes claros.
+- [x] Navegação não corta conteúdo em largura 375px e 414px.
 
 #### Testes e verificação
 
-- [ ] Renderizar navegação e validar seis abas principais.
-- [ ] Adicionar teste cobrindo `Configurar navegação por abas` em arquivo de teste da sprint.
-- [ ] Cobrir pelo menos: Usuário alterna entre Dashboard, Transações, Categorias, Contas, Relatórios
+- [x] Renderizar navegação e validar seis abas principais.
+- [x] Adicionar teste cobrindo `Configurar navegação por abas` em arquivo de teste da sprint.
+- [x] Cobrir pelo menos: Usuário alterna entre Dashboard, Transações, Categorias, Contas, Relatórios
   e Configurações.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ### T0402 — Criar componente de tela padrão
 
-- Status: todo
+- Status: done
 - Feature: Componente de tela padrão
 - Plano: `PLAN.md` > `Fase 5 — Navegação e layout base`
 - Dependências: T0401
 
 #### Requisitos funcionais
 
-- [ ] Padronizar espaçamento e layout.
-- [ ] Componente `Screen` criado.
-- [ ] Respeita safe area.
-- [ ] Aplica padding consistente.
-- [ ] Usado em pelo menos duas telas.
+- [x] Padronizar espaçamento e layout.
+- [x] Componente `Screen` criado.
+- [x] Respeita safe area.
+- [x] Aplica padding consistente.
+- [x] Usado em pelo menos duas telas.
 
 #### Requisitos técnicos
 
-- [ ] Respeitar safe area e teclado mobile.
-- [ ] Criar componentes reutilizáveis e testáveis.
-- [ ] Manter navegação local e sem login obrigatório.
+- [x] Respeitar safe area e teclado mobile.
+- [x] Criar componentes reutilizáveis e testáveis.
+- [x] Manter navegação local e sem login obrigatório.
 
 #### Arquivos prováveis
 
@@ -114,40 +114,40 @@ Criar a estrutura visual principal do app.
 
 #### Critérios de aceite
 
-- [ ] Componente `Screen` criado.
-- [ ] Respeita safe area.
-- [ ] Aplica padding consistente.
-- [ ] Usado em pelo menos duas telas.
+- [x] Componente `Screen` criado.
+- [x] Respeita safe area.
+- [x] Aplica padding consistente.
+- [x] Usado em pelo menos duas telas.
 
 #### Testes e verificação
 
-- [ ] Testar safe area/padding por snapshot ou props.
-- [ ] Usar `Screen` em duas telas.
-- [ ] Adicionar teste cobrindo `Criar componente de tela padrão` em arquivo de teste da sprint.
-- [ ] Cobrir pelo menos: Componente `Screen` criado.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Testar safe area/padding por snapshot ou props.
+- [x] Usar `Screen` em duas telas.
+- [x] Adicionar teste cobrindo `Criar componente de tela padrão` em arquivo de teste da sprint.
+- [x] Cobrir pelo menos: Componente `Screen` criado.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ### T0403 — Criar componentes base
 
-- Status: todo
+- Status: done
 - Feature: Componentes base
 - Plano: `PLAN.md` > `Fase 5 — Navegação e layout base`
 - Dependências: T0402
 
 #### Requisitos funcionais
 
-- [ ] Criar UI reutilizável.
-- [ ] Componentes `Button`, `TextInput`, `MoneyInput`, `Card`, `EmptyState` criados.
-- [ ] Componentes aceitam props básicas.
-- [ ] Componentes documentam estados default, pressed/active, disabled e loading quando aplicável.
-- [ ] Componentes são testáveis.
+- [x] Criar UI reutilizável.
+- [x] Componentes `Button`, `TextInput`, `MoneyInput`, `Card`, `EmptyState` criados.
+- [x] Componentes aceitam props básicas.
+- [x] Componentes documentam estados default, pressed/active, disabled e loading quando aplicável.
+- [x] Componentes são testáveis.
 
 #### Requisitos técnicos
 
-- [ ] Respeitar safe area e teclado mobile.
-- [ ] Criar componentes reutilizáveis e testáveis.
-- [ ] Manter navegação local e sem login obrigatório.
+- [x] Respeitar safe area e teclado mobile.
+- [x] Criar componentes reutilizáveis e testáveis.
+- [x] Manter navegação local e sem login obrigatório.
 
 #### Arquivos prováveis
 
@@ -169,40 +169,40 @@ Criar a estrutura visual principal do app.
 
 #### Critérios de aceite
 
-- [ ] Componentes `Button`, `TextInput`, `MoneyInput`, `Card`, `EmptyState` criados.
-- [ ] Componentes aceitam props básicas.
-- [ ] Componentes têm estado default, pressed/active e disabled documentados.
-- [ ] Componentes são testáveis.
+- [x] Componentes `Button`, `TextInput`, `MoneyInput`, `Card`, `EmptyState` criados.
+- [x] Componentes aceitam props básicas.
+- [x] Componentes têm estado default, pressed/active e disabled documentados.
+- [x] Componentes são testáveis.
 
 #### Testes e verificação
 
-- [ ] Renderizar cada componente.
-- [ ] Testar estado disabled/loading/empty quando aplicável.
-- [ ] Adicionar teste cobrindo `Criar componentes base` em arquivo de teste da sprint.
-- [ ] Cobrir pelo menos: Componentes `Button`, `TextInput`, `MoneyInput`, `Card`, `EmptyState`
+- [x] Renderizar cada componente.
+- [x] Testar estado disabled/loading/empty quando aplicável.
+- [x] Adicionar teste cobrindo `Criar componentes base` em arquivo de teste da sprint.
+- [x] Cobrir pelo menos: Componentes `Button`, `TextInput`, `MoneyInput`, `Card`, `EmptyState`
   criados.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ### T0404 — Criar estados de carregamento e erro
 
-- Status: todo
+- Status: done
 - Feature: Estados de carregamento e erro
 - Plano: `PLAN.md` > `Fase 5 — Navegação e layout base`
 - Dependências: T0403
 
 #### Requisitos funcionais
 
-- [ ] Evitar telas quebradas.
-- [ ] Loading aparece durante inicialização.
-- [ ] Erro de banco mostra mensagem não técnica e acionável.
-- [ ] Tela vazia usa `EmptyState`.
+- [x] Evitar telas quebradas.
+- [x] Loading aparece durante inicialização.
+- [x] Erro de banco mostra mensagem não técnica e acionável.
+- [x] Tela vazia usa `EmptyState`.
 
 #### Requisitos técnicos
 
-- [ ] Respeitar safe area e teclado mobile.
-- [ ] Criar componentes reutilizáveis e testáveis.
-- [ ] Manter navegação local e sem login obrigatório.
+- [x] Respeitar safe area e teclado mobile.
+- [x] Criar componentes reutilizáveis e testáveis.
+- [x] Manter navegação local e sem login obrigatório.
 
 #### Arquivos prováveis
 
@@ -222,33 +222,33 @@ Criar a estrutura visual principal do app.
 
 #### Critérios de aceite
 
-- [ ] Loading aparece durante inicialização.
-- [ ] Erro de banco mostra mensagem não técnica e acionável.
-- [ ] Tela vazia usa `EmptyState`.
+- [x] Loading aparece durante inicialização.
+- [x] Erro de banco mostra mensagem não técnica e acionável.
+- [x] Tela vazia usa `EmptyState`.
 
 #### Testes e verificação
 
-- [ ] Simular loading e erro de banco.
-- [ ] Validar EmptyState em tela sem dados.
-- [ ] Adicionar teste cobrindo `Criar estados de carregamento e erro` em arquivo de teste da sprint.
-- [ ] Cobrir pelo menos: Loading aparece durante inicialização.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Simular loading e erro de banco.
+- [x] Validar EmptyState em tela sem dados.
+- [x] Adicionar teste cobrindo `Criar estados de carregamento e erro` em arquivo de teste da sprint.
+- [x] Cobrir pelo menos: Loading aparece durante inicialização.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ## Testes da sprint
 
-- [ ] Teste de renderização das abas.
-- [ ] Teste dos componentes base.
-- [ ] Teste de estado vazio.
-- [ ] Teste de navegação entre duas abas.
-- [ ] `npm test` passa.
-- [ ] `npm run lint` passa.
+- [x] Teste de renderização das abas.
+- [x] Teste dos componentes base.
+- [x] Teste de estado vazio.
+- [x] Teste de navegação entre duas abas.
+- [x] `npm test` passa.
+- [x] `npm run lint` passa.
 
 ## Checklist final
 
-- [ ] App abre sem tela branca.
-- [ ] `npm test` passa com os testes adicionados na sprint.
-- [ ] `npm run lint` passa sem erros.
-- [ ] Não há chamada de rede para dados financeiros.
-- [ ] Não há dependência proibida adicionada.
-- [ ] `docs/sprint-04/PROGRESS.md` descreve o que foi entregue.
+- [x] App abre sem tela branca.
+- [x] `npm test` passa com os testes adicionados na sprint.
+- [x] `npm run lint` passa sem erros.
+- [x] Não há chamada de rede para dados financeiros.
+- [x] Não há dependência proibida adicionada.
+- [x] `docs/sprint-04/PROGRESS.md` descreve o que foi entregue.
