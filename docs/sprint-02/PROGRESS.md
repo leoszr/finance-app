@@ -2,114 +2,135 @@
 
 ## Resumo
 
-- Status geral: todo
+- Status geral: concluído
 - Branch: `feature/sprint-02-finance-domain`
 - Commit final sugerido: `feat(domain): add money date and validation helpers`
-- Use este arquivo para registrar evidências curtas e evitar reler todo o TASK.md.
 
 ## Entregue nesta sprint
 
-- Nada entregue ainda.
+- Utilitários puros para dinheiro em `src/lib/money.ts`.
+- Utilitários puros para filtros mensais em `src/lib/month.ts`.
+- Tipo `Result` e erro previsível em `src/lib/result.ts`.
+- Validações puras para conta, categoria e transação em `src/lib/validation/`.
+- Testes unitários da sprint em `src/tests/domain/`.
 
 ## Progresso por task
 
 ### T0201 — Criar utilitário de dinheiro
 
-- Status: todo
+- Status: done
 - Feature: Utilitário de dinheiro
 
 #### Desenvolvido
 
-- A preencher ao concluir a task.
+- `parseCurrencyToCents()` criada.
+- `formatCentsToCurrency()` criada.
+- Conversões BRL com centavos inteiros seguros, espaço normal em `R$ 25,90` e erro controlado.
 
 #### Evidências
 
-- A preencher com arquivos alterados, testes e comandos executados.
+- Arquivos: `src/lib/money.ts`, `src/lib/result.ts`, `src/tests/domain/money.test.ts`.
+- Testes cobrem `25,90 -> 2590`, `1.200,00 -> 120000`, `2590 -> R$ 25,90`, valor inválido e centavos inseguros.
 
 #### Pendências
 
-- Implementar task.
+- Nenhuma.
 
 ### T0202 — Criar utilitário de datas mensais
 
-- Status: todo
+- Status: done
 - Feature: Utilitário de datas mensais
 
 #### Desenvolvido
 
-- A preencher ao concluir a task.
+- `getMonthRange()` criada.
+- `formatMonthLabel()` criada.
+- `isDateInsideMonth()` criada.
+- Funções usam datas UTC, validam mês `1..12` e retornam `Result`, sem backend ou timezone externo.
 
 #### Evidências
 
-- A preencher com arquivos alterados, testes e comandos executados.
+- Arquivos: `src/lib/month.ts`, `src/tests/domain/month.test.ts`.
+- Testes cobrem início/fim de mês, virada de ano, dentro/fora do mês e mês inválido.
 
 #### Pendências
 
-- Implementar task.
+- Nenhuma.
 
 ### T0203 — Criar validação de conta
 
-- Status: todo
+- Status: done
 - Feature: Validação de conta
 
 #### Desenvolvido
 
-- A preencher ao concluir a task.
+- `validateAccount()` criada.
+- Nome obrigatório, saldo inicial zero válido e moeda padrão `BRL`.
 
 #### Evidências
 
-- A preencher com arquivos alterados, testes e comandos executados.
+- Arquivos: `src/lib/validation/accountValidation.ts`, `src/tests/domain/accountValidation.test.ts`.
+- Testes cobrem nome vazio, saldo zero e moeda padrão.
 
 #### Pendências
 
-- Implementar task.
+- Nenhuma.
 
 ### T0204 — Criar validação de categoria
 
-- Status: todo
+- Status: done
 - Feature: Validação de categoria
 
 #### Desenvolvido
 
-- A preencher ao concluir a task.
+- `validateCategory()` criada.
+- Nome obrigatório, tipo obrigatório, tipo inválido rejeitado, cor/ícone opcionais.
 
 #### Evidências
 
-- A preencher com arquivos alterados, testes e comandos executados.
+- Arquivos: `src/lib/validation/categoryValidation.ts`, `src/tests/domain/categoryValidation.test.ts`.
+- Testes cobrem nome vazio, tipo inválido e opcionais.
 
 #### Pendências
 
-- Implementar task.
+- Nenhuma.
 
 ### T0205 — Criar validação de transação
 
-- Status: todo
+- Status: done
 - Feature: Validação de transação
 
 #### Desenvolvido
 
-- A preencher ao concluir a task.
+- `validateTransaction()` criada.
+- Valor maior que zero e seguro, IDs positivos inteiros, data real `YYYY-MM-DD` e descrição opcional.
 
 #### Evidências
 
-- A preencher com arquivos alterados, testes e comandos executados.
+- Arquivos: `src/lib/validation/transactionValidation.ts`, `src/tests/domain/transactionValidation.test.ts`.
+- Testes cobrem valor zero inválido, IDs inválidos, data inválida, obrigatórios e integração de transação completa.
 
 #### Pendências
 
-- Implementar task.
+- Nenhuma.
 
 ## Testes executados
 
-- Nenhum teste executado ainda.
+- `npm test -- --runInBand` — passou: 9 suites, 32 testes.
+- `npm run lint` — passou sem warnings.
+- `npm run typecheck` — passou.
 
 ## Decisões técnicas
 
-- Nenhuma decisão registrada ainda.
+- Domínio financeiro isolado em funções puras sem UI, banco, rede ou APIs externas.
+- Erros retornam `Result<T>` com `{ code, message, field }`.
+- Dinheiro fica como inteiro em centavos.
+- Datas mensais usam strings `YYYY-MM-DD` com validação de mês/data para filtros previsíveis.
 
 ## Problemas / riscos encontrados
 
-- Nenhum problema registrado ainda.
+- Branch criada a partir da sprint 01 local ainda com alterações não commitadas; diff atual inclui sprint 01 + sprint 02 até o commit/merge anterior ser consolidado.
 
 ## Próximo passo
 
-- Iniciar a primeira task pendente em `docs/sprint-02/TASK.md`.
+- Revisar diff e fazer commit sugerido: `feat(domain): add money date and validation helpers` após consolidar a sprint 01.

@@ -10,10 +10,15 @@ export type DatabaseInitResult =
   | { ok: false; error: Error };
 
 export async function applyMigrations(database: DatabaseExecutor): Promise<void> {
+  await database.execAsync('PRAGMA foreign_keys = ON;');
   await database.execAsync('BEGIN IMMEDIATE;');
 
   try {
     for (const statement of initialMigrationStatements) {
+      if (statement === 'PRAGMA foreign_keys = ON;') {
+        continue;
+      }
+
       await database.execAsync(statement);
     }
 
