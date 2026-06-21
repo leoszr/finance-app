@@ -12,8 +12,8 @@ describe('Sprint 01 database initialization', () => {
     await applyMigrations(database);
 
     expect(database.execAsync).toHaveBeenCalledTimes(initialMigrationStatements.length + 2);
-    expect(database.execAsync).toHaveBeenNthCalledWith(1, 'BEGIN IMMEDIATE;');
-    expect(database.execAsync).toHaveBeenNthCalledWith(2, 'PRAGMA foreign_keys = ON;');
+    expect(database.execAsync).toHaveBeenNthCalledWith(1, 'PRAGMA foreign_keys = ON;');
+    expect(database.execAsync).toHaveBeenNthCalledWith(2, 'BEGIN IMMEDIATE;');
     expect(database.execAsync).toHaveBeenLastCalledWith('COMMIT;');
   });
 
@@ -21,6 +21,7 @@ describe('Sprint 01 database initialization', () => {
     const database: DatabaseExecutor = {
       execAsync: jest
         .fn()
+        .mockResolvedValueOnce(undefined)
         .mockResolvedValueOnce(undefined)
         .mockRejectedValueOnce(new Error('disk unavailable'))
         .mockResolvedValueOnce(undefined),

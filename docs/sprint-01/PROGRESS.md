@@ -139,7 +139,7 @@
 
 ## Decisões técnicas
 
-- Migration inicial mantida em SQL explícito para aplicação simples via `expo-sqlite`, aplicada em transação.
+- Migration inicial mantida em SQL explícito para aplicação simples via `expo-sqlite`; `PRAGMA foreign_keys` roda antes da transação e DDL roda em transação.
 - Drizzle usado para schema tipado e client local; SQLite abre de forma lazy para erro controlado.
 - Valores monetários modelados em campos `*_cents` como `INTEGER`.
 
