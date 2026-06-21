@@ -2,97 +2,111 @@
 
 ## Resumo
 
-- Status geral: todo
+- Status geral: concluído
 - Branch: `feature/sprint-03-local-repositories`
 - Commit final sugerido: `feat(db): add local repositories for finance entities`
-- Use este arquivo para registrar evidências curtas e evitar reler todo o TASK.md.
 
 ## Entregue nesta sprint
 
-- Nada entregue ainda.
+- Repositórios locais para contas, categorias, transações e configurações.
+- Acesso SQLite centralizado em `src/db/repositories/`.
+- Testes unitários de CRUD, links obrigatórios, compatibilidade tipo/categoria e regras de integridade com fake database.
 
 ## Progresso por task
 
 ### T0301 — Criar `accountsRepository`
 
-- Status: todo
+- Status: done
 - Feature: `accountsRepository`
 
 #### Desenvolvido
 
-- A preencher ao concluir a task.
+- `createAccount()`, `getAccounts()`, `getAccountById()`, `updateAccount()`, `deleteAccount()`.
+- Delete bloqueado quando há transações associadas; ID inexistente retorna erro controlado.
 
 #### Evidências
 
-- A preencher com arquivos alterados, testes e comandos executados.
+- Arquivos: `src/db/repositories/accountsRepository.ts`, `src/tests/repositories/accountsRepository.test.ts`.
+- Testes cobrem CRUD e bloqueio de delete.
 
 #### Pendências
 
-- Implementar task.
+- Nenhuma.
 
 ### T0302 — Criar `categoriesRepository`
 
-- Status: todo
+- Status: done
 - Feature: `categoriesRepository`
 
 #### Desenvolvido
 
-- A preencher ao concluir a task.
+- `createCategory()`, `getCategories()`, `getCategoriesByType()`, `updateCategory()`, `deleteCategory()`.
+- Delete bloqueado quando há transações associadas; ID inexistente retorna erro controlado.
 
 #### Evidências
 
-- A preencher com arquivos alterados, testes e comandos executados.
+- Arquivos: `src/db/repositories/categoriesRepository.ts`, `src/tests/repositories/categoriesRepository.test.ts`.
+- Testes cobrem listagem por tipo, update, delete e bloqueio.
 
 #### Pendências
 
-- Implementar task.
+- Nenhuma.
 
 ### T0303 — Criar `transactionsRepository`
 
-- Status: todo
+- Status: done
 - Feature: `transactionsRepository`
 
 #### Desenvolvido
 
-- A preencher ao concluir a task.
+- `createTransaction()`, `getTransactions()`, `getTransactionsByMonth()`, `getTransactionById()`, `updateTransaction()`, `deleteTransaction()`.
+- Leitura mensal usa `getMonthRange()` validado; create/update validam existência de conta/categoria e tipo compatível.
 
 #### Evidências
 
-- A preencher com arquivos alterados, testes e comandos executados.
+- Arquivos: `src/db/repositories/transactionsRepository.ts`, `src/tests/repositories/transactionsRepository.test.ts`.
+- Testes cobrem criação de receita/despesa, listagem mensal, update e delete.
 
 #### Pendências
 
-- Implementar task.
+- Nenhuma.
 
 ### T0304 — Criar `settingsRepository`
 
-- Status: todo
+- Status: done
 - Feature: `settingsRepository`
 
 #### Desenvolvido
 
-- A preencher ao concluir a task.
+- `getSetting()`, `setSetting()`, `deleteSetting()`.
+- `setSetting()` cria ou atualiza via upsert.
+- Chave inexistente retorna `null`; chave vazia é rejeitada.
 
 #### Evidências
 
-- A preencher com arquivos alterados, testes e comandos executados.
+- Arquivos: `src/db/repositories/settingsRepository.ts`, `src/tests/repositories/settingsRepository.test.ts`.
+- Testes cobrem set/get/update/delete e retorno `null`.
 
 #### Pendências
 
-- Implementar task.
+- Nenhuma.
 
 ## Testes executados
 
-- Nenhum teste executado ainda.
+- `npm test` — passou: 13 suites, 44 testes.
+- `npm run lint` — passou sem warnings.
+- `npm run typecheck` — passou.
 
 ## Decisões técnicas
 
-- Nenhuma decisão registrada ainda.
+- Repositórios recebem `RepositoryDatabase` injetável para testes sem tocar SQLite nativo no Jest.
+- Singleton de repositório não é criado no import para evitar abrir SQLite fora do fluxo controlado.
+- Regras de integridade de delete e links de transação são checadas no repositório antes da escrita.
 
 ## Problemas / riscos encontrados
 
-- Nenhum problema registrado ainda.
+- Branch criada a partir da sprint anterior; consolidar/mergear sprints anteriores antes do PR final se necessário.
 
 ## Próximo passo
 
-- Iniciar a primeira task pendente em `docs/sprint-03/TASK.md`.
+- Revisar diff e fazer commit sugerido: `feat(db): add local repositories for finance entities`.
