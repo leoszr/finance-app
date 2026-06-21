@@ -6,28 +6,27 @@
 - [x] Estrutura de documentação por sprint criada — Evidência: `docs/sprint-XX/TASK.md`
 - [x] Templates de progresso por sprint criados — Evidência: `docs/sprint-XX/PROGRESS.md`
 - [x] Tasks refinadas com feature, requisitos, arquivos prováveis e testes — Evidência: `TASK.md`
+- [x] Sprint 0 implementada — Evidência: `docs/sprint-00/PROGRESS.md`, `package.json`, `app/index.tsx`, `src/tests/`
 
 ## Em andamento
 
-- [ ] Nenhuma sprint de implementação iniciada ainda — Evidência parcial: documentação inicial criada.
+- [ ] Nenhuma sprint ativa no momento — Evidência: Sprint 0 concluída; próxima sprint ainda não iniciada.
 
 ## Bloqueado
 
-- [ ] Implementação do app — Bloqueio: aguardando início da Sprint 0.
+- [ ] Nenhum bloqueio atual registrado.
 
 ## Desconhecido
 
-- [ ] Versões exatas de Expo, React Native, Drizzle e ferramentas de teste — Falta evidência.
-- [ ] Estratégia final de navegação: Expo Router ou React Navigation puro — Falta decisão técnica.
+- [x] Versões exatas de Expo, React Native e ferramentas de teste — Evidência: `package.json` e `package-lock.json`.
+- [x] Estratégia inicial de navegação: Expo Router — Evidência: `app/_layout.tsx` e decisão em `docs/sprint-00/PROGRESS.md`.
 - [ ] Biblioteca final de gráficos — Falta decisão técnica durante Sprint 8.
 
 ## Próximos passos
 
-1. Iniciar `feature/sprint-00-project-foundation`.
-2. Executar `docs/sprint-00/TASK.md`.
-3. Atualizar `docs/sprint-00/PROGRESS.md` conforme cada task for concluída.
-4. Rodar `npm test` e `npm run lint` quando os scripts existirem.
-5. Registrar evidências neste arquivo ao fim da sprint.
+1. Revisar/commitar Sprint 0 se desejado.
+2. Iniciar Sprint 1 em `docs/sprint-01/TASK.md`.
+3. Manter `npm test` e `npm run lint` verdes a cada sprint.
 
 ## Obsoleto/Arquivado
 
