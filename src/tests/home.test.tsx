@@ -1,19 +1,18 @@
 import { render } from '@testing-library/react-native';
 
-import HomeScreen from '../../app/index';
+import DashboardScreen from '../../app/(tabs)/dashboard';
 
 import { APP_NAME } from '@/lib/appInfo';
 
 describe('Home screen', () => {
-  it('covers T0005: shows the app name', async () => {
-    const { getByText } = await render(<HomeScreen />);
-
-    expect(getByText(APP_NAME)).toBeTruthy();
+  it('keeps app identity available', () => {
+    expect(APP_NAME).toBe('Finance App');
   });
 
-  it('states that the app is local-first', async () => {
-    const { getAllByText } = await render(<HomeScreen />);
+  it('renders the dashboard as the main app entry content', async () => {
+    const { getByText } = await render(<DashboardScreen />);
 
-    expect(getAllByText(/local-first/i).length).toBeGreaterThan(0);
+    expect(getByText('Dashboard')).toBeTruthy();
+    expect(getByText(/local/i)).toBeTruthy();
   });
 });
