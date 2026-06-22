@@ -16,6 +16,7 @@
 - [x] Sprint 07 implementada — Evidência: `docs/sprint-07/PROGRESS.md`, `src/features/transactions/TransactionsManager.tsx`, `src/tests/features-sprint07.test.tsx`
 - [x] Sprint 08 implementada — Evidência: `docs/sprint-08/PROGRESS.md`, `src/features/dashboard/DashboardManager.tsx`, `src/tests/features-sprint08.test.tsx`
 - [x] Sprint 09 implementada — Evidência: `docs/sprint-09/PROGRESS.md`, `src/features/reports/ReportScreen.tsx`, `src/db/queries/reportQueries.ts`, `src/tests/features-sprint09.test.tsx`
+- [x] Sprint 10 implementada — Evidência: `docs/sprint-10/PROGRESS.md`, `src/features/reports/pdf/`, `src/tests/features-sprint10.test.tsx`
 
 ## Em andamento
 
@@ -33,8 +34,8 @@
 
 ## Próximos passos
 
-1. Iniciar Sprint 10 em `docs/sprint-10/TASK.md`.
-2. Implementar geração local de PDF.
+1. Iniciar Sprint 11 em `docs/sprint-11/TASK.md`.
+2. Implementar exportação/importação local de dados.
 3. Manter `npm test`, `npm run lint` e `npm run typecheck` verdes a cada sprint.
 
 ## Obsoleto/Arquivado

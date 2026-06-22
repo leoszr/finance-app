@@ -81,7 +81,7 @@
 
 ### Sprint 10 — Geração de PDF local
 
-- Status: todo
+- Status: done
 - Branch: `feature/sprint-10-pdf-export`
 - Tasks: `docs/sprint-10/TASK.md`
 - Progresso: `docs/sprint-10/PROGRESS.md`

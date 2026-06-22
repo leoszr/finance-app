@@ -7,9 +7,12 @@ import { createReportQueries, type MonthlyReport } from '@/db/queries/reportQuer
 import { subscribeToFinanceDataChanges } from '@/lib/dataEvents';
 import { formatCentsToCurrency } from '@/lib/money';
 import { formatMonthLabel } from '@/lib/month';
+import { generateAndShareReportPdf, type PdfResult } from '@/features/reports/pdf/reportPdf';
 import { buildLocalReportSummary } from '@/lib/reportSummary';
+import type { Result } from '@/lib/result';
 
 type ReportQueries = ReturnType<typeof createReportQueries>;
+type PdfGenerator = (report: MonthlyReport, year: number, month: number) => Promise<Result<PdfResult>>;
 
 let defaultReportQueries: ReportQueries | undefined;
 
@@ -42,11 +45,15 @@ function percent(value: number | null) {
   return value === null ? 'sem base anterior' : `${value > 0 ? '+' : ''}${value}%`;
 }
 
-export function ReportScreen({ reportQueries }: { reportQueries?: ReportQueries }) {
+export function ReportScreen({ reportQueries, pdfGenerator = generateAndShareReportPdf }: { reportQueries?: ReportQueries; pdfGenerator?: PdfGenerator }) {
   const [selectedMonth, setSelectedMonth] = useState(currentYearMonth);
   const [report, setReport] = useState<MonthlyReport | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [pdfLoading, setPdfLoading] = useState(false);
+  const [pdfMessage, setPdfMessage] = useState<string | null>(null);
+  const [pdfError, setPdfError] = useState<string | null>(null);
   const loadRequestRef = useRef(0);
+  const pdfRequestRef = useRef(0);
 
   const loadData = useCallback(async () => {
     const requestId = ++loadRequestRef.current;
@@ -69,8 +76,26 @@ export function ReportScreen({ reportQueries }: { reportQueries?: ReportQueries 
 
   function changeMonth(offset: number) {
     loadRequestRef.current += 1;
+    pdfRequestRef.current += 1;
+    setPdfLoading(false);
+    setPdfMessage(null);
+    setPdfError(null);
     setReport(null);
     setSelectedMonth((current) => moveMonth(current.year, current.month, offset));
+  }
+
+
+  async function handleGeneratePdf() {
+    if (!report) return;
+    const requestId = ++pdfRequestRef.current;
+    setPdfLoading(true);
+    setPdfMessage(null);
+    setPdfError(null);
+    const result = await pdfGenerator(report, selectedMonth.year, selectedMonth.month);
+    if (requestId !== pdfRequestRef.current) return;
+    setPdfLoading(false);
+    if (!result.ok) { setPdfError(result.error.message); return; }
+    setPdfMessage(result.value.shared ? 'PDF gerado e compartilhado.' : 'PDF gerado. Compartilhamento indisponível neste dispositivo.');
   }
 
   if (error) return <Text accessibilityRole="alert" style={styles.error}>{error}</Text>;
@@ -84,6 +109,12 @@ export function ReportScreen({ reportQueries }: { reportQueries?: ReportQueries 
           <Text testID="report-selected-month-label" style={styles.month}>{monthLabel(selectedMonth.year, selectedMonth.month)}</Text>
           <Button testID="report-next-month-button" onPress={() => changeMonth(1)}>Mês seguinte</Button>
         </View>
+      </Card>
+
+      <Card>
+        <Button testID="generate-report-pdf-button" loading={pdfLoading} onPress={handleGeneratePdf}>Gerar PDF</Button>
+        {pdfMessage ? <Text style={styles.success}>{pdfMessage}</Text> : null}
+        {pdfError ? <Text accessibilityRole="alert" style={styles.pdfError}>{pdfError}</Text> : null}
       </Card>
 
       {!report.hasData ? <Card><EmptyState title="Relatório sem dados" message="Nenhuma movimentação neste mês." testID="report-empty-state" /></Card> : null}
@@ -138,6 +169,8 @@ const styles = StyleSheet.create({
   muted: { marginTop: 10, color: '#64748b', fontSize: 15, fontWeight: '700', lineHeight: 22 },
   lightText: { color: '#f8fafc', fontWeight: '800' },
   error: { color: '#fecaca', fontWeight: '900' },
+  success: { marginTop: 10, color: '#047857', fontSize: 15, fontWeight: '900' },
+  pdfError: { marginTop: 10, color: '#b91c1c', fontSize: 15, fontWeight: '900' },
   row: { marginTop: 12, flexDirection: 'row', justifyContent: 'space-between', gap: 12 },
   transactionRow: { marginTop: 14, gap: 4 },
   rowName: { color: '#0f172a', fontSize: 16, fontWeight: '900' },
