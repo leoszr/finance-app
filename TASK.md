@@ -67,14 +67,14 @@
 
 ### Sprint 08 — Dashboard financeiro
 
-- Status: doing
+- Status: done
 - Branch: `feature/sprint-08-dashboard`
 - Tasks: `docs/sprint-08/TASK.md`
 - Progresso: `docs/sprint-08/PROGRESS.md`
 
 ### Sprint 09 — Relatórios locais
 
-- Status: todo
+- Status: done
 - Branch: `feature/sprint-09-local-reports`
 - Tasks: `docs/sprint-09/TASK.md`
 - Progresso: `docs/sprint-09/PROGRESS.md`
