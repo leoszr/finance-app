@@ -24,6 +24,7 @@ export function CategoriesManager({ repository }: { repository?: CategoriesRepos
   const [categories, setCategories] = useState<CategoryRecord[]>([]);
   const [form, setForm] = useState<FormState>(emptyForm);
   const [error, setError] = useState<string | null>(null);
+  const [status, setStatus] = useState('');
   const [fieldError, setFieldError] = useState<string | undefined>();
   const [isSaving, setIsSaving] = useState(false);
   const isSavingRef = useRef(false);
@@ -43,7 +44,7 @@ export function CategoriesManager({ repository }: { repository?: CategoriesRepos
     isSavingRef.current = true;
     setIsSaving(true);
     try {
-      setError(null); setFieldError(undefined);
+      setError(null); setFieldError(undefined); setStatus('');
       const input: CategoryInput = { name: form.name, type: form.type, color: form.color };
       const result: RepositoryResult<CategoryRecord> = form.id ? await activeRepository.updateCategory(form.id, input) : await activeRepository.createCategory(input);
       if (!result.ok) {
@@ -53,6 +54,7 @@ export function CategoriesManager({ repository }: { repository?: CategoriesRepos
       }
       setForm(emptyForm);
       await loadCategories();
+      setStatus(form.id ? 'Categoria atualizada.' : 'Categoria salva.');
     } finally {
       isSavingRef.current = false;
       setIsSaving(false);
@@ -61,11 +63,12 @@ export function CategoriesManager({ repository }: { repository?: CategoriesRepos
 
   async function deleteCategory(category: CategoryRecord) {
     const remove = async () => {
-      setError(null);
+      setError(null); setStatus('');
       const result = await activeRepository.deleteCategory(category.id);
       if (!result.ok) { setError(result.error.message); return; }
       setFieldError(undefined);
       await loadCategories();
+      setStatus('Categoria excluída.');
     };
     if (Alert.alert) {
       Alert.alert('Excluir categoria', `Remover ${category.name}?`, [{ text: 'Cancelar' }, { text: 'Excluir', style: 'destructive', onPress: remove }]);
@@ -93,15 +96,16 @@ export function CategoriesManager({ repository }: { repository?: CategoriesRepos
             {colors.map((color) => <Button key={color} onPress={() => { setFieldError(undefined); setForm((current) => ({ ...current, color })); }} disabled={form.color === color}>{color}</Button>)}
           </View>
           {error && !fieldError ? <Text accessibilityRole="alert" style={styles.error}>{error}</Text> : null}
+          {status ? <Text accessibilityLiveRegion="polite" style={styles.status}>{status}</Text> : null}
           <Button testID="save-category-button" onPress={saveCategory} disabled={isSaving}>Salvar categoria</Button>
         </View>
       </Card>
 
       <Text style={styles.sectionTitleLight}>Categorias de receita</Text>
-      {income.length === 0 ? <EmptyState title="Sem receitas" message="Categorias de receita aparecerão aqui." /> : income.map((category) => <CategoryItem key={category.id} category={category} onEdit={() => { setError(null); setFieldError(undefined); setForm({ id: category.id, name: category.name, type: category.type, color: category.color ?? colors[0] }); }} onDelete={() => void deleteCategory(category)} />)}
+      {income.length === 0 ? <EmptyState title="Crie categorias de receita" message="Separe salário, reembolsos e outras entradas para entender de onde vem o dinheiro." /> : income.map((category) => <CategoryItem key={category.id} category={category} onEdit={() => { setError(null); setFieldError(undefined); setForm({ id: category.id, name: category.name, type: category.type, color: category.color ?? colors[0] }); }} onDelete={() => void deleteCategory(category)} />)}
 
       <Text style={styles.sectionTitleLight}>Categorias de despesa</Text>
-      {expense.length === 0 ? <EmptyState title="Sem despesas" message="Categorias de despesa aparecerão aqui." /> : expense.map((category) => <CategoryItem key={category.id} category={category} onEdit={() => { setError(null); setFieldError(undefined); setForm({ id: category.id, name: category.name, type: category.type, color: category.color ?? colors[0] }); }} onDelete={() => void deleteCategory(category)} />)}
+      {expense.length === 0 ? <EmptyState title="Crie categorias de despesa" message="Use categorias como mercado, casa e transporte para ler seus gastos sem esforço." /> : expense.map((category) => <CategoryItem key={category.id} category={category} onEdit={() => { setError(null); setFieldError(undefined); setForm({ id: category.id, name: category.name, type: category.type, color: category.color ?? colors[0] }); }} onDelete={() => void deleteCategory(category)} />)}
     </View>
   );
 }
@@ -117,5 +121,5 @@ function CategoryItem({ category, onEdit, onDelete }: { category: CategoryRecord
 }
 
 const styles = StyleSheet.create({
-  stack: { gap: 16 }, form: { gap: 12 }, rowActions: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 }, sectionTitle: { color: '#0f172a', fontSize: 20, fontWeight: '900' }, sectionTitleLight: { color: '#f8fafc', fontSize: 20, fontWeight: '900' }, label: { color: '#1e293b', fontWeight: '800' }, itemTitle: { color: '#0f172a', fontSize: 18, fontWeight: '900' }, itemMeta: { marginTop: 6, color: '#475569', fontSize: 15, fontWeight: '700' }, error: { color: '#b91c1c', fontWeight: '800' },
+  stack: { gap: 16 }, form: { gap: 12 }, rowActions: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 }, sectionTitle: { color: '#0f172a', fontSize: 20, fontWeight: '900' }, sectionTitleLight: { color: '#f8fafc', fontSize: 20, fontWeight: '900' }, label: { color: '#1e293b', fontWeight: '800' }, itemTitle: { color: '#0f172a', fontSize: 18, fontWeight: '900' }, itemMeta: { marginTop: 6, color: '#475569', fontSize: 15, fontWeight: '700' }, error: { color: '#b91c1c', fontWeight: '800' }, status: { borderWidth: 1, borderColor: '#99f6e4', borderRadius: 999, backgroundColor: '#ccfbf1', padding: 10, color: '#115e59', fontWeight: '900', textAlign: 'center' },
 });

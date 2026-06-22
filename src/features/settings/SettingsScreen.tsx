@@ -8,6 +8,7 @@ import { APP_NAME, APP_TAGLINE } from '@/lib/appInfo';
 import { localAuth as defaultLocalAuth, type BiometricAvailability, type LocalAuth } from '@/lib/localAuth';
 import { formatCentsToCurrency, type AppCurrency } from '@/lib/money';
 import { DEFAULT_CURRENCY, DEFAULT_INITIAL_MONTH, normalizeBooleanSetting, normalizeCurrency, normalizeInitialMonth, SETTINGS_KEYS, type InitialMonthPreference } from '@/lib/settings/preferences';
+import { notifySettingsChanged } from '@/lib/settings/settingsEvents';
 
 type SettingsRepository = ReturnType<typeof createSettingsRepository>;
 
@@ -66,6 +67,7 @@ export function SettingsScreen({ localAuth = defaultLocalAuth, settingsRepositor
     const result = await repository.setSetting(SETTINGS_KEYS.appLockEnabled, String(next));
     if (!result.ok) { setStatus(result.error.message); return; }
     setAppLockEnabled(next);
+    notifySettingsChanged();
     setStatus(next ? 'Bloqueio local ativado.' : 'Bloqueio local desativado.');
   }
 

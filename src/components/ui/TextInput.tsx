@@ -7,6 +7,7 @@ export function TextInput({ label, error, style, ...props }: TextInputProps) {
     <View style={styles.wrapper}>
       <Text style={styles.label}>{label}</Text>
       <RNTextInput
+        accessibilityLabel={props.accessibilityLabel ?? label}
         placeholderTextColor="#94a3b8"
         style={[styles.input, props.editable === false && styles.disabled, error && styles.error, style]}
         {...props}

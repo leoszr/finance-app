@@ -119,7 +119,7 @@ export function DashboardManager({ dashboardQueries, settingsRepository }: { das
 
       {!summary.hasData ? (
         <Card>
-          <EmptyState title="Sem dados ainda" message="Cadastre contas e transações para liberar seu resumo financeiro." testID="dashboard-empty-state" />
+          <EmptyState title="Monte seu painel financeiro" message="Crie uma conta, adicione categorias e registre uma transação para liberar saldos e gráficos." testID="dashboard-empty-state" />
         </Card>
       ) : null}
 
@@ -132,7 +132,7 @@ export function DashboardManager({ dashboardQueries, settingsRepository }: { das
 
       <Card>
         <Text style={styles.sectionTitle}>Receita x despesa</Text>
-        {maxFlow === 0 ? <Text style={styles.muted}>Sem receitas ou despesas neste mês.</Text> : (
+        {maxFlow === 0 ? <Text style={styles.muted}>Registre uma receita ou despesa para comparar entradas e saídas deste mês.</Text> : (
           <View style={styles.chart}>
             <BarRow label="Receitas" value={money(summary.incomeCents, currency)} ratio={summary.incomeCents / maxFlow} color="#10b981" />
             <BarRow label="Despesas" value={money(summary.expenseCents, currency)} ratio={summary.expenseCents / maxFlow} color="#ef4444" />
@@ -142,7 +142,7 @@ export function DashboardManager({ dashboardQueries, settingsRepository }: { das
 
       <Card>
         <Text style={styles.sectionTitle}>Maiores gastos por categoria</Text>
-        {summary.expenseCategories.length === 0 ? <Text style={styles.muted}>Sem despesas neste mês.</Text> : (
+        {summary.expenseCategories.length === 0 ? <Text style={styles.muted}>Quando você lançar despesas, suas maiores categorias aparecem aqui.</Text> : (
           <View style={styles.chart}>
             {summary.expenseCategories.map((category) => (
               <BarRow key={category.categoryId} label={category.categoryName} value={money(category.amountCents, currency)} ratio={category.amountCents / maxCategory} />
@@ -153,7 +153,7 @@ export function DashboardManager({ dashboardQueries, settingsRepository }: { das
 
       <Card>
         <Text style={styles.sectionTitle}>Saldo por conta</Text>
-        {summary.accountBalances.length === 0 ? <Text style={styles.muted}>Nenhuma conta cadastrada.</Text> : summary.accountBalances.map((account) => (
+        {summary.accountBalances.length === 0 ? <Text style={styles.muted}>Crie uma conta para acompanhar saldo total e saldo por origem.</Text> : summary.accountBalances.map((account) => (
           <View key={account.accountId} style={styles.accountRow}>
             <Text style={styles.accountName}>{account.accountName}</Text>
             <Text style={styles.accountValue}>{money(account.balanceCents, currency)}</Text>

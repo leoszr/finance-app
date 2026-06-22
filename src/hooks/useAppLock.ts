@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AppState, type AppStateStatus } from 'react-native';
 
 import { createSettingsRepository } from '@/db/repositories/settingsRepository';
 import { localAuth as defaultLocalAuth, type BiometricAvailability, type LocalAuth } from '@/lib/localAuth';
+import { subscribeToSettingsChanges } from '@/lib/settings/settingsEvents';
 import { normalizeBooleanSetting, SETTINGS_KEYS } from '@/lib/settings/preferences';
 
 type SettingsRepository = ReturnType<typeof createSettingsRepository>;
@@ -21,30 +22,35 @@ export function useAppLock(settingsRepository?: SettingsRepository, auth: LocalA
   const [locked, setLocked] = useState(false);
   const [availability, setAvailability] = useState<BiometricAvailability>({ available: false, labels: [] });
   const [message, setMessage] = useState('');
+  const [unlocking, setUnlocking] = useState(false);
+  const unlockingRef = useRef(false);
+
+  const refreshLock = useCallback(async () => {
+    const saved = await repository.getSetting(SETTINGS_KEYS.appLockEnabled);
+    const nextEnabled = normalizeBooleanSetting(saved?.value);
+    if (!nextEnabled) {
+      setEnabled(false);
+      setLocked(false);
+      setMessage('');
+      return;
+    }
+
+    const nextAvailability = await auth.getBiometricAvailability().catch((): BiometricAvailability => ({
+      available: false,
+      labels: [],
+      reason: 'Biometria indisponível. Tente novamente.',
+    }));
+    setEnabled(true);
+    setAvailability(nextAvailability);
+    setLocked(true);
+    setMessage(!nextAvailability.available ? (nextAvailability.reason ?? 'Biometria indisponível.') : '');
+  }, [auth, repository]);
 
   useEffect(() => {
     let mounted = true;
 
-    repository.getSetting(SETTINGS_KEYS.appLockEnabled).then(async (saved) => {
+    refreshLock().then(() => {
       if (!mounted) return;
-      const nextEnabled = normalizeBooleanSetting(saved?.value);
-      if (!nextEnabled) {
-        setEnabled(false);
-        setLocked(false);
-        setLoading(false);
-        return;
-      }
-
-      const nextAvailability = await auth.getBiometricAvailability().catch((): BiometricAvailability => ({
-        available: false,
-        labels: [],
-        reason: 'Biometria indisponível. Tente novamente.',
-      }));
-      if (!mounted) return;
-      setEnabled(nextEnabled);
-      setAvailability(nextAvailability);
-      setLocked(nextEnabled);
-      setMessage(nextEnabled && !nextAvailability.available ? (nextAvailability.reason ?? 'Biometria indisponível.') : '');
       setLoading(false);
     }).catch(() => {
       if (!mounted) return;
@@ -54,32 +60,37 @@ export function useAppLock(settingsRepository?: SettingsRepository, auth: LocalA
     });
 
     return () => { mounted = false; };
-  }, [auth, repository]);
+  }, [refreshLock]);
+
+  useEffect(() => subscribeToSettingsChanges(() => void refreshLock()), [refreshLock]);
 
   useEffect(() => {
-    if (!enabled) return undefined;
     let state: AppStateStatus = AppState.currentState;
     const subscription = AppState.addEventListener('change', (nextState) => {
       if ((state === 'inactive' || state === 'background') && nextState === 'active') {
-        setLocked(true);
-        setMessage('');
+        void refreshLock();
       }
       state = nextState;
     });
-    return () => subscription.remove();
-  }, [enabled]);
+    return () => subscription?.remove?.();
+  }, [refreshLock]);
 
   const unlock = useCallback(async () => {
+    if (unlockingRef.current) return;
     if (!availability.available) {
       setLocked(false);
       setMessage('Entrada liberada sem biometria. Revise a configuração de bloqueio.');
       return;
     }
 
+    unlockingRef.current = true;
+    setUnlocking(true);
     const ok = await auth.authenticate().catch(() => false);
+    unlockingRef.current = false;
+    setUnlocking(false);
     setLocked(!ok);
     setMessage(ok ? '' : 'Não foi possível autenticar. Tente novamente.');
   }, [auth, availability.available]);
 
-  return { availability, enabled, loading, locked, message, unlock };
+  return { availability, enabled, loading, locked, message, unlock, unlocking };
 }

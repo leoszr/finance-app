@@ -110,7 +110,7 @@
 
 ### Sprint 14 — Polimento de experiência mobile
 
-- Status: todo
+- Status: done
 - Branch: `dev`
 - Tasks: `docs/sprint-14/TASK.md`
 - Progresso: `docs/sprint-14/PROGRESS.md`

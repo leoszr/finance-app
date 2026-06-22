@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flexGrow: 1,
-    paddingHorizontal: SCREEN_PADDING.horizontal,
+    paddingHorizontal: 16,
     paddingVertical: SCREEN_PADDING.vertical,
   },
   centered: {

@@ -19,7 +19,7 @@ export function AppLockGate({ children, localAuth, settingsRepository }: AppLock
 
   if (lock.loading) return <LoadingState message="Verificando bloqueio local..." />;
   if (lock.enabled && lock.locked) {
-    return <AppLockScreen available={lock.availability.available} message={lock.message} onUnlock={() => void lock.unlock()} />;
+    return <AppLockScreen available={lock.availability.available} message={lock.message} onUnlock={() => void lock.unlock()} unlocking={lock.unlocking} />;
   }
 
   return children;

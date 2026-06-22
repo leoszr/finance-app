@@ -83,7 +83,7 @@ describe('Sprint 08 dashboard financeiro', () => {
     await act(async () => { fireEvent.press(screen.getByTestId('dashboard-next-month-button')); });
     await act(async () => { fireEvent.press(screen.getByTestId('dashboard-next-month-button')); });
 
-    await waitFor(() => expect(screen.getByText('Sem receitas ou despesas neste mês.')).toBeTruthy());
+    await waitFor(() => expect(screen.getByText('Registre uma receita ou despesa para comparar entradas e saídas deste mês.')).toBeTruthy());
   });
 
   it('shows empty state without accounts or transactions', async () => {
@@ -91,7 +91,7 @@ describe('Sprint 08 dashboard financeiro', () => {
     const screen = await render(<DashboardManager dashboardQueries={dashboardQueries} />);
 
     await waitFor(() => expect(screen.getByTestId('dashboard-empty-state')).toBeTruthy());
-    expect(screen.getByText('Sem dados ainda')).toBeTruthy();
+    expect(screen.getByText('Monte seu painel financeiro')).toBeTruthy();
   });
 
   it('refreshes when finance data changes after dashboard mount', async () => {

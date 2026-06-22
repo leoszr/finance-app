@@ -49,19 +49,20 @@ describe('Sprint 06 transactions CRUD', () => {
     expect(transactions.map((transaction) => transaction.description)).toEqual(['Mais recente', 'Mercado novo', 'Antiga']);
   });
 
-  it('rejects malformed BRL amount without silently rounding', async () => {
+  it('formats noisy BRL input before saving', async () => {
     const { accountsRepository, categoriesRepository, transactionsRepository } = await seedRepositories();
     const screen = await render(<TransactionsManager accountsRepository={accountsRepository} categoriesRepository={categoriesRepository} transactionsRepository={transactionsRepository} />);
 
     await waitFor(() => expect(screen.getAllByText('Carteira').length).toBeGreaterThan(0));
-    await act(async () => { fireEvent.changeText(screen.getByTestId('transaction-amount-input'), '12,345'); });
+    await act(async () => { fireEvent.changeText(screen.getByTestId('transaction-amount-input'), 'abc12345'); });
+    expect(screen.getByDisplayValue('R$ 123,45')).toBeTruthy();
     await act(async () => { fireEvent.changeText(screen.getByTestId('transaction-date-input'), '2026-06-21'); });
     await act(async () => { fireEvent.press(screen.getAllByText('Carteira')[0]); });
     await act(async () => { fireEvent.press(screen.getByText('Mercado')); });
     await act(async () => { fireEvent.press(screen.getByTestId('save-transaction-button')); });
 
-    await waitFor(() => expect(screen.getAllByText('Valor monetário inválido.').length).toBeGreaterThan(0));
-    expect(await transactionsRepository.getTransactions()).toHaveLength(0);
+    await waitFor(() => expect(screen.getByText('Transação salva.')).toBeTruthy());
+    expect((await transactionsRepository.getTransactions())[0].amountCents).toBe(12345);
   });
 
   it('covers T0603 and T0604: edits and deletes transactions', async () => {

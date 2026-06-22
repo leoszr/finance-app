@@ -36,6 +36,7 @@ export function AccountsManager({ repository }: { repository?: AccountsRepositor
   const [accounts, setAccounts] = useState<AccountRecord[]>([]);
   const [form, setForm] = useState<FormState>(emptyForm);
   const [error, setError] = useState<string | null>(null);
+  const [status, setStatus] = useState('');
   const [fieldError, setFieldError] = useState<string | undefined>();
   const [isSaving, setIsSaving] = useState(false);
   const isSavingRef = useRef(false);
@@ -56,7 +57,7 @@ export function AccountsManager({ repository }: { repository?: AccountsRepositor
     isSavingRef.current = true;
     setIsSaving(true);
     try {
-      setError(null); setFieldError(undefined);
+      setError(null); setFieldError(undefined); setStatus('');
       const input: AccountInput = {
         name: form.name,
         type: form.type,
@@ -73,6 +74,7 @@ export function AccountsManager({ repository }: { repository?: AccountsRepositor
       }
       setForm(emptyForm);
       await loadAccounts();
+      setStatus(form.id ? 'Conta atualizada.' : 'Conta salva.');
     } finally {
       isSavingRef.current = false;
       setIsSaving(false);
@@ -81,11 +83,12 @@ export function AccountsManager({ repository }: { repository?: AccountsRepositor
 
   async function deleteAccount(account: AccountRecord) {
     const remove = async () => {
-      setError(null);
+      setError(null); setStatus('');
       const result = await activeRepository.deleteAccount(account.id);
       if (!result.ok) { setError(result.error.message); return; }
       setFieldError(undefined);
       await loadAccounts();
+      setStatus('Conta excluída.');
     };
     if (Alert.alert) {
       Alert.alert('Excluir conta', `Remover ${account.name}?`, [{ text: 'Cancelar' }, { text: 'Excluir', style: 'destructive', onPress: remove }]);
@@ -108,6 +111,7 @@ export function AccountsManager({ repository }: { repository?: AccountsRepositor
           </View>
           <MoneyInput testID="account-balance-input" label="Saldo inicial" value={form.initialBalance} onChangeText={(initialBalance) => setForm((current) => ({ ...current, initialBalance }))} />
           {error && !fieldError ? <Text accessibilityRole="alert" style={styles.error}>{error}</Text> : null}
+          {status ? <Text accessibilityLiveRegion="polite" style={styles.status}>{status}</Text> : null}
           <Button testID="save-account-button" onPress={saveAccount} disabled={isSaving}>Salvar conta</Button>
         </View>
       </Card>
@@ -118,7 +122,7 @@ export function AccountsManager({ repository }: { repository?: AccountsRepositor
       </View>
 
       {accounts.length === 0 ? (
-        <EmptyState title="Nenhuma conta" message="Adicione sua primeira conta para registrar transações." />
+        <EmptyState title="Comece por uma conta" message="Crie uma conta, carteira ou cartão para registrar suas primeiras movimentações." />
       ) : accounts.map((account) => (
         <Card key={account.id}>
           <Text style={styles.itemTitle}>{account.name}</Text>
@@ -134,8 +138,8 @@ export function AccountsManager({ repository }: { repository?: AccountsRepositor
 }
 
 const styles = StyleSheet.create({
-  stack: { gap: 16 }, form: { gap: 12 }, listHeader: { gap: 12 }, rowActions: { flexDirection: 'row', gap: 10, marginTop: 14 }, options: { gap: 8 },
+  stack: { gap: 16 }, form: { gap: 12 }, listHeader: { gap: 12 }, rowActions: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 14 }, options: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   sectionTitle: { color: '#0f172a', fontSize: 20, fontWeight: '900' }, label: { color: '#1e293b', fontWeight: '800' },
   itemTitle: { color: '#0f172a', fontSize: 18, fontWeight: '900' }, itemMeta: { marginTop: 6, color: '#475569', fontSize: 15, fontWeight: '700' },
-  error: { color: '#b91c1c', fontWeight: '800' },
+  error: { color: '#b91c1c', fontWeight: '800' }, status: { borderWidth: 1, borderColor: '#99f6e4', borderRadius: 999, backgroundColor: '#ccfbf1', padding: 10, color: '#115e59', fontWeight: '900', textAlign: 'center' },
 });

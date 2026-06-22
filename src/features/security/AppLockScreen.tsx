@@ -7,9 +7,10 @@ type AppLockScreenProps = {
   available: boolean;
   message?: string;
   onUnlock: () => void;
+  unlocking?: boolean;
 };
 
-export function AppLockScreen({ available, message, onUnlock }: AppLockScreenProps) {
+export function AppLockScreen({ available, message, onUnlock, unlocking = false }: AppLockScreenProps) {
   return (
     <Screen centered testID="app-lock-screen">
       <Card>
@@ -17,7 +18,7 @@ export function AppLockScreen({ available, message, onUnlock }: AppLockScreenPro
           <Text accessibilityRole="header" style={styles.title}>App bloqueado</Text>
           <Text style={styles.text}>Autentique no aparelho para ver seus dados financeiros.</Text>
           {message ? <Text style={styles.warning}>{message}</Text> : null}
-          <Button onPress={onUnlock}>{available ? 'Desbloquear' : 'Continuar sem biometria'}</Button>
+          <Button loading={unlocking} onPress={onUnlock}>{available ? 'Desbloquear' : 'Continuar sem biometria'}</Button>
         </View>
       </Card>
     </Screen>

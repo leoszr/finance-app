@@ -3,8 +3,10 @@ import { AppState, Text } from 'react-native';
 
 import { createSettingsRepository } from '@/db/repositories/settingsRepository';
 import { AppLockGate } from '@/features/security/AppLockGate';
+import { AppLockScreen } from '@/features/security/AppLockScreen';
 import { SettingsScreen } from '@/features/settings/SettingsScreen';
 import type { LocalAuth } from '@/lib/localAuth';
+import { notifySettingsChanged } from '@/lib/settings/settingsEvents';
 import { createFakeRepositoryDatabase } from '@/tests/repositories/fakeRepositoryDatabase';
 
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
@@ -128,10 +130,41 @@ describe('Sprint 13 local security', () => {
     await act(async () => {
       onAppStateChange?.('background');
       onAppStateChange?.('active');
+      await Promise.resolve();
     });
 
     await waitFor(() => expect(screen.getByText('App bloqueado')).toBeTruthy());
     expect(screen.queryByText('Dados protegidos')).toBeNull();
     appStateSpy.mockRestore();
+  });
+
+  it('refreshes when app lock setting changes without remount', async () => {
+    const repository = createSettingsRepository(createFakeRepositoryDatabase());
+    const screen = await render(
+      <AppLockGate localAuth={auth()} settingsRepository={repository}>
+        <Text>Configurações abertas</Text>
+      </AppLockGate>,
+    );
+
+    await waitFor(() => expect(screen.getByText('Configurações abertas')).toBeTruthy());
+    await act(async () => {
+      await repository.setSetting('appLockEnabled', 'true');
+      notifySettingsChanged();
+      await Promise.resolve();
+    });
+    await waitFor(() => expect(screen.getByText('App bloqueado')).toBeTruthy());
+
+    await act(async () => {
+      await repository.setSetting('appLockEnabled', 'false');
+      notifySettingsChanged();
+      await Promise.resolve();
+    });
+    await waitFor(() => expect(screen.getByText('Configurações abertas')).toBeTruthy());
+  });
+
+  it('disables unlock action while native auth is in flight', async () => {
+    const screen = await render(<AppLockScreen available unlocking onUnlock={jest.fn()} />);
+
+    expect(screen.getByText('Desbloquear').parent?.props.accessibilityState).toEqual({ busy: true, disabled: true });
   });
 });

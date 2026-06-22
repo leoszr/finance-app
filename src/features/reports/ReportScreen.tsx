@@ -117,7 +117,7 @@ export function ReportScreen({ reportQueries, pdfGenerator = generateAndShareRep
         {pdfError ? <Text accessibilityRole="alert" style={styles.pdfError}>{pdfError}</Text> : null}
       </Card>
 
-      {!report.hasData ? <Card><EmptyState title="Relatório sem dados" message="Nenhuma movimentação neste mês." testID="report-empty-state" /></Card> : null}
+      {!report.hasData ? <Card><EmptyState title="Relatório sem dados" message="Registre transações neste mês para gerar análise, comparação e PDF local." testID="report-empty-state" /></Card> : null}
 
       <View style={styles.grid}>
         <SummaryCard label="Receitas" value={money(report.incomeCents)} tone="income" />
@@ -138,7 +138,7 @@ export function ReportScreen({ reportQueries, pdfGenerator = generateAndShareRep
 
       <Card>
         <Text style={styles.sectionTitle}>Gastos por categoria</Text>
-        {report.expenseCategories.length === 0 ? <Text style={styles.muted}>Sem despesas neste mês.</Text> : report.expenseCategories.map((category) => (
+        {report.expenseCategories.length === 0 ? <Text style={styles.muted}>Lance despesas para ver a participação de cada categoria.</Text> : report.expenseCategories.map((category) => (
           <View key={category.categoryId} style={styles.row}>
             <Text style={styles.rowName}>{category.categoryName}</Text>
             <Text style={styles.rowText}>{money(category.amountCents)} • {category.percent}%</Text>
@@ -148,7 +148,7 @@ export function ReportScreen({ reportQueries, pdfGenerator = generateAndShareRep
 
       <Card>
         <Text style={styles.sectionTitle}>Transações do período</Text>
-        {report.transactions.length === 0 ? <Text style={styles.muted}>Nenhuma transação no período.</Text> : report.transactions.map((transaction) => (
+        {report.transactions.length === 0 ? <Text style={styles.muted}>As transações do mês aparecem aqui depois do primeiro lançamento.</Text> : report.transactions.map((transaction) => (
           <View key={transaction.id} style={styles.transactionRow}>
             <Text style={styles.rowName}>{transaction.date} · {transaction.description}</Text>
             <Text style={styles.rowText}>{transaction.categoryName} · {transaction.accountName}</Text>

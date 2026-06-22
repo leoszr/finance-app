@@ -97,7 +97,7 @@ describe('Sprint 09 relatórios locais', () => {
     await act(async () => { fireEvent.press(screen.getByTestId('report-next-month-button')); });
 
     await waitFor(() => expect(screen.getByTestId('report-empty-state')).toBeTruthy());
-    expect(screen.getByText('Nenhuma transação no período.')).toBeTruthy();
+    expect(screen.getByText('As transações do mês aparecem aqui depois do primeiro lançamento.')).toBeTruthy();
   });
 
   it('clears stale report while loading another month', async () => {

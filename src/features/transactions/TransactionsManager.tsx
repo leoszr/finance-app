@@ -92,6 +92,7 @@ export function TransactionsManager({
   const [categories, setCategories] = useState<CategoryRecord[]>([]);
   const [form, setForm] = useState<FormState>(emptyForm);
   const [error, setError] = useState<string | null>(null);
+  const [status, setStatus] = useState('');
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [isSaving, setIsSaving] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(currentYearMonth);
@@ -147,7 +148,7 @@ export function TransactionsManager({
     isSavingRef.current = true;
     setIsSaving(true);
     try {
-      setError(null);
+      setError(null); setStatus('');
       setFieldErrors({});
       const amount = parseCurrencyToCents(form.amount);
       if (!amount.ok) {
@@ -172,6 +173,7 @@ export function TransactionsManager({
       }
       setForm({ ...emptyForm, transactionDate: todayIsoDate() });
       await loadData();
+      setStatus(form.id ? 'Transação atualizada.' : 'Transação salva.');
     } finally {
       isSavingRef.current = false;
       setIsSaving(false);
@@ -180,10 +182,11 @@ export function TransactionsManager({
 
   async function deleteTransaction(transaction: TransactionRecord) {
     const remove = async () => {
-      setError(null);
+      setError(null); setStatus('');
       const result = await activeTransactionsRepository.deleteTransaction(transaction.id);
       if (!result.ok) { setError(result.error.message); return; }
       await loadData();
+      setStatus('Transação excluída.');
     };
     if (Alert.alert) {
       Alert.alert('Excluir transação', `Remover ${transaction.description || centsToMoney(transaction.amountCents)}?`, [{ text: 'Cancelar' }, { text: 'Excluir', style: 'destructive', onPress: remove }]);
@@ -233,6 +236,7 @@ export function TransactionsManager({
           <View style={styles.rowActions}>{compatibleCategories.map((category) => <Button key={category.id} onPress={() => { setFieldErrors((current) => ({ ...current, categoryId: undefined })); setForm((current) => ({ ...current, categoryId: category.id })); }} disabled={form.categoryId === category.id}>{category.name}</Button>)}</View>
           {fieldErrors.categoryId ? <Text accessibilityRole="alert" style={styles.error}>{fieldErrors.categoryId}</Text> : null}
           {error ? <Text accessibilityRole="alert" style={styles.error}>{error}</Text> : null}
+          {status ? <Text accessibilityLiveRegion="polite" style={styles.status}>{status}</Text> : null}
           <Button testID="save-transaction-button" onPress={saveTransaction} disabled={isSaving}>Salvar transação</Button>
         </View>
       </Card>
@@ -262,7 +266,7 @@ export function TransactionsManager({
           </View>
         </View>
       </Card>
-      {filteredTransactions.length === 0 ? <EmptyState title="Nenhuma transação" message="Receitas e despesas aparecerão aqui." /> : filteredTransactions.map((transaction) => (
+      {filteredTransactions.length === 0 ? <EmptyState title="Adicione sua primeira transação" message="Registre uma receita ou despesa para acompanhar saldo, relatórios e gráficos deste mês." /> : filteredTransactions.map((transaction) => (
         <Card key={transaction.id}>
           <Text style={styles.itemTitle}>{transaction.description || typeLabels[transaction.type]}</Text>
           <Text style={styles.itemMeta}>{findCategoryName(transaction.categoryId)} · {findAccountName(transaction.accountId)} · {transaction.transactionDate}</Text>
@@ -282,7 +286,7 @@ const styles = StyleSheet.create({
   sectionTitle: { color: '#0f172a', fontSize: 20, fontWeight: '900' }, sectionTitleLight: { color: '#f8fafc', fontSize: 20, fontWeight: '900' },
   label: { color: '#1e293b', fontWeight: '800' }, itemTitle: { color: '#0f172a', fontSize: 18, fontWeight: '900' },
   itemMeta: { marginTop: 6, color: '#475569', fontSize: 15, fontWeight: '700' }, amount: { marginTop: 8, fontSize: 18, fontWeight: '900' },
-  income: { color: '#047857' }, expense: { color: '#b91c1c' }, error: { color: '#b91c1c', fontWeight: '800' },
+  income: { color: '#047857' }, expense: { color: '#b91c1c' }, error: { color: '#b91c1c', fontWeight: '800' }, status: { borderWidth: 1, borderColor: '#99f6e4', borderRadius: 999, backgroundColor: '#ccfbf1', padding: 10, color: '#115e59', fontWeight: '900', textAlign: 'center' },
   filterLabel: { alignSelf: 'center', color: '#0f172a', fontSize: 16, fontWeight: '900', textTransform: 'capitalize' },
   summary: { gap: 6, borderTopWidth: 1, borderTopColor: '#e2e8f0', paddingTop: 12 }, summaryText: { color: '#0f172a', fontSize: 15, fontWeight: '800' },
 });

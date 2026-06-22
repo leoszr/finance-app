@@ -7,14 +7,16 @@ type ButtonProps = {
   disabled?: boolean;
   loading?: boolean;
   testID?: string;
+  accessibilityLabel?: string;
 };
 
-export function Button({ children, onPress, disabled = false, loading = false, testID }: ButtonProps) {
+export function Button({ accessibilityLabel, children, onPress, disabled = false, loading = false, testID }: ButtonProps) {
   const inactive = disabled || loading;
 
   return (
     <Pressable
       accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel}
       accessibilityState={{ disabled: inactive, busy: loading }}
       disabled={inactive}
       onPress={onPress}
@@ -31,6 +33,8 @@ const styles = StyleSheet.create({
   button: {
     minHeight: 48,
     flexDirection: 'row',
+    flexGrow: 1,
+    flexShrink: 1,
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
