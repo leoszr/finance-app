@@ -13,36 +13,36 @@ Permitir backup manual local-first.
 
 ## Regras da sprint
 
-- [ ] Criar uma feature branch para a sprint.
-- [ ] Manter as alterações coesas ao objetivo da sprint.
-- [ ] Atualizar ou criar testes junto com a implementação.
-- [ ] Executar `npm test` e `npm run lint` antes do commit final.
-- [ ] Não adicionar backend, Supabase, PostgreSQL, Java backend, API externa, IA ou sync automático.
-- [ ] Atualizar `docs/sprint-11/PROGRESS.md` com evidências reais.
+- [x] Criar uma feature branch para a sprint.
+- [x] Manter as alterações coesas ao objetivo da sprint.
+- [x] Atualizar ou criar testes junto com a implementação.
+- [x] Executar `npm test` e `npm run lint` antes do commit final.
+- [x] Não adicionar backend, Supabase, PostgreSQL, Java backend, API externa, IA ou sync automático.
+- [x] Atualizar `docs/sprint-11/PROGRESS.md` com evidências reais.
 
 ## Tasks
 
 ### T1101 — Criar exportação JSON
 
-- Status: todo
+- Status: done
 - Feature: Exportação JSON
 - Plano: `PLAN.md` > `Fase 9 — Backup, configurações e segurança`
 - Dependências: T1005
 
 #### Requisitos funcionais
 
-- [ ] Exportar dados completos do app.
-- [ ] Exporta contas.
-- [ ] Exporta categorias.
-- [ ] Exporta transações.
-- [ ] Exporta configurações.
-- [ ] Arquivo contém versão do schema.
+- [x] Exportar dados completos do app.
+- [x] Exporta contas.
+- [x] Exporta categorias.
+- [x] Exporta transações.
+- [x] Exporta configurações.
+- [x] Arquivo contém versão do schema.
 
 #### Requisitos técnicos
 
-- [ ] Exportar e importar dados locais em JSON versionado.
-- [ ] Validar arquivo completo antes de alterar o banco.
-- [ ] Pedir confirmação antes de substituição total.
+- [x] Exportar e importar dados locais em JSON versionado.
+- [x] Validar arquivo completo antes de alterar o banco.
+- [x] Pedir confirmação antes de substituição total.
 
 #### Arquivos prováveis
 
@@ -60,39 +60,39 @@ Permitir backup manual local-first.
 
 #### Critérios de aceite
 
-- [ ] Exporta contas.
-- [ ] Exporta categorias.
-- [ ] Exporta transações.
-- [ ] Exporta configurações.
-- [ ] Arquivo contém versão do schema.
+- [x] Exporta contas.
+- [x] Exporta categorias.
+- [x] Exporta transações.
+- [x] Exporta configurações.
+- [x] Arquivo contém versão do schema.
 
 #### Testes e verificação
 
-- [ ] Adicionar teste cobrindo `Criar exportação JSON` em arquivo de teste da sprint.
-- [ ] Cobrir pelo menos: Exporta contas.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Adicionar teste cobrindo `Criar exportação JSON` em arquivo de teste da sprint.
+- [x] Cobrir pelo menos: Exporta contas.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ### T1102 — Criar compartilhamento do backup
 
-- Status: todo
+- Status: done
 - Feature: Compartilhamento do backup
 - Plano: `PLAN.md` > `Fase 9 — Backup, configurações e segurança`
 - Dependências: T1101
 
 #### Requisitos funcionais
 
-- [ ] Permitir salvar ou enviar backup.
-- [ ] Usuário gera arquivo `.json`.
-- [ ] Menu de compartilhamento abre.
-- [ ] Nome do arquivo contém data.
-- [ ] Erro tratado.
+- [x] Permitir salvar ou enviar backup.
+- [x] Usuário gera arquivo `.json`.
+- [x] Menu de compartilhamento abre.
+- [x] Nome do arquivo contém data.
+- [x] Erro tratado.
 
 #### Requisitos técnicos
 
-- [ ] Exportar e importar dados locais em JSON versionado.
-- [ ] Validar arquivo completo antes de alterar o banco.
-- [ ] Pedir confirmação antes de substituição total.
+- [x] Exportar e importar dados locais em JSON versionado.
+- [x] Validar arquivo completo antes de alterar o banco.
+- [x] Pedir confirmação antes de substituição total.
 
 #### Arquivos prováveis
 
@@ -112,40 +112,40 @@ Permitir backup manual local-first.
 
 #### Critérios de aceite
 
-- [ ] Usuário gera arquivo `.json`.
-- [ ] Menu de compartilhamento abre.
-- [ ] Nome do arquivo contém data.
-- [ ] Erro tratado.
+- [x] Usuário gera arquivo `.json`.
+- [x] Menu de compartilhamento abre.
+- [x] Nome do arquivo contém data.
+- [x] Erro tratado.
 
 #### Testes e verificação
 
-- [ ] Adicionar teste cobrindo `Criar compartilhamento do backup` em arquivo de teste da sprint.
-- [ ] Cobrir pelo menos: Usuário gera arquivo `.json`.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Adicionar teste cobrindo `Criar compartilhamento do backup` em arquivo de teste da sprint.
+- [x] Cobrir pelo menos: Usuário gera arquivo `.json`.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ### T1103 — Criar validação de arquivo importado
 
-- Status: todo
+- Status: done
 - Feature: Validação de arquivo importado
 - Plano: `PLAN.md` > `Fase 9 — Backup, configurações e segurança`
 - Dependências: T1102
 
 #### Requisitos funcionais
 
-- [ ] Impedir importação inválida.
-- [ ] Valida versão do schema.
-- [ ] Valida presença de contas.
-- [ ] Valida presença de categorias.
-- [ ] Valida transações.
-- [ ] Rejeita arquivo inválido sem alterar banco.
+- [x] Impedir importação inválida.
+- [x] Valida versão do schema.
+- [x] Valida presença de contas.
+- [x] Valida presença de categorias.
+- [x] Valida transações.
+- [x] Rejeita arquivo inválido sem alterar banco.
 
 #### Requisitos técnicos
 
-- [ ] Exportar e importar dados locais em JSON versionado.
-- [ ] Validar arquivo completo antes de alterar o banco.
-- [ ] Pedir confirmação antes de substituição total.
-- [ ] Usar transação de banco para evitar restauração parcial.
+- [x] Exportar e importar dados locais em JSON versionado.
+- [x] Validar arquivo completo antes de alterar o banco.
+- [x] Pedir confirmação antes de substituição total.
+- [x] Usar transação de banco para evitar restauração parcial.
 
 #### Arquivos prováveis
 
@@ -163,41 +163,41 @@ Permitir backup manual local-first.
 
 #### Critérios de aceite
 
-- [ ] Valida versão do schema.
-- [ ] Valida presença de contas.
-- [ ] Valida presença de categorias.
-- [ ] Valida transações.
-- [ ] Rejeita arquivo inválido sem alterar banco.
+- [x] Valida versão do schema.
+- [x] Valida presença de contas.
+- [x] Valida presença de categorias.
+- [x] Valida transações.
+- [x] Rejeita arquivo inválido sem alterar banco.
 
 #### Testes e verificação
 
-- [ ] Adicionar teste cobrindo `Criar validação de arquivo importado` em arquivo de teste da sprint.
-- [ ] Cobrir pelo menos: Valida versão do schema.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Adicionar teste cobrindo `Criar validação de arquivo importado` em arquivo de teste da sprint.
+- [x] Cobrir pelo menos: Valida versão do schema.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ### T1104 — Criar importação com substituição total
 
-- Status: todo
+- Status: done
 - Feature: Importação com substituição total
 - Plano: `PLAN.md` > `Fase 9 — Backup, configurações e segurança`
 - Dependências: T1103
 
 #### Requisitos funcionais
 
-- [ ] Restaurar backup.
-- [ ] Usuário escolhe arquivo.
-- [ ] App valida arquivo.
-- [ ] App pede confirmação.
-- [ ] Banco local substituído.
-- [ ] Dados aparecem após restauração.
+- [x] Restaurar backup.
+- [x] Usuário escolhe arquivo.
+- [x] App valida arquivo.
+- [x] App pede confirmação.
+- [x] Banco local substituído.
+- [x] Dados aparecem após restauração.
 
 #### Requisitos técnicos
 
-- [ ] Exportar e importar dados locais em JSON versionado.
-- [ ] Validar arquivo completo antes de alterar o banco.
-- [ ] Pedir confirmação antes de substituição total.
-- [ ] Usar transação de banco para evitar restauração parcial.
+- [x] Exportar e importar dados locais em JSON versionado.
+- [x] Validar arquivo completo antes de alterar o banco.
+- [x] Pedir confirmação antes de substituição total.
+- [x] Usar transação de banco para evitar restauração parcial.
 
 #### Arquivos prováveis
 
@@ -215,42 +215,42 @@ Permitir backup manual local-first.
 
 #### Critérios de aceite
 
-- [ ] Usuário escolhe arquivo.
-- [ ] App valida arquivo.
-- [ ] App pede confirmação.
-- [ ] Banco local substituído.
-- [ ] Dados aparecem após restauração.
+- [x] Usuário escolhe arquivo.
+- [x] App valida arquivo.
+- [x] App pede confirmação.
+- [x] Banco local substituído.
+- [x] Dados aparecem após restauração.
 
 #### Testes e verificação
 
-- [ ] Adicionar teste cobrindo `Criar importação com substituição total` em arquivo de teste da
+- [x] Adicionar teste cobrindo `Criar importação com substituição total` em arquivo de teste da
   sprint.
-- [ ] Cobrir pelo menos: Usuário escolhe arquivo.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Cobrir pelo menos: Usuário escolhe arquivo.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ### T1105 — Criar tela de backup
 
-- Status: todo
+- Status: done
 - Feature: Tela de backup
 - Plano: `PLAN.md` > `Fase 9 — Backup, configurações e segurança`
 - Dependências: T1104
 
 #### Requisitos funcionais
 
-- [ ] Centralizar exportação e importação.
-- [ ] Tela acessível por configurações.
-- [ ] Botão de exportar.
-- [ ] Botão de importar.
-- [ ] Textos explicam backup manual.
-- [ ] Nenhuma conta online exigida.
+- [x] Centralizar exportação e importação.
+- [x] Tela acessível por configurações.
+- [x] Botão de exportar.
+- [x] Botão de importar.
+- [x] Textos explicam backup manual.
+- [x] Nenhuma conta online exigida.
 
 #### Requisitos técnicos
 
-- [ ] Exportar e importar dados locais em JSON versionado.
-- [ ] Validar arquivo completo antes de alterar o banco.
-- [ ] Pedir confirmação antes de substituição total.
-- [ ] Usar transação de banco para evitar restauração parcial.
+- [x] Exportar e importar dados locais em JSON versionado.
+- [x] Validar arquivo completo antes de alterar o banco.
+- [x] Pedir confirmação antes de substituição total.
+- [x] Usar transação de banco para evitar restauração parcial.
 
 #### Arquivos prováveis
 
@@ -269,34 +269,34 @@ Permitir backup manual local-first.
 
 #### Critérios de aceite
 
-- [ ] Tela acessível por configurações.
-- [ ] Botão de exportar.
-- [ ] Botão de importar.
-- [ ] Textos explicam backup manual.
-- [ ] Nenhuma conta online exigida.
+- [x] Tela acessível por configurações.
+- [x] Botão de exportar.
+- [x] Botão de importar.
+- [x] Textos explicam backup manual.
+- [x] Nenhuma conta online exigida.
 
 #### Testes e verificação
 
-- [ ] Adicionar teste cobrindo `Criar tela de backup` em arquivo de teste da sprint.
-- [ ] Cobrir pelo menos: Tela acessível por configurações.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Adicionar teste cobrindo `Criar tela de backup` em arquivo de teste da sprint.
+- [x] Cobrir pelo menos: Tela acessível por configurações.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ## Testes da sprint
 
-- [ ] Teste de geração JSON.
-- [ ] Teste de validação de backup válido.
-- [ ] Teste de rejeição de backup inválido.
-- [ ] Teste de importação preservando integridade.
-- [ ] Teste de exportar e importar no mesmo fluxo.
-- [ ] `npm test` passa.
-- [ ] `npm run lint` passa.
+- [x] Teste de geração JSON.
+- [x] Teste de validação de backup válido.
+- [x] Teste de rejeição de backup inválido.
+- [x] Teste de importação preservando integridade.
+- [x] Teste de exportar e importar no mesmo fluxo.
+- [x] `npm test` passa.
+- [x] `npm run lint` passa.
 
 ## Checklist final
 
-- [ ] App abre sem tela branca.
-- [ ] `npm test` passa com os testes adicionados na sprint.
-- [ ] `npm run lint` passa sem erros.
-- [ ] Não há chamada de rede para dados financeiros.
-- [ ] Não há dependência proibida adicionada.
-- [ ] `docs/sprint-11/PROGRESS.md` descreve o que foi entregue.
+- [x] App abre sem tela branca.
+- [x] `npm test` passa com os testes adicionados na sprint.
+- [x] `npm run lint` passa sem erros.
+- [x] Não há chamada de rede para dados financeiros.
+- [x] Não há dependência proibida adicionada.
+- [x] `docs/sprint-11/PROGRESS.md` descreve o que foi entregue.
