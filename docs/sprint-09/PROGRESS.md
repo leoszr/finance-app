@@ -2,114 +2,136 @@
 
 ## Resumo
 
-- Status geral: todo
+- Status geral: concluída
 - Branch: `feature/sprint-09-local-reports`
 - Commit final sugerido: `feat(reports): add local monthly reports`
-- Use este arquivo para registrar evidências curtas e evitar reler todo o TASK.md.
+- Relatório mensal local implementado sem backend, IA, API externa ou dependência nova.
 
 ## Entregue nesta sprint
 
-- Nada entregue ainda.
+- Tela de relatórios conectada à aba `Relatórios`.
+- Mês selecionável com resumo do período.
+- Query local em SQLite para relatório mensal, transações, categorias e comparação com mês anterior.
+- Resumo textual por regras locais.
+- Testes da sprint em `src/tests/features-sprint09.test.tsx`.
 
 ## Progresso por task
 
 ### T0901 — Criar tela de relatórios
 
-- Status: todo
+- Status: done
 - Feature: Tela de relatórios
 
 #### Desenvolvido
 
-- A preencher ao concluir a task.
+- `app/(tabs)/reports.tsx` agora renderiza `ReportScreen`.
+- `ReportScreen` carrega dados locais, troca mês e trata mês sem dados.
 
 #### Evidências
 
-- A preencher com arquivos alterados, testes e comandos executados.
+- `src/features/reports/ReportScreen.tsx`
+- `app/(tabs)/reports.tsx`
+- `src/tests/features-sprint09.test.tsx`
 
 #### Pendências
 
-- Implementar task.
+- Nenhuma.
 
 ### T0902 — Criar tabela de transações do relatório
 
-- Status: todo
+- Status: done
 - Feature: Tabela de transações do relatório
 
 #### Desenvolvido
 
-- A preencher ao concluir a task.
+- Lista do período com data, descrição, categoria, conta e valor.
+- Ordenação por data desc/id desc vinda da query local.
 
 #### Evidências
 
-- A preencher com arquivos alterados, testes e comandos executados.
+- `src/db/queries/reportQueries.ts`
+- `src/features/reports/ReportScreen.tsx`
+- `src/tests/features-sprint09.test.tsx`
 
 #### Pendências
 
-- Implementar task.
+- Nenhuma.
 
 ### T0903 — Criar seção de categorias
 
-- Status: todo
+- Status: done
 - Feature: Seção de categorias
 
 #### Desenvolvido
 
-- A preencher ao concluir a task.
+- Agrupamento local de despesas por categoria.
+- Total e percentual sobre despesas, ordenado do maior para o menor.
 
 #### Evidências
 
-- A preencher com arquivos alterados, testes e comandos executados.
+- `src/db/queries/reportQueries.ts`
+- `src/tests/features-sprint09.test.tsx`
 
 #### Pendências
 
-- Implementar task.
+- Nenhuma.
 
 ### T0904 — Criar comparação com mês anterior
 
-- Status: todo
+- Status: done
 - Feature: Comparação com mês anterior
 
 #### Desenvolvido
 
-- A preencher ao concluir a task.
+- Cálculo de receitas/despesas anteriores, diferença absoluta e percentual.
+- Mês anterior sem dados retorna percentual sem base.
 
 #### Evidências
 
-- A preencher com arquivos alterados, testes e comandos executados.
+- `src/db/queries/reportQueries.ts`
+- `src/features/reports/ReportScreen.tsx`
+- `src/tests/features-sprint09.test.tsx`
 
 #### Pendências
 
-- Implementar task.
+- Nenhuma.
 
 ### T0905 — Criar resumo textual automático local
 
-- Status: todo
+- Status: done
 - Feature: Resumo textual automático local
 
 #### Desenvolvido
 
-- A preencher ao concluir a task.
+- `buildLocalReportSummary` gera texto por regras locais.
+- Cobre aumento, redução, ausência de dados e mês anterior vazio.
 
 #### Evidências
 
-- A preencher com arquivos alterados, testes e comandos executados.
+- `src/lib/reportSummary.ts`
+- `src/tests/features-sprint09.test.tsx`
 
 #### Pendências
 
-- Implementar task.
+- Nenhuma.
 
 ## Testes executados
 
-- Nenhum teste executado ainda.
+- `npm test -- --runInBand src/tests/features-sprint09.test.tsx` — passou.
+- `npm test -- --runInBand` — 21 suítes, 85 testes passaram.
+- `npm run lint` — passou.
+- `npm run typecheck` — passou.
 
 ## Decisões técnicas
 
-- Nenhuma decisão registrada ainda.
+- Sem dependência nova: relatório renderizado com componentes nativos e cálculo local.
+- Query monta joins em memória sobre dados locais para manter compatível com fake DB dos testes.
+- Ajustes pós-review: troca de mês limpa relatório em voo; resumo textual trata queda a zero e usa diferenças absolutas no texto.
 
 ## Problemas / riscos encontrados
 
-- Nenhum problema registrado ainda.
+- Nenhum bloqueio.
 
 ## Próximo passo
 
-- Iniciar a primeira task pendente em `docs/sprint-09/TASK.md`.
+- Iniciar Sprint 10 — Geração de PDF local.

@@ -13,35 +13,35 @@ Criar relatório mensal dentro do app, sem PDF ainda.
 
 ## Regras da sprint
 
-- [ ] Criar uma feature branch para a sprint.
-- [ ] Manter as alterações coesas ao objetivo da sprint.
-- [ ] Atualizar ou criar testes junto com a implementação.
-- [ ] Executar `npm test` e `npm run lint` antes do commit final.
-- [ ] Não adicionar backend, Supabase, PostgreSQL, Java backend, API externa, IA ou sync automático.
-- [ ] Atualizar `docs/sprint-09/PROGRESS.md` com evidências reais.
+- [x] Criar uma feature branch para a sprint.
+- [x] Manter as alterações coesas ao objetivo da sprint.
+- [x] Atualizar ou criar testes junto com a implementação.
+- [x] Executar `npm test` e `npm run lint` antes do commit final.
+- [x] Não adicionar backend, Supabase, PostgreSQL, Java backend, API externa, IA ou sync automático.
+- [x] Atualizar `docs/sprint-09/PROGRESS.md` com evidências reais.
 
 ## Tasks
 
 ### T0901 — Criar tela de relatórios
 
-- Status: todo
+- Status: done
 - Feature: Tela de relatórios
 - Plano: `PLAN.md` > `Fase 8 — Relatórios e PDF`
 - Dependências: T0805
 
 #### Requisitos funcionais
 
-- [ ] Centralizar análise mensal.
-- [ ] Tela acessível pela navegação.
-- [ ] Mês selecionável.
-- [ ] Mostra resumo do período.
-- [ ] Usa dados do SQLite.
+- [x] Centralizar análise mensal.
+- [x] Tela acessível pela navegação.
+- [x] Mês selecionável.
+- [x] Mostra resumo do período.
+- [x] Usa dados do SQLite.
 
 #### Requisitos técnicos
 
-- [ ] Gerar relatório somente com regras locais.
-- [ ] Não chamar IA, backend ou API externa.
-- [ ] Tratar mês sem dados e mês anterior sem dados.
+- [x] Gerar relatório somente com regras locais.
+- [x] Não chamar IA, backend ou API externa.
+- [x] Tratar mês sem dados e mês anterior sem dados.
 
 #### Arquivos prováveis
 
@@ -61,40 +61,40 @@ Criar relatório mensal dentro do app, sem PDF ainda.
 
 #### Critérios de aceite
 
-- [ ] Tela acessível pela navegação.
-- [ ] Mês selecionável.
-- [ ] Mostra resumo do período.
-- [ ] Usa dados do SQLite.
+- [x] Tela acessível pela navegação.
+- [x] Mês selecionável.
+- [x] Mostra resumo do período.
+- [x] Usa dados do SQLite.
 
 #### Testes e verificação
 
-- [ ] Adicionar teste cobrindo `Criar tela de relatórios` em arquivo de teste da sprint.
-- [ ] Cobrir pelo menos: Tela acessível pela navegação.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Adicionar teste cobrindo `Criar tela de relatórios` em arquivo de teste da sprint.
+- [x] Cobrir pelo menos: Tela acessível pela navegação.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ### T0902 — Criar tabela de transações do relatório
 
-- Status: todo
+- Status: done
 - Feature: Tabela de transações do relatório
 - Plano: `PLAN.md` > `Fase 8 — Relatórios e PDF`
 - Dependências: T0901
 
 #### Requisitos funcionais
 
-- [ ] Mostrar transações do período.
-- [ ] Mostra data.
-- [ ] Mostra descrição.
-- [ ] Mostra categoria.
-- [ ] Mostra conta.
-- [ ] Mostra valor.
-- [ ] Ordena por data.
+- [x] Mostrar transações do período.
+- [x] Mostra data.
+- [x] Mostra descrição.
+- [x] Mostra categoria.
+- [x] Mostra conta.
+- [x] Mostra valor.
+- [x] Ordena por data.
 
 #### Requisitos técnicos
 
-- [ ] Gerar relatório somente com regras locais.
-- [ ] Não chamar IA, backend ou API externa.
-- [ ] Tratar mês sem dados e mês anterior sem dados.
+- [x] Gerar relatório somente com regras locais.
+- [x] Não chamar IA, backend ou API externa.
+- [x] Tratar mês sem dados e mês anterior sem dados.
 
 #### Arquivos prováveis
 
@@ -113,41 +113,41 @@ Criar relatório mensal dentro do app, sem PDF ainda.
 
 #### Critérios de aceite
 
-- [ ] Mostra data.
-- [ ] Mostra descrição.
-- [ ] Mostra categoria.
-- [ ] Mostra conta.
-- [ ] Mostra valor.
-- [ ] Ordena por data.
+- [x] Mostra data.
+- [x] Mostra descrição.
+- [x] Mostra categoria.
+- [x] Mostra conta.
+- [x] Mostra valor.
+- [x] Ordena por data.
 
 #### Testes e verificação
 
-- [ ] Adicionar teste cobrindo `Criar tabela de transações do relatório` em arquivo de teste da
+- [x] Adicionar teste cobrindo `Criar tabela de transações do relatório` em arquivo de teste da
   sprint.
-- [ ] Cobrir pelo menos: Mostra data.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Cobrir pelo menos: Mostra data.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ### T0903 — Criar seção de categorias
 
-- Status: todo
+- Status: done
 - Feature: Seção de categorias
 - Plano: `PLAN.md` > `Fase 8 — Relatórios e PDF`
 - Dependências: T0902
 
 #### Requisitos funcionais
 
-- [ ] Resumir gastos por categoria.
-- [ ] Agrupa despesas por categoria.
-- [ ] Mostra valor total.
-- [ ] Mostra percentual sobre despesas.
-- [ ] Ordena do maior para o menor.
+- [x] Resumir gastos por categoria.
+- [x] Agrupa despesas por categoria.
+- [x] Mostra valor total.
+- [x] Mostra percentual sobre despesas.
+- [x] Ordena do maior para o menor.
 
 #### Requisitos técnicos
 
-- [ ] Gerar relatório somente com regras locais.
-- [ ] Não chamar IA, backend ou API externa.
-- [ ] Tratar mês sem dados e mês anterior sem dados.
+- [x] Gerar relatório somente com regras locais.
+- [x] Não chamar IA, backend ou API externa.
+- [x] Tratar mês sem dados e mês anterior sem dados.
 
 #### Arquivos prováveis
 
@@ -166,39 +166,39 @@ Criar relatório mensal dentro do app, sem PDF ainda.
 
 #### Critérios de aceite
 
-- [ ] Agrupa despesas por categoria.
-- [ ] Mostra valor total.
-- [ ] Mostra percentual sobre despesas.
-- [ ] Ordena do maior para o menor.
+- [x] Agrupa despesas por categoria.
+- [x] Mostra valor total.
+- [x] Mostra percentual sobre despesas.
+- [x] Ordena do maior para o menor.
 
 #### Testes e verificação
 
-- [ ] Adicionar teste cobrindo `Criar seção de categorias` em arquivo de teste da sprint.
-- [ ] Cobrir pelo menos: Agrupa despesas por categoria.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Adicionar teste cobrindo `Criar seção de categorias` em arquivo de teste da sprint.
+- [x] Cobrir pelo menos: Agrupa despesas por categoria.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ### T0904 — Criar comparação com mês anterior
 
-- Status: todo
+- Status: done
 - Feature: Comparação com mês anterior
 - Plano: `PLAN.md` > `Fase 8 — Relatórios e PDF`
 - Dependências: T0903
 
 #### Requisitos funcionais
 
-- [ ] Mostrar variação mensal.
-- [ ] Calcula receita do mês anterior.
-- [ ] Calcula despesa do mês anterior.
-- [ ] Mostra diferença absoluta.
-- [ ] Mostra diferença percentual.
-- [ ] Trata mês anterior sem dados.
+- [x] Mostrar variação mensal.
+- [x] Calcula receita do mês anterior.
+- [x] Calcula despesa do mês anterior.
+- [x] Mostra diferença absoluta.
+- [x] Mostra diferença percentual.
+- [x] Trata mês anterior sem dados.
 
 #### Requisitos técnicos
 
-- [ ] Gerar relatório somente com regras locais.
-- [ ] Não chamar IA, backend ou API externa.
-- [ ] Tratar mês sem dados e mês anterior sem dados.
+- [x] Gerar relatório somente com regras locais.
+- [x] Não chamar IA, backend ou API externa.
+- [x] Tratar mês sem dados e mês anterior sem dados.
 
 #### Arquivos prováveis
 
@@ -216,39 +216,39 @@ Criar relatório mensal dentro do app, sem PDF ainda.
 
 #### Critérios de aceite
 
-- [ ] Calcula receita do mês anterior.
-- [ ] Calcula despesa do mês anterior.
-- [ ] Mostra diferença absoluta.
-- [ ] Mostra diferença percentual.
-- [ ] Trata mês anterior sem dados.
+- [x] Calcula receita do mês anterior.
+- [x] Calcula despesa do mês anterior.
+- [x] Mostra diferença absoluta.
+- [x] Mostra diferença percentual.
+- [x] Trata mês anterior sem dados.
 
 #### Testes e verificação
 
-- [ ] Adicionar teste cobrindo `Criar comparação com mês anterior` em arquivo de teste da sprint.
-- [ ] Cobrir pelo menos: Calcula receita do mês anterior.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Adicionar teste cobrindo `Criar comparação com mês anterior` em arquivo de teste da sprint.
+- [x] Cobrir pelo menos: Calcula receita do mês anterior.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ### T0905 — Criar resumo textual automático local
 
-- Status: todo
+- Status: done
 - Feature: Resumo textual automático local
 - Plano: `PLAN.md` > `Fase 8 — Relatórios e PDF`
 - Dependências: T0904
 
 #### Requisitos funcionais
 
-- [ ] Gerar observações sem IA.
-- [ ] Texto gerado por regras locais.
-- [ ] Não chama API externa.
-- [ ] Cobre aumento, redução e ausência de dados.
-- [ ] Usa valores reais do relatório.
+- [x] Gerar observações sem IA.
+- [x] Texto gerado por regras locais.
+- [x] Não chama API externa.
+- [x] Cobre aumento, redução e ausência de dados.
+- [x] Usa valores reais do relatório.
 
 #### Requisitos técnicos
 
-- [ ] Gerar relatório somente com regras locais.
-- [ ] Não chamar IA, backend ou API externa.
-- [ ] Tratar mês sem dados e mês anterior sem dados.
+- [x] Gerar relatório somente com regras locais.
+- [x] Não chamar IA, backend ou API externa.
+- [x] Tratar mês sem dados e mês anterior sem dados.
 
 #### Arquivos prováveis
 
@@ -268,34 +268,34 @@ Criar relatório mensal dentro do app, sem PDF ainda.
 
 #### Critérios de aceite
 
-- [ ] Texto gerado por regras locais.
-- [ ] Não chama API externa.
-- [ ] Cobre aumento, redução e ausência de dados.
-- [ ] Usa valores reais do relatório.
+- [x] Texto gerado por regras locais.
+- [x] Não chama API externa.
+- [x] Cobre aumento, redução e ausência de dados.
+- [x] Usa valores reais do relatório.
 
 #### Testes e verificação
 
-- [ ] Adicionar teste cobrindo `Criar resumo textual automático local` em arquivo de teste da
+- [x] Adicionar teste cobrindo `Criar resumo textual automático local` em arquivo de teste da
   sprint.
-- [ ] Cobrir pelo menos: Texto gerado por regras locais.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Cobrir pelo menos: Texto gerado por regras locais.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ## Testes da sprint
 
-- [ ] Teste de agrupamento por categoria.
-- [ ] Teste de percentual por categoria.
-- [ ] Teste de comparação mensal.
-- [ ] Teste de relatório sem dados.
-- [ ] Teste de resumo textual por regras locais.
-- [ ] `npm test` passa.
-- [ ] `npm run lint` passa.
+- [x] Teste de agrupamento por categoria.
+- [x] Teste de percentual por categoria.
+- [x] Teste de comparação mensal.
+- [x] Teste de relatório sem dados.
+- [x] Teste de resumo textual por regras locais.
+- [x] `npm test` passa.
+- [x] `npm run lint` passa.
 
 ## Checklist final
 
-- [ ] App abre sem tela branca.
-- [ ] `npm test` passa com os testes adicionados na sprint.
-- [ ] `npm run lint` passa sem erros.
-- [ ] Não há chamada de rede para dados financeiros.
-- [ ] Não há dependência proibida adicionada.
-- [ ] `docs/sprint-09/PROGRESS.md` descreve o que foi entregue.
+- [x] App abre sem tela branca.
+- [x] `npm test` passa com os testes adicionados na sprint.
+- [x] `npm run lint` passa sem erros.
+- [x] Não há chamada de rede para dados financeiros.
+- [x] Não há dependência proibida adicionada.
+- [x] `docs/sprint-09/PROGRESS.md` descreve o que foi entregue.
