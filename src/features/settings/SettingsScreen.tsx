@@ -5,8 +5,9 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Button, Card } from '@/components/ui';
 import { createSettingsRepository } from '@/db/repositories/settingsRepository';
 import { APP_NAME, APP_TAGLINE } from '@/lib/appInfo';
+import { localAuth as defaultLocalAuth, type BiometricAvailability, type LocalAuth } from '@/lib/localAuth';
 import { formatCentsToCurrency, type AppCurrency } from '@/lib/money';
-import { DEFAULT_CURRENCY, DEFAULT_INITIAL_MONTH, normalizeCurrency, normalizeInitialMonth, SETTINGS_KEYS, type InitialMonthPreference } from '@/lib/settings/preferences';
+import { DEFAULT_CURRENCY, DEFAULT_INITIAL_MONTH, normalizeBooleanSetting, normalizeCurrency, normalizeInitialMonth, SETTINGS_KEYS, type InitialMonthPreference } from '@/lib/settings/preferences';
 
 type SettingsRepository = ReturnType<typeof createSettingsRepository>;
 
@@ -17,10 +18,12 @@ function getDefaultSettingsRepository() {
   return defaultSettingsRepository;
 }
 
-export function SettingsScreen({ settingsRepository }: { settingsRepository?: SettingsRepository }) {
+export function SettingsScreen({ localAuth = defaultLocalAuth, settingsRepository }: { localAuth?: LocalAuth; settingsRepository?: SettingsRepository }) {
   const repository = useMemo(() => settingsRepository ?? getDefaultSettingsRepository(), [settingsRepository]);
   const [currency, setCurrency] = useState<AppCurrency>(DEFAULT_CURRENCY);
   const [initialMonth, setInitialMonth] = useState<InitialMonthPreference>(DEFAULT_INITIAL_MONTH);
+  const [appLockEnabled, setAppLockEnabled] = useState(false);
+  const [biometrics, setBiometrics] = useState<BiometricAvailability>({ available: false, labels: [] });
   const [status, setStatus] = useState('');
 
   useEffect(() => {
@@ -28,13 +31,18 @@ export function SettingsScreen({ settingsRepository }: { settingsRepository?: Se
       void Promise.all([
         repository.getSetting(SETTINGS_KEYS.currency),
         repository.getSetting(SETTINGS_KEYS.initialMonth),
-      ]).then(([savedCurrency, savedInitialMonth]) => {
+        repository.getSetting(SETTINGS_KEYS.appLockEnabled),
+      ]).then(([savedCurrency, savedInitialMonth, savedAppLock]) => {
         setCurrency(normalizeCurrency(savedCurrency?.value));
         setInitialMonth(normalizeInitialMonth(savedInitialMonth?.value));
+        setAppLockEnabled(normalizeBooleanSetting(savedAppLock?.value));
       });
+      void localAuth.getBiometricAvailability()
+        .then(setBiometrics)
+        .catch(() => setBiometrics({ available: false, labels: [], reason: 'Biometria indisponível neste aparelho.' }));
     }, 0);
     return () => clearTimeout(timer);
-  }, [repository]);
+  }, [localAuth, repository]);
 
   async function saveCurrency(next: AppCurrency) {
     const result = await repository.setSetting(SETTINGS_KEYS.currency, next);
@@ -48,6 +56,17 @@ export function SettingsScreen({ settingsRepository }: { settingsRepository?: Se
     if (!result.ok) { setStatus(result.error.message); return; }
     setInitialMonth(next);
     setStatus('Mês inicial salvo.');
+  }
+
+  async function saveAppLock(next: boolean) {
+    if (next && !biometrics.available) {
+      setStatus(biometrics.reason ?? 'Biometria indisponível neste aparelho.');
+      return;
+    }
+    const result = await repository.setSetting(SETTINGS_KEYS.appLockEnabled, String(next));
+    if (!result.ok) { setStatus(result.error.message); return; }
+    setAppLockEnabled(next);
+    setStatus(next ? 'Bloqueio local ativado.' : 'Bloqueio local desativado.');
   }
 
   const preview = formatCentsToCurrency(123456, currency);
@@ -79,6 +98,20 @@ export function SettingsScreen({ settingsRepository }: { settingsRepository?: Se
         <Text style={styles.text}>Não há sincronização automática.</Text>
         <Text style={styles.text}>Faça backup manual com frequência.</Text>
         <Button onPress={() => router.push('/backup' as never)}>Backup</Button>
+      </Card>
+
+      <Card>
+        <Text style={styles.section}>Segurança local</Text>
+        <Text style={styles.label}>Bloqueio do app: {appLockEnabled ? 'ativado' : 'desativado'}</Text>
+        <Text style={styles.text}>
+          {biometrics.available
+            ? `Biometria disponível${biometrics.labels.length ? `: ${biometrics.labels.join(', ')}` : '.'}`
+            : (biometrics.reason ?? 'Biometria indisponível neste aparelho.')}
+        </Text>
+        <View style={styles.row}>
+          <Button onPress={() => void saveAppLock(true)} disabled={appLockEnabled || !biometrics.available}>Ativar bloqueio</Button>
+          <Button onPress={() => void saveAppLock(false)} disabled={!appLockEnabled}>Desativar bloqueio</Button>
+        </View>
       </Card>
 
       {status ? <Text style={styles.status}>{status}</Text> : null}

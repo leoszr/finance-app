@@ -13,7 +13,13 @@
       "predictiveBackGestureEnabled": false
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Permitir que o Finance App use Face ID para desbloquear seus dados locais."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

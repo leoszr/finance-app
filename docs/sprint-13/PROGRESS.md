@@ -2,97 +2,109 @@
 
 ## Resumo
 
-- Status geral: todo
+- Status geral: done
 - Branch: `dev`
 - Commit final sugerido: `feat(security): add optional local app lock`
-- Use este arquivo para registrar evidências curtas e evitar reler todo o TASK.md.
 
 ## Entregue nesta sprint
 
-- Nada entregue ainda.
+- Suporte a autenticação local via `expo-local-authentication`.
+- Configuração local para ativar/desativar bloqueio do app.
+- Gate de bloqueio antes da navegação principal, sem mostrar dados financeiros atrás.
+- Tela de bloqueio com retry e fallback controlado quando biometria fica indisponível.
 
 ## Progresso por task
 
 ### T1301 — Adicionar suporte a biometria local
 
-- Status: todo
+- Status: done
 - Feature: Suporte a biometria local
 
 #### Desenvolvido
 
-- A preencher ao concluir a task.
+- `src/lib/localAuth.ts` detecta hardware, cadastro biométrico e tipos suportados.
+- Autenticação local usa prompt nativo do aparelho.
 
 #### Evidências
 
-- A preencher com arquivos alterados, testes e comandos executados.
+- Teste: `src/tests/features-sprint13.test.tsx` cobre detecção biométrica.
 
 #### Pendências
 
-- Implementar task.
+- Nenhuma.
 
 ### T1302 — Criar configuração de bloqueio
 
-- Status: todo
+- Status: done
 - Feature: Configuração de bloqueio
 
 #### Desenvolvido
 
-- A preencher ao concluir a task.
+- `appLockEnabled` salvo em `settings`.
+- `SettingsScreen` permite ativar/desativar bloqueio quando biometria está disponível.
 
 #### Evidências
 
-- A preencher com arquivos alterados, testes e comandos executados.
+- Teste cobre ativação, persistência e desativação.
 
 #### Pendências
 
-- Implementar task.
+- Nenhuma.
 
 ### T1303 — Criar tela de bloqueio
 
-- Status: todo
+- Status: done
 - Feature: Tela de bloqueio
 
 #### Desenvolvido
 
-- A preencher ao concluir a task.
+- `AppLockGate` envolve a navegação raiz após inicialização do banco.
+- `AppLockScreen` bloqueia visualmente antes do dashboard e libera após autenticação.
 
 #### Evidências
 
-- A preencher com arquivos alterados, testes e comandos executados.
+- Teste garante que conteúdo privado não aparece antes do desbloqueio.
 
 #### Pendências
 
-- Implementar task.
+- Nenhuma.
 
 ### T1304 — Criar fallback controlado
 
-- Status: todo
+- Status: done
 - Feature: Fallback controlado
 
 #### Desenvolvido
 
-- A preencher ao concluir a task.
+- Falha de autenticação mantém o app bloqueado e permite nova tentativa.
+- Se biometria estiver indisponível após bloqueio ativado, o app mostra aviso e permite entrada sem apagar dados.
 
 #### Evidências
 
-- A preencher com arquivos alterados, testes e comandos executados.
+- Testes cobrem retry após falha e fallback sem biometria.
 
 #### Pendências
 
-- Implementar task.
+- Nenhuma.
 
 ## Testes executados
 
-- Nenhum teste executado ainda.
+- `npm run typecheck` — passou.
+- `npm run lint` — passou.
+- `npm test -- --runInBand` — 25 suites, 103 testes passaram.
 
 ## Decisões técnicas
 
-- Nenhuma decisão registrada ainda.
+- Preferido bloqueio biométrico nativo do Expo. Sem PIN próprio nesta sprint para evitar armazenar segredo local fraco sem SecureStore.
+- Fallback sem biometria libera o app com aviso para evitar travamento e perda de acesso aos dados locais.
+- Pós-review: lock desativado não consulta biometria; falhas nativas não travam app; retorno do background relocka o app.
 
 ## Problemas / riscos encontrados
 
-- Nenhum problema registrado ainda.
+- `npm install` reportou 37 vulnerabilidades moderadas já existentes no audit; não bloqueou build/testes.
+- `expo-local-authentication` adicionou suporte nativo; precisa rebuild do app nativo para uso em device.
+- Disabling app lock sem nova autenticação foi deferido para hardening futuro.
 
 ## Próximo passo
 
-- Iniciar a primeira task pendente em `docs/sprint-13/TASK.md`.
+- Abrir PR de `dev` para `main` ou iniciar Sprint 14.

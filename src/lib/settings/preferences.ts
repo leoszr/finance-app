@@ -3,6 +3,7 @@ import type { AppCurrency } from '@/lib/money';
 export const SETTINGS_KEYS = {
   currency: 'currency',
   initialMonth: 'initialMonth',
+  appLockEnabled: 'appLockEnabled',
 } as const;
 
 export type InitialMonthPreference = 'current' | 'lastWithData';
@@ -16,4 +17,8 @@ export function normalizeCurrency(value: string | null | undefined): AppCurrency
 
 export function normalizeInitialMonth(value: string | null | undefined): InitialMonthPreference {
   return value === 'lastWithData' ? value : DEFAULT_INITIAL_MONTH;
+}
+
+export function normalizeBooleanSetting(value: string | null | undefined): boolean {
+  return value === 'true';
 }

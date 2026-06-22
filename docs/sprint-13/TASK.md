@@ -13,36 +13,36 @@ Adicionar bloqueio local opcional com biometria ou PIN definido pelo usuário.
 
 ## Regras da sprint
 
-- [ ] Garantir que o trabalho da sprint será feito na branch `dev`.
-- [ ] Manter as alterações coesas ao objetivo da sprint.
-- [ ] Atualizar ou criar testes junto com a implementação.
-- [ ] Executar `npm test` e `npm run lint` antes do commit final.
-- [ ] Não adicionar backend, Supabase, PostgreSQL, Java backend, API externa, IA ou sync automático.
+- [x] Garantir que o trabalho da sprint será feito na branch `dev`.
+- [x] Manter as alterações coesas ao objetivo da sprint.
+- [x] Atualizar ou criar testes junto com a implementação.
+- [x] Executar `npm test` e `npm run lint` antes do commit final.
+- [x] Não adicionar backend, Supabase, PostgreSQL, Java backend, API externa, IA ou sync automático.
 - [ ] Ao concluir, abrir PR de `dev` para `main`.
-- [ ] Atualizar `docs/sprint-13/PROGRESS.md` com evidências reais.
+- [x] Atualizar `docs/sprint-13/PROGRESS.md` com evidências reais.
 
 ## Tasks
 
 ### T1301 — Adicionar suporte a biometria local
 
-- Status: todo
+- Status: done
 - Feature: Suporte a biometria local
 - Plano: `PLAN.md` > `Fase 9 — Backup, configurações e segurança`
 - Dependências: T1204
 
 #### Requisitos funcionais
 
-- [ ] Permitir desbloqueio com Face ID, Touch ID ou biometria Android.
-- [ ] App detecta disponibilidade.
-- [ ] Usuário pode ativar bloqueio.
-- [ ] App solicita autenticação ao abrir.
-- [ ] Sem biometria, opção fica indisponível.
+- [x] Permitir desbloqueio com Face ID, Touch ID ou biometria Android.
+- [x] App detecta disponibilidade.
+- [x] Usuário pode ativar bloqueio.
+- [x] App solicita autenticação ao abrir.
+- [x] Sem biometria, opção fica indisponível.
 
 #### Requisitos técnicos
 
-- [ ] Usar autenticação local do dispositivo quando disponível.
-- [ ] Não enviar credenciais ou dados financeiros para rede.
-- [ ] Garantir fallback sem apagar dados.
+- [x] Usar autenticação local do dispositivo quando disponível.
+- [x] Não enviar credenciais ou dados financeiros para rede.
+- [x] Garantir fallback sem apagar dados.
 
 #### Arquivos prováveis
 
@@ -60,38 +60,38 @@ Adicionar bloqueio local opcional com biometria ou PIN definido pelo usuário.
 
 #### Critérios de aceite
 
-- [ ] App detecta disponibilidade.
-- [ ] Usuário pode ativar bloqueio.
-- [ ] App solicita autenticação ao abrir.
-- [ ] Sem biometria, opção fica indisponível.
+- [x] App detecta disponibilidade.
+- [x] Usuário pode ativar bloqueio.
+- [x] App solicita autenticação ao abrir.
+- [x] Sem biometria, opção fica indisponível.
 
 #### Testes e verificação
 
-- [ ] Adicionar teste cobrindo `Adicionar suporte a biometria local` em arquivo de teste da sprint.
-- [ ] Cobrir pelo menos: App detecta disponibilidade.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Adicionar teste cobrindo `Adicionar suporte a biometria local` em arquivo de teste da sprint.
+- [x] Cobrir pelo menos: App detecta disponibilidade.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ### T1302 — Criar configuração de bloqueio
 
-- Status: todo
+- Status: done
 - Feature: Configuração de bloqueio
 - Plano: `PLAN.md` > `Fase 9 — Backup, configurações e segurança`
 - Dependências: T1301
 
 #### Requisitos funcionais
 
-- [ ] Salvar preferência local.
-- [ ] Usuário ativa bloqueio.
-- [ ] Usuário desativa bloqueio.
-- [ ] Escolha persiste.
-- [ ] App respeita escolha ao reiniciar.
+- [x] Salvar preferência local.
+- [x] Usuário ativa bloqueio.
+- [x] Usuário desativa bloqueio.
+- [x] Escolha persiste.
+- [x] App respeita escolha ao reiniciar.
 
 #### Requisitos técnicos
 
-- [ ] Usar autenticação local do dispositivo quando disponível.
-- [ ] Não enviar credenciais ou dados financeiros para rede.
-- [ ] Garantir fallback sem apagar dados.
+- [x] Usar autenticação local do dispositivo quando disponível.
+- [x] Não enviar credenciais ou dados financeiros para rede.
+- [x] Garantir fallback sem apagar dados.
 
 #### Arquivos prováveis
 
@@ -111,38 +111,38 @@ Adicionar bloqueio local opcional com biometria ou PIN definido pelo usuário.
 
 #### Critérios de aceite
 
-- [ ] Usuário ativa bloqueio.
-- [ ] Usuário desativa bloqueio.
-- [ ] Escolha persiste.
-- [ ] App respeita escolha ao reiniciar.
+- [x] Usuário ativa bloqueio.
+- [x] Usuário desativa bloqueio.
+- [x] Escolha persiste.
+- [x] App respeita escolha ao reiniciar.
 
 #### Testes e verificação
 
-- [ ] Adicionar teste cobrindo `Criar configuração de bloqueio` em arquivo de teste da sprint.
-- [ ] Cobrir pelo menos: Usuário ativa bloqueio.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Adicionar teste cobrindo `Criar configuração de bloqueio` em arquivo de teste da sprint.
+- [x] Cobrir pelo menos: Usuário ativa bloqueio.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ### T1303 — Criar tela de bloqueio
 
-- Status: todo
+- Status: done
 - Feature: Tela de bloqueio
 - Plano: `PLAN.md` > `Fase 9 — Backup, configurações e segurança`
 - Dependências: T1302
 
 #### Requisitos funcionais
 
-- [ ] Impedir acesso visual aos dados antes da autenticação.
-- [ ] Tela aparece antes do dashboard.
-- [ ] Dados financeiros não aparecem atrás da tela.
-- [ ] Falha mantém app bloqueado.
-- [ ] Sucesso libera navegação.
+- [x] Impedir acesso visual aos dados antes da autenticação.
+- [x] Tela aparece antes do dashboard.
+- [x] Dados financeiros não aparecem atrás da tela.
+- [x] Falha mantém app bloqueado.
+- [x] Sucesso libera navegação.
 
 #### Requisitos técnicos
 
-- [ ] Usar autenticação local do dispositivo quando disponível.
-- [ ] Não enviar credenciais ou dados financeiros para rede.
-- [ ] Garantir fallback sem apagar dados.
+- [x] Usar autenticação local do dispositivo quando disponível.
+- [x] Não enviar credenciais ou dados financeiros para rede.
+- [x] Garantir fallback sem apagar dados.
 
 #### Arquivos prováveis
 
@@ -160,37 +160,37 @@ Adicionar bloqueio local opcional com biometria ou PIN definido pelo usuário.
 
 #### Critérios de aceite
 
-- [ ] Tela aparece antes do dashboard.
-- [ ] Dados financeiros não aparecem atrás da tela.
-- [ ] Falha mantém app bloqueado.
-- [ ] Sucesso libera navegação.
+- [x] Tela aparece antes do dashboard.
+- [x] Dados financeiros não aparecem atrás da tela.
+- [x] Falha mantém app bloqueado.
+- [x] Sucesso libera navegação.
 
 #### Testes e verificação
 
-- [ ] Adicionar teste cobrindo `Criar tela de bloqueio` em arquivo de teste da sprint.
-- [ ] Cobrir pelo menos: Tela aparece antes do dashboard.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Adicionar teste cobrindo `Criar tela de bloqueio` em arquivo de teste da sprint.
+- [x] Cobrir pelo menos: Tela aparece antes do dashboard.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ### T1304 — Criar fallback controlado
 
-- Status: todo
+- Status: done
 - Feature: Fallback controlado
 - Plano: `PLAN.md` > `Fase 9 — Backup, configurações e segurança`
 - Dependências: T1303
 
 #### Requisitos funcionais
 
-- [ ] Evitar travamento do app.
-- [ ] Usuário pode tentar autenticar novamente.
-- [ ] Sem biometria, app mostra aviso.
-- [ ] App não perde dados.
+- [x] Evitar travamento do app.
+- [x] Usuário pode tentar autenticar novamente.
+- [x] Sem biometria, app mostra aviso.
+- [x] App não perde dados.
 
 #### Requisitos técnicos
 
-- [ ] Usar autenticação local do dispositivo quando disponível.
-- [ ] Não enviar credenciais ou dados financeiros para rede.
-- [ ] Garantir fallback sem apagar dados.
+- [x] Usar autenticação local do dispositivo quando disponível.
+- [x] Não enviar credenciais ou dados financeiros para rede.
+- [x] Garantir fallback sem apagar dados.
 
 #### Arquivos prováveis
 
@@ -210,32 +210,32 @@ Adicionar bloqueio local opcional com biometria ou PIN definido pelo usuário.
 
 #### Critérios de aceite
 
-- [ ] Usuário pode tentar autenticar novamente.
-- [ ] Sem biometria, app mostra aviso.
-- [ ] App não perde dados.
+- [x] Usuário pode tentar autenticar novamente.
+- [x] Sem biometria, app mostra aviso.
+- [x] App não perde dados.
 
 #### Testes e verificação
 
-- [ ] Adicionar teste cobrindo `Criar fallback controlado` em arquivo de teste da sprint.
-- [ ] Cobrir pelo menos: Usuário pode tentar autenticar novamente.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Adicionar teste cobrindo `Criar fallback controlado` em arquivo de teste da sprint.
+- [x] Cobrir pelo menos: Usuário pode tentar autenticar novamente.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ## Testes da sprint
 
-- [ ] Teste de configuração ativada.
-- [ ] Teste de configuração desativada.
-- [ ] Teste de tela bloqueada.
-- [ ] Teste de desbloqueio com mock.
-- [ ] Teste de fallback sem biometria.
-- [ ] `npm test` passa.
-- [ ] `npm run lint` passa.
+- [x] Teste de configuração ativada.
+- [x] Teste de configuração desativada.
+- [x] Teste de tela bloqueada.
+- [x] Teste de desbloqueio com mock.
+- [x] Teste de fallback sem biometria.
+- [x] `npm test` passa.
+- [x] `npm run lint` passa.
 
 ## Checklist final
 
-- [ ] App abre sem tela branca.
-- [ ] `npm test` passa com os testes adicionados na sprint.
-- [ ] `npm run lint` passa sem erros.
-- [ ] Não há chamada de rede para dados financeiros.
-- [ ] Não há dependência proibida adicionada.
-- [ ] `docs/sprint-13/PROGRESS.md` descreve o que foi entregue.
+- [x] App abre sem tela branca.
+- [x] `npm test` passa com os testes adicionados na sprint.
+- [x] `npm run lint` passa sem erros.
+- [x] Não há chamada de rede para dados financeiros.
+- [x] Não há dependência proibida adicionada.
+- [x] `docs/sprint-13/PROGRESS.md` descreve o que foi entregue.

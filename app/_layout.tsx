@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { ErrorState } from '@/components/feedback/ErrorState';
 import { LoadingState } from '@/components/feedback/LoadingState';
 import { initDatabase } from '@/db/initDatabase';
+import { AppLockGate } from '@/features/security/AppLockGate';
 
 const DATABASE_ERROR_MESSAGE =
   'Não conseguimos preparar seus dados neste aparelho. Feche e abra o app; se continuar, tente novamente.';
@@ -37,5 +38,9 @@ export default function RootLayout() {
     return <LoadingState message="Inicializando banco local..." />;
   }
 
-  return <Stack screenOptions={{ headerShown: false }} />;
+  return (
+    <AppLockGate>
+      <Stack screenOptions={{ headerShown: false }} />
+    </AppLockGate>
+  );
 }

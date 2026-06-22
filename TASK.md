@@ -103,7 +103,7 @@
 
 ### Sprint 13 — Segurança local básica
 
-- Status: todo
+- Status: done
 - Branch: `dev`
 - Tasks: `docs/sprint-13/TASK.md`
 - Progresso: `docs/sprint-13/PROGRESS.md`
