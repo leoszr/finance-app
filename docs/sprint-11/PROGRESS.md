@@ -9,7 +9,7 @@
 
 ## Entregue nesta sprint
 
-- Nada entregue ainda.
+- Backup JSON local com exportação/importação básica e tela inicial de backup.
 
 ## Progresso por task
 
@@ -20,15 +20,21 @@
 
 #### Desenvolvido
 
-- A preencher ao concluir a task.
+- `src/lib/backup/backupSchema.ts`
+- `src/lib/backup/exportBackup.ts`
+- `src/lib/backup/importBackup.ts`
+- `src/features/backup/BackupScreen.tsx`
+- `src/tests/features-sprint11.test.tsx`
 
 #### Evidências
 
-- A preencher com arquivos alterados, testes e comandos executados.
+- `npm test -- --runInBand src/tests/features-sprint11.test.tsx`
+- `npm test -- --runInBand`
+- `npm run lint -- --max-warnings=0`
 
 #### Pendências
 
-- Implementar task.
+- Refinar escolha de arquivo nativa depois.
 
 ### T1102 — Criar compartilhamento do backup
 

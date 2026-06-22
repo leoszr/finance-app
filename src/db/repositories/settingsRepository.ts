@@ -13,6 +13,11 @@ type SettingRow = {
 
 export function createSettingsRepository(database: RepositoryDatabase = getRepositoryDatabase()) {
   return {
+    async getSettings(): Promise<SettingRecord[]> {
+      const rows = await database.getAllAsync<SettingRow>(`SELECT key, value FROM settings ORDER BY key ASC`);
+      return rows.map((row) => ({ key: row.key, value: row.value }));
+    },
+
     async getSetting(key: string): Promise<SettingRecord | null> {
       const normalizedKey = key.trim();
       if (!normalizedKey) return null;
@@ -42,4 +47,3 @@ export function createSettingsRepository(database: RepositoryDatabase = getRepos
     },
   };
 }
-
