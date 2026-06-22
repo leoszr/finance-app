@@ -14,6 +14,7 @@ export default function TabsLayout() {
         tabBarStyle: { minHeight: 64, paddingBottom: 8, paddingTop: 8 },
       }}
     >
+      <Tabs.Screen name="backup" options={{ href: null }} />
       {TAB_ROUTES.map((route) => (
         <Tabs.Screen
           key={route.name}

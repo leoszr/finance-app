@@ -1,0 +1,36 @@
+import { getSqliteDatabase } from '@/db/client';
+import { notifyFinanceDataChanged } from '@/lib/dataEvents';
+import { BACKUP_SCHEMA_VERSION, type BackupData } from './backupSchema';
+
+export function validateBackup(data: unknown) {
+  if (!data || typeof data !== 'object' || Array.isArray(data)) return { ok: false as const, error: 'backup_shape_invalid' };
+
+  const backup = data as Partial<BackupData>;
+  if (backup.schemaVersion !== BACKUP_SCHEMA_VERSION) return { ok: false as const, error: 'backup_schema_invalid' };
+  if (!Array.isArray(backup.accounts) || !Array.isArray(backup.categories) || !Array.isArray(backup.transactions) || !Array.isArray(backup.settings)) {
+    return { ok: false as const, error: 'backup_shape_invalid' };
+  }
+
+  return { ok: true as const, value: backup as BackupData };
+}
+
+export async function importBackup(data: unknown) {
+  const valid = validateBackup(data);
+  if (!valid.ok) return valid;
+  const db = getSqliteDatabase();
+  const backup = valid.value;
+  db.execSync('BEGIN IMMEDIATE;');
+  try {
+    db.execSync('DELETE FROM transactions; DELETE FROM accounts; DELETE FROM categories; DELETE FROM settings;');
+    for (const row of backup.accounts) db.runSync('INSERT INTO accounts (id, name, type, currency, initial_balance_cents, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)', [row.id, row.name, row.type, row.currency, row.initialBalanceCents ?? row.initial_balance_cents, row.createdAt ?? row.created_at, row.updatedAt ?? row.updated_at].map((value) => value as never));
+    for (const row of backup.categories) db.runSync('INSERT INTO categories (id, name, type, color, icon, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)', [row.id, row.name, row.type, row.color ?? null, row.icon ?? null, row.createdAt ?? row.created_at, row.updatedAt ?? row.updated_at].map((value) => value as never));
+    for (const row of backup.transactions) db.runSync('INSERT INTO transactions (id, account_id, category_id, type, amount_cents, description, transaction_date, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [row.id, row.accountId ?? row.account_id, row.categoryId ?? row.category_id, row.type, row.amountCents ?? row.amount_cents, row.description ?? null, row.transactionDate ?? row.transaction_date, row.createdAt ?? row.created_at, row.updatedAt ?? row.updated_at].map((value) => value as never));
+    for (const row of backup.settings) db.runSync('INSERT INTO settings (key, value, created_at, updated_at) VALUES (?, ?, ?, ?)', [row.key, row.value, row.createdAt ?? row.created_at ?? '2026-06-21 00:00:00', row.updatedAt ?? row.updated_at ?? '2026-06-21 00:00:00'].map((value) => value as never));
+    db.execSync('COMMIT;');
+    notifyFinanceDataChanged();
+    return { ok: true as const };
+  } catch (error) {
+    db.execSync('ROLLBACK;');
+    return { ok: false as const, error: error instanceof Error ? error : new Error('Falha ao importar backup.') };
+  }
+}
