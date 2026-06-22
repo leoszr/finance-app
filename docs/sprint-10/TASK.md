@@ -13,35 +13,35 @@ Gerar PDF mensal diretamente no celular.
 
 ## Regras da sprint
 
-- [ ] Criar uma feature branch para a sprint.
-- [ ] Manter as alterações coesas ao objetivo da sprint.
-- [ ] Atualizar ou criar testes junto com a implementação.
-- [ ] Executar `npm test` e `npm run lint` antes do commit final.
-- [ ] Não adicionar backend, Supabase, PostgreSQL, Java backend, API externa, IA ou sync automático.
-- [ ] Atualizar `docs/sprint-10/PROGRESS.md` com evidências reais.
+- [x] Criar uma feature branch para a sprint.
+- [x] Manter as alterações coesas ao objetivo da sprint.
+- [x] Atualizar ou criar testes junto com a implementação.
+- [x] Executar `npm test` e `npm run lint` antes do commit final.
+- [x] Não adicionar backend, Supabase, PostgreSQL, Java backend, API externa, IA ou sync automático.
+- [x] Atualizar `docs/sprint-10/PROGRESS.md` com evidências reais.
 
 ## Tasks
 
 ### T1001 — Instalar ferramentas de PDF local
 
-- Status: todo
+- Status: done
 - Feature: Ferramentas de PDF local
 - Plano: `PLAN.md` > `Fase 8 — Relatórios e PDF`
 - Dependências: T0905
 
 #### Requisitos funcionais
 
-- [ ] Adicionar geração e compartilhamento de PDF.
-- [ ] Dependências prováveis: `expo-print`, `expo-sharing`, `expo-file-system`.
-- [ ] App compila.
-- [ ] Nenhuma dependência de backend adicionada.
+- [x] Adicionar geração e compartilhamento de PDF.
+- [x] Dependências prováveis: `expo-print`, `expo-sharing`, `expo-file-system`.
+- [x] App compila.
+- [x] Nenhuma dependência de backend adicionada.
 
 #### Requisitos técnicos
 
-- [ ] Gerar PDF no dispositivo.
-- [ ] Usar APIs Expo locais para impressão, arquivo e compartilhamento.
-- [ ] Tratar erro sem perder dados financeiros.
-- [ ] Mockar APIs Expo nos testes automatizados.
+- [x] Gerar PDF no dispositivo.
+- [x] Usar APIs Expo locais para impressão, arquivo e compartilhamento.
+- [x] Tratar erro sem perder dados financeiros.
+- [x] Mockar APIs Expo nos testes automatizados.
 
 #### Arquivos prováveis
 
@@ -61,39 +61,39 @@ Gerar PDF mensal diretamente no celular.
 
 #### Critérios de aceite
 
-- [ ] Dependências prováveis: `expo-print`, `expo-sharing`, `expo-file-system`.
-- [ ] App compila.
-- [ ] Nenhuma dependência de backend adicionada.
+- [x] Dependências prováveis: `expo-print`, `expo-sharing`, `expo-file-system`.
+- [x] App compila.
+- [x] Nenhuma dependência de backend adicionada.
 
 #### Testes e verificação
 
-- [ ] Adicionar teste cobrindo `Instalar ferramentas de PDF local` em arquivo de teste da sprint.
-- [ ] Cobrir pelo menos: Dependências prováveis: `expo-print`, `expo-sharing`, `expo-file-system`.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Adicionar teste cobrindo `Instalar ferramentas de PDF local` em arquivo de teste da sprint.
+- [x] Cobrir pelo menos: Dependências prováveis: `expo-print`, `expo-sharing`, `expo-file-system`.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ### T1002 — Criar template HTML do relatório
 
-- Status: todo
+- Status: done
 - Feature: Template HTML do relatório
 - Plano: `PLAN.md` > `Fase 8 — Relatórios e PDF`
 - Dependências: T1001
 
 #### Requisitos funcionais
 
-- [ ] Transformar dados financeiros em HTML.
-- [ ] HTML inclui título.
-- [ ] HTML inclui mês.
-- [ ] HTML inclui receitas, despesas e saldo.
-- [ ] HTML inclui tabela de categorias.
-- [ ] HTML inclui tabela de transações.
-- [ ] Layout A4 tem título, totais e tabelas sem sobreposição.
+- [x] Transformar dados financeiros em HTML.
+- [x] HTML inclui título.
+- [x] HTML inclui mês.
+- [x] HTML inclui receitas, despesas e saldo.
+- [x] HTML inclui tabela de categorias.
+- [x] HTML inclui tabela de transações.
+- [x] Layout A4 tem título, totais e tabelas sem sobreposição.
 
 #### Requisitos técnicos
 
-- [ ] Gerar PDF no dispositivo.
-- [ ] Usar APIs Expo locais para impressão, arquivo e compartilhamento.
-- [ ] Tratar erro sem perder dados financeiros.
+- [x] Gerar PDF no dispositivo.
+- [x] Usar APIs Expo locais para impressão, arquivo e compartilhamento.
+- [x] Tratar erro sem perder dados financeiros.
 
 #### Arquivos prováveis
 
@@ -112,41 +112,41 @@ Gerar PDF mensal diretamente no celular.
 
 #### Critérios de aceite
 
-- [ ] HTML inclui título.
-- [ ] HTML inclui mês.
-- [ ] HTML inclui receitas, despesas e saldo.
-- [ ] HTML inclui tabela de categorias.
-- [ ] HTML inclui tabela de transações.
-- [ ] Layout A4 tem título, totais e tabelas sem sobreposição.
+- [x] HTML inclui título.
+- [x] HTML inclui mês.
+- [x] HTML inclui receitas, despesas e saldo.
+- [x] HTML inclui tabela de categorias.
+- [x] HTML inclui tabela de transações.
+- [x] Layout A4 tem título, totais e tabelas sem sobreposição.
 
 #### Testes e verificação
 
-- [ ] Adicionar teste cobrindo `Criar template HTML do relatório` em arquivo de teste da sprint.
-- [ ] Cobrir pelo menos: HTML inclui título.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Adicionar teste cobrindo `Criar template HTML do relatório` em arquivo de teste da sprint.
+- [x] Cobrir pelo menos: HTML inclui título.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ### T1003 — Criar função de geração de PDF
 
-- Status: todo
+- Status: done
 - Feature: Função de geração de PDF
 - Plano: `PLAN.md` > `Fase 8 — Relatórios e PDF`
 - Dependências: T1002
 
 #### Requisitos funcionais
 
-- [ ] Converter HTML em PDF local.
-- [ ] Função recebe dados do relatório.
-- [ ] Gera arquivo PDF.
-- [ ] Retorna URI local.
-- [ ] Trata erro de geração.
+- [x] Converter HTML em PDF local.
+- [x] Função recebe dados do relatório.
+- [x] Gera arquivo PDF.
+- [x] Retorna URI local.
+- [x] Trata erro de geração.
 
 #### Requisitos técnicos
 
-- [ ] Gerar PDF no dispositivo.
-- [ ] Usar APIs Expo locais para impressão, arquivo e compartilhamento.
-- [ ] Tratar erro sem perder dados financeiros.
-- [ ] Mockar APIs Expo nos testes automatizados.
+- [x] Gerar PDF no dispositivo.
+- [x] Usar APIs Expo locais para impressão, arquivo e compartilhamento.
+- [x] Tratar erro sem perder dados financeiros.
+- [x] Mockar APIs Expo nos testes automatizados.
 
 #### Arquivos prováveis
 
@@ -166,39 +166,39 @@ Gerar PDF mensal diretamente no celular.
 
 #### Critérios de aceite
 
-- [ ] Função recebe dados do relatório.
-- [ ] Gera arquivo PDF.
-- [ ] Retorna URI local.
-- [ ] Trata erro de geração.
+- [x] Função recebe dados do relatório.
+- [x] Gera arquivo PDF.
+- [x] Retorna URI local.
+- [x] Trata erro de geração.
 
 #### Testes e verificação
 
-- [ ] Adicionar teste cobrindo `Criar função de geração de PDF` em arquivo de teste da sprint.
-- [ ] Cobrir pelo menos: Função recebe dados do relatório.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Adicionar teste cobrindo `Criar função de geração de PDF` em arquivo de teste da sprint.
+- [x] Cobrir pelo menos: Função recebe dados do relatório.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ### T1004 — Criar botão Gerar PDF
 
-- Status: todo
+- Status: done
 - Feature: Botão Gerar PDF
 - Plano: `PLAN.md` > `Fase 8 — Relatórios e PDF`
 - Dependências: T1003
 
 #### Requisitos funcionais
 
-- [ ] Permitir gerar relatório pela interface.
-- [ ] Botão aparece na tela de relatórios.
-- [ ] Botão gera PDF do mês selecionado.
-- [ ] Botão mostra loading durante geração.
-- [ ] Erro exibido se geração falhar.
+- [x] Permitir gerar relatório pela interface.
+- [x] Botão aparece na tela de relatórios.
+- [x] Botão gera PDF do mês selecionado.
+- [x] Botão mostra loading durante geração.
+- [x] Erro exibido se geração falhar.
 
 #### Requisitos técnicos
 
-- [ ] Gerar PDF no dispositivo.
-- [ ] Usar APIs Expo locais para impressão, arquivo e compartilhamento.
-- [ ] Tratar erro sem perder dados financeiros.
-- [ ] Mockar APIs Expo nos testes automatizados.
+- [x] Gerar PDF no dispositivo.
+- [x] Usar APIs Expo locais para impressão, arquivo e compartilhamento.
+- [x] Tratar erro sem perder dados financeiros.
+- [x] Mockar APIs Expo nos testes automatizados.
 
 #### Arquivos prováveis
 
@@ -217,39 +217,39 @@ Gerar PDF mensal diretamente no celular.
 
 #### Critérios de aceite
 
-- [ ] Botão aparece na tela de relatórios.
-- [ ] Botão gera PDF do mês selecionado.
-- [ ] Botão mostra loading durante geração.
-- [ ] Erro exibido se geração falhar.
+- [x] Botão aparece na tela de relatórios.
+- [x] Botão gera PDF do mês selecionado.
+- [x] Botão mostra loading durante geração.
+- [x] Erro exibido se geração falhar.
 
 #### Testes e verificação
 
-- [ ] Adicionar teste cobrindo `Criar botão Gerar PDF` em arquivo de teste da sprint.
-- [ ] Cobrir pelo menos: Botão aparece na tela de relatórios.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Adicionar teste cobrindo `Criar botão Gerar PDF` em arquivo de teste da sprint.
+- [x] Cobrir pelo menos: Botão aparece na tela de relatórios.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ### T1005 — Criar compartilhamento do PDF
 
-- Status: todo
+- Status: done
 - Feature: Compartilhamento do PDF
 - Plano: `PLAN.md` > `Fase 8 — Relatórios e PDF`
 - Dependências: T1004
 
 #### Requisitos funcionais
 
-- [ ] Abrir menu nativo de compartilhamento.
-- [ ] Após gerar PDF, usuário pode compartilhar.
-- [ ] Funciona em iOS.
-- [ ] Funciona em Android.
-- [ ] Sem compartilhamento disponível, mostra mensagem alternativa.
+- [x] Abrir menu nativo de compartilhamento.
+- [x] Após gerar PDF, usuário pode compartilhar.
+- [x] Funciona em iOS.
+- [x] Funciona em Android.
+- [x] Sem compartilhamento disponível, mostra mensagem alternativa.
 
 #### Requisitos técnicos
 
-- [ ] Gerar PDF no dispositivo.
-- [ ] Usar APIs Expo locais para impressão, arquivo e compartilhamento.
-- [ ] Tratar erro sem perder dados financeiros.
-- [ ] Mockar APIs Expo nos testes automatizados.
+- [x] Gerar PDF no dispositivo.
+- [x] Usar APIs Expo locais para impressão, arquivo e compartilhamento.
+- [x] Tratar erro sem perder dados financeiros.
+- [x] Mockar APIs Expo nos testes automatizados.
 
 #### Arquivos prováveis
 
@@ -269,33 +269,33 @@ Gerar PDF mensal diretamente no celular.
 
 #### Critérios de aceite
 
-- [ ] Após gerar PDF, usuário pode compartilhar.
-- [ ] Funciona em iOS.
-- [ ] Funciona em Android.
-- [ ] Sem compartilhamento disponível, mostra mensagem alternativa.
+- [x] Após gerar PDF, usuário pode compartilhar.
+- [x] Funciona em iOS.
+- [x] Funciona em Android.
+- [x] Sem compartilhamento disponível, mostra mensagem alternativa.
 
 #### Testes e verificação
 
-- [ ] Adicionar teste cobrindo `Criar compartilhamento do PDF` em arquivo de teste da sprint.
-- [ ] Cobrir pelo menos: Após gerar PDF, usuário pode compartilhar.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Adicionar teste cobrindo `Criar compartilhamento do PDF` em arquivo de teste da sprint.
+- [x] Cobrir pelo menos: Após gerar PDF, usuário pode compartilhar.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ## Testes da sprint
 
-- [ ] Teste do HTML gerado.
-- [ ] Teste de presença dos dados no template.
-- [ ] Teste de função de geração com mock.
-- [ ] Teste do botão de PDF.
-- [ ] Teste de erro controlado.
-- [ ] `npm test` passa.
-- [ ] `npm run lint` passa.
+- [x] Teste do HTML gerado.
+- [x] Teste de presença dos dados no template.
+- [x] Teste de função de geração com mock.
+- [x] Teste do botão de PDF.
+- [x] Teste de erro controlado.
+- [x] `npm test` passa.
+- [x] `npm run lint` passa.
 
 ## Checklist final
 
-- [ ] App abre sem tela branca.
-- [ ] `npm test` passa com os testes adicionados na sprint.
-- [ ] `npm run lint` passa sem erros.
-- [ ] Não há chamada de rede para dados financeiros.
-- [ ] Não há dependência proibida adicionada.
-- [ ] `docs/sprint-10/PROGRESS.md` descreve o que foi entregue.
+- [x] App abre sem tela branca.
+- [x] `npm test` passa com os testes adicionados na sprint.
+- [x] `npm run lint` passa sem erros.
+- [x] Não há chamada de rede para dados financeiros.
+- [x] Não há dependência proibida adicionada.
+- [x] `docs/sprint-10/PROGRESS.md` descreve o que foi entregue.
