@@ -2,120 +2,67 @@
 
 ## Resumo
 
-- Status geral: todo
+- Status geral: done
 - Branch: `feature/sprint-11-backup-import-export`
 - Commit final sugerido: `feat(backup): add local data export and import`
-- Use este arquivo para registrar evidências curtas e evitar reler todo o TASK.md.
 
 ## Entregue nesta sprint
 
-- Backup JSON local com exportação/importação básica e tela inicial de backup.
+- Backup JSON local versionado com contas, categorias, transações e configurações.
+- Exportação para arquivo `.json` em cache e abertura do menu nativo de compartilhamento.
+- Escolha de arquivo JSON via seletor nativo do `expo-file-system`.
+- Validação antes de importar e restauração em transação SQLite com substituição total.
+- Tela de backup acessível por Configurações, sem conta online ou backend.
 
 ## Progresso por task
 
 ### T1101 — Criar exportação JSON
 
-- Status: todo
-- Feature: Exportação JSON
-
-#### Desenvolvido
-
-- `src/lib/backup/backupSchema.ts`
-- `src/lib/backup/exportBackup.ts`
-- `src/lib/backup/importBackup.ts`
-- `src/features/backup/BackupScreen.tsx`
-- `src/tests/features-sprint11.test.tsx`
-
-#### Evidências
-
-- `npm test -- --runInBand src/tests/features-sprint11.test.tsx`
-- `npm test -- --runInBand`
-- `npm run lint -- --max-warnings=0`
-
-#### Pendências
-
-- Refinar escolha de arquivo nativa depois.
+- Status: done
+- Desenvolvido: `src/lib/backup/backupSchema.ts`, `src/lib/backup/exportBackup.ts`, `src/tests/features-sprint11.test.tsx`
+- Evidências: exporta `schemaVersion`, `accounts`, `categories`, `transactions`, `settings`.
 
 ### T1102 — Criar compartilhamento do backup
 
-- Status: todo
-- Feature: Compartilhamento do backup
-
-#### Desenvolvido
-
-- A preencher ao concluir a task.
-
-#### Evidências
-
-- A preencher com arquivos alterados, testes e comandos executados.
-
-#### Pendências
-
-- Implementar task.
+- Status: done
+- Desenvolvido: `src/lib/backup/backupFile.ts`, `src/features/backup/BackupScreen.tsx`
+- Evidências: gera `backup-YYYY-MM-DD.json` e chama `Sharing.shareAsync` quando disponível.
 
 ### T1103 — Criar validação de arquivo importado
 
-- Status: todo
-- Feature: Validação de arquivo importado
-
-#### Desenvolvido
-
-- A preencher ao concluir a task.
-
-#### Evidências
-
-- A preencher com arquivos alterados, testes e comandos executados.
-
-#### Pendências
-
-- Implementar task.
+- Status: done
+- Desenvolvido: `src/lib/backup/importBackup.ts`, `src/tests/features-sprint11.test.tsx`
+- Evidências: `validateBackup` rejeita schema inválido e linhas incompletas antes de alterar banco.
 
 ### T1104 — Criar importação com substituição total
 
-- Status: todo
-- Feature: Importação com substituição total
-
-#### Desenvolvido
-
-- A preencher ao concluir a task.
-
-#### Evidências
-
-- A preencher com arquivos alterados, testes e comandos executados.
-
-#### Pendências
-
-- Implementar task.
+- Status: done
+- Desenvolvido: `src/lib/backup/importBackup.ts`, `src/features/backup/BackupScreen.tsx`
+- Evidências: tela pede confirmação; importação usa `BEGIN IMMEDIATE`, deletes e inserts, `COMMIT`/`ROLLBACK`.
 
 ### T1105 — Criar tela de backup
 
-- Status: todo
-- Feature: Tela de backup
-
-#### Desenvolvido
-
-- A preencher ao concluir a task.
-
-#### Evidências
-
-- A preencher com arquivos alterados, testes e comandos executados.
-
-#### Pendências
-
-- Implementar task.
+- Status: done
+- Desenvolvido: `app/(tabs)/backup.tsx`, `app/(tabs)/settings.tsx`, `src/features/backup/BackupScreen.tsx`
+- Evidências: Configurações abre Backup; tela tem exportar, importar JSON por arquivo e texto de backup manual local.
 
 ## Testes executados
 
-- Nenhum teste executado ainda.
+- `npm test -- --runInBand src/tests/features-sprint11.test.tsx` — passou.
+- `npm test -- --runInBand` — passou.
+- `npm run lint` — passou.
+- `npm run typecheck` — passou.
 
 ## Decisões técnicas
 
-- Nenhuma decisão registrada ainda.
+- Usar `expo-file-system` já instalado para escrever/pick JSON; sem dependência nova.
+- Usar `expo-sharing` já instalado para abrir menu nativo; se usuário cancelar, arquivo local continua gerado.
+- Importação substitui tudo só após confirmação na tela.
 
 ## Problemas / riscos encontrados
 
-- Nenhum problema registrado ainda.
+- Nenhum bloqueio.
 
 ## Próximo passo
 
-- Iniciar a primeira task pendente em `docs/sprint-11/TASK.md`.
+- Iniciar Sprint 12 — Configurações locais.

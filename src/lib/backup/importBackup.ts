@@ -2,6 +2,22 @@ import { getSqliteDatabase } from '@/db/client';
 import { notifyFinanceDataChanged } from '@/lib/dataEvents';
 import { BACKUP_SCHEMA_VERSION, type BackupData } from './backupSchema';
 
+function has(value: Record<string, unknown>, key: string) {
+  return value[key] !== undefined && value[key] !== null;
+}
+
+function text(value: unknown) {
+  return typeof value === 'string';
+}
+
+function int(value: unknown) {
+  return Number.isInteger(value);
+}
+
+function validateRows(rows: Record<string, unknown>[], required: Record<string, (value: unknown) => boolean>) {
+  return rows.every((row) => Object.entries(required).every(([key, check]) => has(row, key) && check(row[key])));
+}
+
 export function validateBackup(data: unknown) {
   if (!data || typeof data !== 'object' || Array.isArray(data)) return { ok: false as const, error: 'backup_shape_invalid' };
 
@@ -10,6 +26,11 @@ export function validateBackup(data: unknown) {
   if (!Array.isArray(backup.accounts) || !Array.isArray(backup.categories) || !Array.isArray(backup.transactions) || !Array.isArray(backup.settings)) {
     return { ok: false as const, error: 'backup_shape_invalid' };
   }
+
+  if (!validateRows(backup.accounts, { id: int, name: text, type: text, currency: text, initialBalanceCents: int, createdAt: text, updatedAt: text })) return { ok: false as const, error: 'backup_accounts_invalid' };
+  if (!validateRows(backup.categories, { id: int, name: text, type: text, createdAt: text, updatedAt: text })) return { ok: false as const, error: 'backup_categories_invalid' };
+  if (!validateRows(backup.transactions, { id: int, accountId: int, categoryId: int, type: text, amountCents: int, transactionDate: text, createdAt: text, updatedAt: text })) return { ok: false as const, error: 'backup_transactions_invalid' };
+  if (!validateRows(backup.settings, { key: text, value: text })) return { ok: false as const, error: 'backup_settings_invalid' };
 
   return { ok: true as const, value: backup as BackupData };
 }

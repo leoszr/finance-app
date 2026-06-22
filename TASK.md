@@ -88,7 +88,7 @@
 
 ### Sprint 11 — Exportação e importação de dados
 
-- Status: todo
+- Status: done
 - Branch: `feature/sprint-11-backup-import-export`
 - Tasks: `docs/sprint-11/TASK.md`
 - Progresso: `docs/sprint-11/PROGRESS.md`
