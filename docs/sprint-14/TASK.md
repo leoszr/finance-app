@@ -6,18 +6,19 @@ Melhorar usabilidade no iPhone e Android.
 
 ## Entrega da sprint
 
-- Branch: `feature/sprint-14-mobile-polish`
+- Branch: `dev`
 - Commit final sugerido: `feat(ui): polish mobile finance experience`
 - Fase do plano: `Fase 10 — Polimento e release interno`
 - Resultado deve ser pequeno, revisável e testável.
 
 ## Regras da sprint
 
-- [ ] Criar uma feature branch para a sprint.
+- [ ] Garantir que o trabalho da sprint será feito na branch `dev`.
 - [ ] Manter as alterações coesas ao objetivo da sprint.
 - [ ] Atualizar ou criar testes junto com a implementação.
 - [ ] Executar `npm test` e `npm run lint` antes do commit final.
 - [ ] Não adicionar backend, Supabase, PostgreSQL, Java backend, API externa, IA ou sync automático.
+- [ ] Ao concluir, abrir PR de `dev` para `main`.
 - [ ] Atualizar `docs/sprint-14/PROGRESS.md` com evidências reais.
 
 ## Tasks

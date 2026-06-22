@@ -6,18 +6,19 @@ Adicionar bloqueio local opcional com biometria ou PIN definido pelo usuário.
 
 ## Entrega da sprint
 
-- Branch: `feature/sprint-13-local-security`
+- Branch: `dev`
 - Commit final sugerido: `feat(security): add optional local app lock`
 - Fase do plano: `Fase 9 — Backup, configurações e segurança`
 - Resultado deve ser pequeno, revisável e testável.
 
 ## Regras da sprint
 
-- [ ] Criar uma feature branch para a sprint.
+- [ ] Garantir que o trabalho da sprint será feito na branch `dev`.
 - [ ] Manter as alterações coesas ao objetivo da sprint.
 - [ ] Atualizar ou criar testes junto com a implementação.
 - [ ] Executar `npm test` e `npm run lint` antes do commit final.
 - [ ] Não adicionar backend, Supabase, PostgreSQL, Java backend, API externa, IA ou sync automático.
+- [ ] Ao concluir, abrir PR de `dev` para `main`.
 - [ ] Atualizar `docs/sprint-13/PROGRESS.md` com evidências reais.
 
 ## Tasks

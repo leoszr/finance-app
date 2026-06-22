@@ -5,7 +5,8 @@
 - Status: `todo`, `doing`, `done`, `blocked`.
 - Execução detalhada por sprint em `docs/sprint-XX/TASK.md`.
 - Progresso resumido por sprint em `docs/sprint-XX/PROGRESS.md`.
-- Cada sprint deve gerar uma branch, uma suíte de testes atualizada e um commit final.
+- A partir da Sprint 13, trabalhar na branch `dev` e abrir PR de `dev` para `main` ao final de cada sprint.
+- Cada sprint deve manter a suíte de testes atualizada e um commit final coeso.
 
 ## Índice das Sprints
 
@@ -103,21 +104,21 @@
 ### Sprint 13 — Segurança local básica
 
 - Status: todo
-- Branch: `feature/sprint-13-local-security`
+- Branch: `dev`
 - Tasks: `docs/sprint-13/TASK.md`
 - Progresso: `docs/sprint-13/PROGRESS.md`
 
 ### Sprint 14 — Polimento de experiência mobile
 
 - Status: todo
-- Branch: `feature/sprint-14-mobile-polish`
+- Branch: `dev`
 - Tasks: `docs/sprint-14/TASK.md`
 - Progresso: `docs/sprint-14/PROGRESS.md`
 
 ### Sprint 15 — Hardening e release interno
 
 - Status: todo
-- Branch: `feature/sprint-15-internal-release`
+- Branch: `dev`
 - Tasks: `docs/sprint-15/TASK.md`
 - Progresso: `docs/sprint-15/PROGRESS.md`
 

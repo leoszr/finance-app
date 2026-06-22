@@ -3,7 +3,7 @@
 ## Resumo
 
 - Status geral: todo
-- Branch: `feature/sprint-13-local-security`
+- Branch: `dev`
 - Commit final sugerido: `feat(security): add optional local app lock`
 - Use este arquivo para registrar evidências curtas e evitar reler todo o TASK.md.
 

@@ -3,7 +3,7 @@
 ## Resumo
 
 - Status geral: todo
-- Branch: `feature/sprint-15-internal-release`
+- Branch: `dev`
 - Commit final sugerido: `chore(release): prepare internal local-first build`
 - Use este arquivo para registrar evidências curtas e evitar reler todo o TASK.md.
 

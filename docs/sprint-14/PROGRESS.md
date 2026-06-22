@@ -3,7 +3,7 @@
 ## Resumo
 
 - Status geral: todo
-- Branch: `feature/sprint-14-mobile-polish`
+- Branch: `dev`
 - Commit final sugerido: `feat(ui): polish mobile finance experience`
 - Use este arquivo para registrar evidências curtas e evitar reler todo o TASK.md.
 
