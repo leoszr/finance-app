@@ -18,6 +18,7 @@
 - [x] Sprint 09 implementada — Evidência: `docs/sprint-09/PROGRESS.md`, `src/features/reports/ReportScreen.tsx`, `src/db/queries/reportQueries.ts`, `src/tests/features-sprint09.test.tsx`
 - [x] Sprint 10 implementada — Evidência: `docs/sprint-10/PROGRESS.md`, `src/features/reports/pdf/`, `src/tests/features-sprint10.test.tsx`
 - [x] Sprint 11 implementada — Evidência: `docs/sprint-11/PROGRESS.md`, `src/features/backup/BackupScreen.tsx`, `src/lib/backup/`, `src/tests/features-sprint11.test.tsx`
+- [x] Sprint 12 implementada — Evidência: `docs/sprint-12/PROGRESS.md`, `src/features/settings/SettingsScreen.tsx`, `src/lib/settings/preferences.ts`, `src/tests/features-sprint12.test.tsx`
 
 ## Em andamento
 
@@ -35,8 +36,8 @@
 
 ## Próximos passos
 
-1. Iniciar Sprint 12 em `docs/sprint-12/TASK.md`.
-2. Implementar configurações locais.
+1. Iniciar Sprint 13 em `docs/sprint-13/TASK.md`.
+2. Implementar segurança local básica.
 3. Manter `npm test`, `npm run lint` e `npm run typecheck` verdes a cada sprint.
 
 ## Obsoleto/Arquivado

@@ -22,6 +22,13 @@ type CategoryRow = { id: number; name: string; type: TransactionType };
 type TransactionRow = { account_id: number; category_id: number; type: TransactionType; amount_cents: number; transaction_date: string };
 
 export function createDashboardQueries(database: RepositoryDatabase = getRepositoryDatabase()) {
+  async function getLatestTransactionMonth() {
+    const row = (await database.getAllAsync<{ transaction_date: string }>('SELECT transaction_date FROM transactions ORDER BY transaction_date DESC, id DESC LIMIT 1'))[0];
+    if (!row) return null;
+    const [year, month] = row.transaction_date.split('-').map(Number);
+    return Number.isInteger(year) && Number.isInteger(month) ? { year, month } : null;
+  }
+
   async function getMonthlySummary(year: number, month: number): Promise<RepositoryResult<MonthlyDashboardSummary>> {
     const range = getMonthRange(year, month);
     if (!range.ok) return range;
@@ -68,5 +75,5 @@ export function createDashboardQueries(database: RepositoryDatabase = getReposit
     });
   }
 
-  return { getMonthlySummary };
+  return { getMonthlySummary, getLatestTransactionMonth };
 }

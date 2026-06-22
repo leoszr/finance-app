@@ -13,8 +13,7 @@
       "predictiveBackGestureEnabled": false
     },
     "plugins": [
-      "expo-router",
-      "expo-sharing"
+      "expo-router"
     ],
     "experiments": {
       "typedRoutes": true,

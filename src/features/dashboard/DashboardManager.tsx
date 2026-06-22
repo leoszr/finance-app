@@ -5,13 +5,17 @@ import { BarRow } from '@/components/charts/BarRow';
 import { SummaryCard } from '@/components/finance/SummaryCard';
 import { Button, Card, EmptyState } from '@/components/ui';
 import { createDashboardQueries, type MonthlyDashboardSummary } from '@/db/queries/dashboardQueries';
+import { createSettingsRepository } from '@/db/repositories/settingsRepository';
 import { formatMonthLabel } from '@/lib/month';
 import { subscribeToFinanceDataChanges } from '@/lib/dataEvents';
-import { formatCentsToCurrency } from '@/lib/money';
+import { formatCentsToCurrency, type AppCurrency } from '@/lib/money';
+import { normalizeCurrency, normalizeInitialMonth, SETTINGS_KEYS } from '@/lib/settings/preferences';
 
 type DashboardQueries = ReturnType<typeof createDashboardQueries>;
+type SettingsRepository = ReturnType<typeof createSettingsRepository>;
 
 let defaultDashboardQueries: DashboardQueries | undefined;
+let defaultSettingsRepository: SettingsRepository | undefined;
 
 function currentYearMonth() {
   const date = new Date();
@@ -28,8 +32,13 @@ function getDefaultDashboardQueries() {
   return defaultDashboardQueries;
 }
 
-function money(cents: number) {
-  const formatted = formatCentsToCurrency(Math.abs(cents));
+function getDefaultSettingsRepository() {
+  defaultSettingsRepository ??= createSettingsRepository();
+  return defaultSettingsRepository;
+}
+
+function money(cents: number, currency: AppCurrency) {
+  const formatted = formatCentsToCurrency(Math.abs(cents), currency);
   return `${cents < 0 ? '-' : ''}${formatted.ok ? formatted.value : 'R$ 0,00'}`;
 }
 
@@ -38,8 +47,9 @@ function monthLabel(year: number, month: number) {
   return formatted.ok ? formatted.value : `${month}/${year}`;
 }
 
-export function DashboardManager({ dashboardQueries }: { dashboardQueries?: DashboardQueries }) {
+export function DashboardManager({ dashboardQueries, settingsRepository }: { dashboardQueries?: DashboardQueries; settingsRepository?: SettingsRepository }) {
   const [selectedMonth, setSelectedMonth] = useState(currentYearMonth);
+  const [currency, setCurrency] = useState<AppCurrency>('BRL');
   const [summary, setSummary] = useState<MonthlyDashboardSummary | null>(null);
   const [error, setError] = useState<string | null>(null);
   const loadRequestRef = useRef(0);
@@ -56,6 +66,29 @@ export function DashboardManager({ dashboardQueries }: { dashboardQueries?: Dash
       if (requestId === loadRequestRef.current) setError('Dashboard indisponível.');
     }
   }, [dashboardQueries, selectedMonth.month, selectedMonth.year]);
+
+  useEffect(() => {
+    if (!settingsRepository && dashboardQueries) return;
+    const timer = setTimeout(() => {
+      let repository: SettingsRepository;
+      try {
+        repository = settingsRepository ?? getDefaultSettingsRepository();
+      } catch {
+        return;
+      }
+      void Promise.all([
+        repository.getSetting(SETTINGS_KEYS.currency),
+        repository.getSetting(SETTINGS_KEYS.initialMonth),
+      ]).then(async ([savedCurrency, savedInitialMonth]) => {
+        setCurrency(normalizeCurrency(savedCurrency?.value));
+        if (normalizeInitialMonth(savedInitialMonth?.value) === 'lastWithData') {
+          const latest = await (dashboardQueries ?? getDefaultDashboardQueries()).getLatestTransactionMonth();
+          if (latest) setSelectedMonth(latest);
+        }
+      });
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [dashboardQueries, settingsRepository]);
 
   useEffect(() => {
     const timer = setTimeout(() => void loadData(), 0);
@@ -91,18 +124,18 @@ export function DashboardManager({ dashboardQueries }: { dashboardQueries?: Dash
       ) : null}
 
       <View style={styles.grid}>
-        <SummaryCard label="Receitas" value={money(summary.incomeCents)} tone="income" />
-        <SummaryCard label="Despesas" value={money(summary.expenseCents)} tone="expense" />
-        <SummaryCard label="Saldo mensal" value={money(summary.balanceCents)} tone={summary.balanceCents < 0 ? 'expense' : 'income'} />
-        <SummaryCard label="Saldo total" value={money(summary.totalBalanceCents)} />
+        <SummaryCard label="Receitas" value={money(summary.incomeCents, currency)} tone="income" />
+        <SummaryCard label="Despesas" value={money(summary.expenseCents, currency)} tone="expense" />
+        <SummaryCard label="Saldo mensal" value={money(summary.balanceCents, currency)} tone={summary.balanceCents < 0 ? 'expense' : 'income'} />
+        <SummaryCard label="Saldo total" value={money(summary.totalBalanceCents, currency)} />
       </View>
 
       <Card>
         <Text style={styles.sectionTitle}>Receita x despesa</Text>
         {maxFlow === 0 ? <Text style={styles.muted}>Sem receitas ou despesas neste mês.</Text> : (
           <View style={styles.chart}>
-            <BarRow label="Receitas" value={money(summary.incomeCents)} ratio={summary.incomeCents / maxFlow} color="#10b981" />
-            <BarRow label="Despesas" value={money(summary.expenseCents)} ratio={summary.expenseCents / maxFlow} color="#ef4444" />
+            <BarRow label="Receitas" value={money(summary.incomeCents, currency)} ratio={summary.incomeCents / maxFlow} color="#10b981" />
+            <BarRow label="Despesas" value={money(summary.expenseCents, currency)} ratio={summary.expenseCents / maxFlow} color="#ef4444" />
           </View>
         )}
       </Card>
@@ -112,7 +145,7 @@ export function DashboardManager({ dashboardQueries }: { dashboardQueries?: Dash
         {summary.expenseCategories.length === 0 ? <Text style={styles.muted}>Sem despesas neste mês.</Text> : (
           <View style={styles.chart}>
             {summary.expenseCategories.map((category) => (
-              <BarRow key={category.categoryId} label={category.categoryName} value={money(category.amountCents)} ratio={category.amountCents / maxCategory} />
+              <BarRow key={category.categoryId} label={category.categoryName} value={money(category.amountCents, currency)} ratio={category.amountCents / maxCategory} />
             ))}
           </View>
         )}
@@ -123,7 +156,7 @@ export function DashboardManager({ dashboardQueries }: { dashboardQueries?: Dash
         {summary.accountBalances.length === 0 ? <Text style={styles.muted}>Nenhuma conta cadastrada.</Text> : summary.accountBalances.map((account) => (
           <View key={account.accountId} style={styles.accountRow}>
             <Text style={styles.accountName}>{account.accountName}</Text>
-            <Text style={styles.accountValue}>{money(account.balanceCents)}</Text>
+            <Text style={styles.accountValue}>{money(account.balanceCents, currency)}</Text>
           </View>
         ))}
       </Card>

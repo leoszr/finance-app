@@ -28,7 +28,7 @@ export async function exportBackupFile(): Promise<Result<BackupFileResult>> {
 }
 
 export async function pickBackupJson() {
-  const picked = await File.pickFileAsync({ mimeTypes: 'application/json' });
-  if (picked.canceled) return null;
-  return picked.result.text();
+  const picked = await File.pickFileAsync(undefined, 'application/json');
+  const file = Array.isArray(picked) ? picked[0] : picked;
+  return file?.text() ?? null;
 }
