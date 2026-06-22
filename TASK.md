@@ -132,5 +132,5 @@
 
 ## Próxima Task
 
-- Sprint atual: `docs/sprint-08/TASK.md`.
-- Começar por T0801 — Criar queries de resumo mensal.
+- Sprint atual: `docs/sprint-13/TASK.md`.
+- Começar por T1301 — Adicionar suporte a biometria local.
