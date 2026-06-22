@@ -7,9 +7,11 @@
     "scheme": "financeapp",
     "userInterfaceStyle": "automatic",
     "ios": {
+      "bundleIdentifier": "com.leo.financeapp",
       "supportsTablet": true
     },
     "android": {
+      "package": "com.leo.financeapp",
       "predictiveBackGestureEnabled": false
     },
     "plugins": [

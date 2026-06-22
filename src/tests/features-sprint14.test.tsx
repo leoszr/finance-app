@@ -54,6 +54,7 @@ describe('Sprint 14 mobile polish', () => {
 
   it('does not reinterpret ambiguous decimal paste as another amount', () => {
     expect(formatMoneyInputText('12,345')).toBe('12,345');
+    expect(formatMoneyInputText('1.234')).toBe('R$ 1.234,00');
     expect(formatMoneyInputText('abc1234')).toBe('R$ 12,34');
   });
 

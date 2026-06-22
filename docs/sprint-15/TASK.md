@@ -13,37 +13,37 @@ Preparar uma versão testável real no celular.
 
 ## Regras da sprint
 
-- [ ] Garantir que o trabalho da sprint será feito na branch `dev`.
-- [ ] Manter as alterações coesas ao objetivo da sprint.
-- [ ] Atualizar ou criar testes junto com a implementação.
-- [ ] Executar `npm test` e `npm run lint` antes do commit final.
-- [ ] Não adicionar backend, Supabase, PostgreSQL, Java backend, API externa, IA ou sync automático.
-- [ ] Ao concluir, abrir PR de `dev` para `main`.
-- [ ] Atualizar `docs/sprint-15/PROGRESS.md` com evidências reais.
+- [x] Garantir que o trabalho da sprint será feito na branch `dev`.
+- [x] Manter as alterações coesas ao objetivo da sprint.
+- [x] Atualizar ou criar testes junto com a implementação.
+- [x] Executar `npm test` e `npm run lint` antes do commit final.
+- [x] Não adicionar backend, Supabase, PostgreSQL, Java backend, API externa, IA ou sync automático.
+- [x] Ao concluir, abrir PR de `dev` para `main`.
+- [x] Atualizar `docs/sprint-15/PROGRESS.md` com evidências reais.
 
 ## Tasks
 
 ### T1501 — Revisar dependências
 
-- Status: todo
+- Status: done
 - Feature: Dependências
 - Plano: `PLAN.md` > `Fase 10 — Polimento e release interno`
 - Dependências: T1405
 
 #### Requisitos funcionais
 
-- [ ] Remover dependências desnecessárias.
-- [ ] Não há Supabase.
-- [ ] Não há PostgreSQL.
-- [ ] Não há SDK de IA.
-- [ ] Não há cliente HTTP desnecessário.
-- [ ] Dependências justificadas.
+- [x] Remover dependências desnecessárias.
+- [x] Não há Supabase.
+- [x] Não há PostgreSQL.
+- [x] Não há SDK de IA.
+- [x] Não há cliente HTTP desnecessário.
+- [x] Dependências justificadas.
 
 #### Requisitos técnicos
 
-- [ ] Remover dependências sem uso e justificar as restantes.
-- [ ] Documentar teste manual em iOS e Android.
-- [ ] Preparar build interno sem introduzir backend.
+- [x] Remover dependências sem uso e justificar as restantes.
+- [x] Documentar teste manual em iOS e Android.
+- [x] Preparar build interno sem introduzir backend.
 
 #### Arquivos prováveis
 
@@ -63,38 +63,38 @@ Preparar uma versão testável real no celular.
 
 #### Critérios de aceite
 
-- [ ] Não há Supabase.
-- [ ] Não há PostgreSQL.
-- [ ] Não há SDK de IA.
-- [ ] Não há cliente HTTP desnecessário.
-- [ ] Dependências justificadas.
+- [x] Não há Supabase.
+- [x] Não há PostgreSQL.
+- [x] Não há SDK de IA.
+- [x] Não há cliente HTTP desnecessário.
+- [x] Dependências justificadas.
 
 #### Testes e verificação
 
-- [ ] Adicionar teste cobrindo `Revisar dependências` em arquivo de teste da sprint.
-- [ ] Cobrir pelo menos: Não há Supabase.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Adicionar teste cobrindo `Revisar dependências` em arquivo de teste da sprint.
+- [x] Cobrir pelo menos: Não há Supabase.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ### T1502 — Criar checklist de teste manual
 
-- Status: todo
+- Status: done
 - Feature: Checklist de teste manual
 - Plano: `PLAN.md` > `Fase 10 — Polimento e release interno`
 - Dependências: T1501
 
 #### Requisitos funcionais
 
-- [ ] Permitir validação humana do app.
-- [ ] Checklist existe no repositório.
-- [ ] Cada item tem resultado esperado.
-- [ ] Checklist cobre iPhone e Android.
+- [x] Permitir validação humana do app.
+- [x] Checklist existe no repositório.
+- [x] Cada item tem resultado esperado.
+- [x] Checklist cobre iPhone e Android.
 
 #### Requisitos técnicos
 
-- [ ] Remover dependências sem uso e justificar as restantes.
-- [ ] Documentar teste manual em iOS e Android.
-- [ ] Preparar build interno sem introduzir backend.
+- [x] Remover dependências sem uso e justificar as restantes.
+- [x] Documentar teste manual em iOS e Android.
+- [x] Preparar build interno sem introduzir backend.
 
 #### Arquivos prováveis
 
@@ -112,37 +112,37 @@ Preparar uma versão testável real no celular.
 
 #### Critérios de aceite
 
-- [ ] Checklist existe no repositório.
-- [ ] Cada item tem resultado esperado.
-- [ ] Checklist cobre iPhone e Android.
+- [x] Checklist existe no repositório.
+- [x] Cada item tem resultado esperado.
+- [x] Checklist cobre iPhone e Android.
 
 #### Testes e verificação
 
-- [ ] Adicionar teste cobrindo `Criar checklist de teste manual` em arquivo de teste da sprint.
-- [ ] Cobrir pelo menos: Checklist existe no repositório.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Adicionar teste cobrindo `Criar checklist de teste manual` em arquivo de teste da sprint.
+- [x] Cobrir pelo menos: Checklist existe no repositório.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ### T1503 — Criar dados de demonstração locais
 
-- Status: todo
+- Status: done
 - Feature: Dados de demonstração locais
 - Plano: `PLAN.md` > `Fase 10 — Polimento e release interno`
 - Dependências: T1502
 
 #### Requisitos funcionais
 
-- [ ] Facilitar teste visual do app.
-- [ ] Usuário pode popular dados fake.
-- [ ] Dados fake marcados como demonstração.
-- [ ] Usuário pode apagar dados fake.
-- [ ] Função não roda automaticamente em produção.
+- [x] Facilitar teste visual do app.
+- [x] Usuário pode popular dados fake.
+- [x] Dados fake marcados como demonstração.
+- [x] Usuário pode apagar dados fake.
+- [x] Função não roda automaticamente em produção.
 
 #### Requisitos técnicos
 
-- [ ] Remover dependências sem uso e justificar as restantes.
-- [ ] Documentar teste manual em iOS e Android.
-- [ ] Preparar build interno sem introduzir backend.
+- [x] Remover dependências sem uso e justificar as restantes.
+- [x] Documentar teste manual em iOS e Android.
+- [x] Preparar build interno sem introduzir backend.
 
 #### Arquivos prováveis
 
@@ -161,38 +161,38 @@ Preparar uma versão testável real no celular.
 
 #### Critérios de aceite
 
-- [ ] Usuário pode popular dados fake.
-- [ ] Dados fake marcados como demonstração.
-- [ ] Usuário pode apagar dados fake.
-- [ ] Função não roda automaticamente em produção.
+- [x] Usuário pode popular dados fake.
+- [x] Dados fake marcados como demonstração.
+- [x] Usuário pode apagar dados fake.
+- [x] Função não roda automaticamente em produção.
 
 #### Testes e verificação
 
-- [ ] Adicionar teste cobrindo `Criar dados de demonstração locais` em arquivo de teste da sprint.
-- [ ] Cobrir pelo menos: Usuário pode popular dados fake.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Adicionar teste cobrindo `Criar dados de demonstração locais` em arquivo de teste da sprint.
+- [x] Cobrir pelo menos: Usuário pode popular dados fake.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ### T1504 — Testar persistência após reinício
 
-- Status: todo
+- Status: done
 - Feature: Persistência após reinício
 - Plano: `PLAN.md` > `Fase 10 — Polimento e release interno`
 - Dependências: T1503
 
 #### Requisitos funcionais
 
-- [ ] Garantir comportamento local-first.
-- [ ] Dados continuam após fechar e abrir app.
-- [ ] Filtros retornam o mesmo resultado antes e depois de reiniciar o app.
-- [ ] Relatórios continuam corretos.
-- [ ] Backup exportado contém dados atuais.
+- [x] Garantir comportamento local-first.
+- [x] Dados continuam após fechar e abrir app.
+- [x] Filtros retornam o mesmo resultado antes e depois de reiniciar o app.
+- [x] Relatórios continuam corretos.
+- [x] Backup exportado contém dados atuais.
 
 #### Requisitos técnicos
 
-- [ ] Remover dependências sem uso e justificar as restantes.
-- [ ] Documentar teste manual em iOS e Android.
-- [ ] Preparar build interno sem introduzir backend.
+- [x] Remover dependências sem uso e justificar as restantes.
+- [x] Documentar teste manual em iOS e Android.
+- [x] Preparar build interno sem introduzir backend.
 
 #### Arquivos prováveis
 
@@ -212,38 +212,38 @@ Preparar uma versão testável real no celular.
 
 #### Critérios de aceite
 
-- [ ] Dados continuam após fechar e abrir app.
-- [ ] Filtros retornam o mesmo resultado antes e depois de reiniciar o app.
-- [ ] Relatórios continuam corretos.
-- [ ] Backup exportado contém dados atuais.
+- [x] Dados continuam após fechar e abrir app.
+- [x] Filtros retornam o mesmo resultado antes e depois de reiniciar o app.
+- [x] Relatórios continuam corretos.
+- [x] Backup exportado contém dados atuais.
 
 #### Testes e verificação
 
-- [ ] Adicionar teste cobrindo `Testar persistência após reinício` em arquivo de teste da sprint.
-- [ ] Cobrir pelo menos: Dados continuam após fechar e abrir app.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Adicionar teste cobrindo `Testar persistência após reinício` em arquivo de teste da sprint.
+- [x] Cobrir pelo menos: Dados continuam após fechar e abrir app.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ### T1505 — Configurar build interno com EAS
 
-- Status: todo
+- Status: done
 - Feature: Build interno com EAS
 - Plano: `PLAN.md` > `Fase 10 — Polimento e release interno`
 - Dependências: T1504
 
 #### Requisitos funcionais
 
-- [ ] Gerar app instalável para teste.
-- [ ] EAS configurado.
-- [ ] Build Android interno configurado.
-- [ ] Build iOS interno configurado se conta Apple estiver disponível.
-- [ ] Instruções de build documentadas.
+- [x] Gerar app instalável para teste.
+- [x] EAS configurado.
+- [x] Build Android interno configurado.
+- [x] Build iOS interno configurado se conta Apple estiver disponível.
+- [x] Instruções de build documentadas.
 
 #### Requisitos técnicos
 
-- [ ] Remover dependências sem uso e justificar as restantes.
-- [ ] Documentar teste manual em iOS e Android.
-- [ ] Preparar build interno sem introduzir backend.
+- [x] Remover dependências sem uso e justificar as restantes.
+- [x] Documentar teste manual em iOS e Android.
+- [x] Preparar build interno sem introduzir backend.
 
 #### Arquivos prováveis
 
@@ -263,34 +263,34 @@ Preparar uma versão testável real no celular.
 
 #### Critérios de aceite
 
-- [ ] EAS configurado.
-- [ ] Build Android interno configurado.
-- [ ] Build iOS interno configurado se conta Apple estiver disponível.
-- [ ] Instruções de build documentadas.
+- [x] EAS configurado.
+- [x] Build Android interno configurado.
+- [x] Build iOS interno configurado se conta Apple estiver disponível.
+- [x] Instruções de build documentadas.
 
 #### Testes e verificação
 
-- [ ] Adicionar teste cobrindo `Configurar build interno com EAS` em arquivo de teste da sprint.
-- [ ] Cobrir pelo menos: EAS configurado.
-- [ ] Executar `npm test` com a suíte atualizada.
-- [ ] Executar `npm run lint` sem erros novos.
+- [x] Adicionar teste cobrindo `Configurar build interno com EAS` em arquivo de teste da sprint.
+- [x] Cobrir pelo menos: EAS configurado.
+- [x] Executar `npm test` com a suíte atualizada.
+- [x] Executar `npm run lint` sem erros novos.
 
 ## Testes da sprint
 
-- [ ] Suíte completa.
+- [x] Suíte completa.
 - [ ] Teste manual com checklist.
 - [ ] Teste de export/import.
 - [ ] Teste de PDF.
-- [ ] Teste de persistência.
+- [x] Teste de persistência.
 - [ ] Teste de build.
-- [ ] `npm test` passa.
-- [ ] `npm run lint` passa.
+- [x] `npm test` passa.
+- [x] `npm run lint` passa.
 
 ## Checklist final
 
 - [ ] App abre sem tela branca.
-- [ ] `npm test` passa com os testes adicionados na sprint.
-- [ ] `npm run lint` passa sem erros.
-- [ ] Não há chamada de rede para dados financeiros.
-- [ ] Não há dependência proibida adicionada.
-- [ ] `docs/sprint-15/PROGRESS.md` descreve o que foi entregue.
+- [x] `npm test` passa com os testes adicionados na sprint.
+- [x] `npm run lint` passa sem erros.
+- [x] Não há chamada de rede para dados financeiros.
+- [x] Não há dependência proibida adicionada.
+- [x] `docs/sprint-15/PROGRESS.md` descreve o que foi entregue.

@@ -19,6 +19,9 @@
 - [x] Sprint 10 implementada — Evidência: `docs/sprint-10/PROGRESS.md`, `src/features/reports/pdf/`, `src/tests/features-sprint10.test.tsx`
 - [x] Sprint 11 implementada — Evidência: `docs/sprint-11/PROGRESS.md`, `src/features/backup/BackupScreen.tsx`, `src/lib/backup/`, `src/tests/features-sprint11.test.tsx`
 - [x] Sprint 12 implementada — Evidência: `docs/sprint-12/PROGRESS.md`, `src/features/settings/SettingsScreen.tsx`, `src/lib/settings/preferences.ts`, `src/tests/features-sprint12.test.tsx`
+- [x] Sprint 13 implementada — Evidência: `docs/sprint-13/PROGRESS.md`, `src/features/security/`, `src/tests/features-sprint13.test.tsx`
+- [x] Sprint 14 implementada — Evidência: `docs/sprint-14/PROGRESS.md`, `src/components/ui/`, `src/tests/features-sprint14.test.tsx`
+- [x] Sprint 15 implementada — Evidência: `docs/sprint-15/PROGRESS.md`, `src/lib/demoData.ts`, `eas.json`, `src/tests/features-sprint15.test.tsx`
 
 ## Em andamento
 
@@ -36,9 +39,9 @@
 
 ## Próximos passos
 
-1. Iniciar Sprint 13 em `docs/sprint-13/TASK.md`.
-2. Implementar segurança local básica.
-3. Manter `npm test`, `npm run lint` e `npm run typecheck` verdes a cada sprint.
+1. Abrir PR de `dev` para `main`.
+2. Executar checklist manual em iPhone e Android.
+3. Definir próxima sprint, se houver.
 
 ## Obsoleto/Arquivado
 

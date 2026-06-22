@@ -117,7 +117,7 @@
 
 ### Sprint 15 — Hardening e release interno
 
-- Status: todo
+- Status: done
 - Branch: `dev`
 - Tasks: `docs/sprint-15/TASK.md`
 - Progresso: `docs/sprint-15/PROGRESS.md`
@@ -133,5 +133,5 @@
 
 ## Próxima Task
 
-- Sprint atual: `docs/sprint-13/TASK.md`.
-- Começar por T1301 — Adicionar suporte a biometria local.
+- Sprint atual: nenhuma.
+- Abrir PR de `dev` para `main` ou definir próxima sprint.

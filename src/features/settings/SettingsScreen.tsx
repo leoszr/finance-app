@@ -1,10 +1,11 @@
 import { router } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Alert, StyleSheet, Text, View } from 'react-native';
 
 import { Button, Card } from '@/components/ui';
 import { createSettingsRepository } from '@/db/repositories/settingsRepository';
 import { APP_NAME, APP_TAGLINE } from '@/lib/appInfo';
+import { clearDemoData, seedDemoData } from '@/lib/demoData';
 import { localAuth as defaultLocalAuth, type BiometricAvailability, type LocalAuth } from '@/lib/localAuth';
 import { formatCentsToCurrency, type AppCurrency } from '@/lib/money';
 import { DEFAULT_CURRENCY, DEFAULT_INITIAL_MONTH, normalizeBooleanSetting, normalizeCurrency, normalizeInitialMonth, SETTINGS_KEYS, type InitialMonthPreference } from '@/lib/settings/preferences';
@@ -71,6 +72,27 @@ export function SettingsScreen({ localAuth = defaultLocalAuth, settingsRepositor
     setStatus(next ? 'Bloqueio local ativado.' : 'Bloqueio local desativado.');
   }
 
+  async function loadDemoData() {
+    const result = await seedDemoData();
+    setStatus(result.ok ? 'Dados de demonstração criados.' : result.error.message);
+  }
+
+  async function deleteDemoData() {
+    const result = await clearDemoData();
+    setStatus(result.ok ? 'Dados de demonstração apagados.' : result.error.message);
+  }
+
+  function confirmDeleteDemoData() {
+    if (Alert.alert) {
+      Alert.alert('Apagar demonstração', 'Remover somente os dados de demonstração criados pelo app?', [
+        { text: 'Cancelar' },
+        { text: 'Apagar', style: 'destructive', onPress: () => void deleteDemoData() },
+      ]);
+      return;
+    }
+    void deleteDemoData();
+  }
+
   const preview = formatCentsToCurrency(123456, currency);
 
   return (
@@ -100,6 +122,15 @@ export function SettingsScreen({ localAuth = defaultLocalAuth, settingsRepositor
         <Text style={styles.text}>Não há sincronização automática.</Text>
         <Text style={styles.text}>Faça backup manual com frequência.</Text>
         <Button onPress={() => router.push('/backup' as never)}>Backup</Button>
+      </Card>
+
+      <Card>
+        <Text style={styles.section}>Demonstração</Text>
+        <Text style={styles.text}>Crie dados locais marcados com [Demo] para testar telas e relatórios.</Text>
+        <View style={styles.row}>
+          <Button onPress={() => void loadDemoData()} testID="seed-demo-data-button">Criar demo</Button>
+          <Button onPress={confirmDeleteDemoData} testID="clear-demo-data-button">Apagar demo</Button>
+        </View>
       </Card>
 
       <Card>
