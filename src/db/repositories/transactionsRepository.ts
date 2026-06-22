@@ -1,4 +1,4 @@
-import { getRepositoryDatabase } from '@/db/repositories/database';
+import { getSqliteDatabase } from '@/db/client';
 import { notifyFinanceDataChanged } from '@/lib/dataEvents';
 import { repoErr, repoOk, type RepositoryDatabase, type RepositoryResult } from '@/db/repositories/types';
 import { getMonthRange } from '@/lib/month';
@@ -146,4 +146,8 @@ export function createTransactionsRepository(database: RepositoryDatabase = getR
     updateTransaction,
     deleteTransaction,
   };
+}
+
+function getRepositoryDatabase(): RepositoryDatabase {
+  return getSqliteDatabase() as unknown as RepositoryDatabase;
 }

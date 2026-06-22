@@ -1,4 +1,4 @@
-import { getRepositoryDatabase } from '@/db/repositories/database';
+import { getSqliteDatabase } from '@/db/client';
 import { repoOk, type RepositoryDatabase, type RepositoryResult } from '@/db/repositories/types';
 
 export type SettingRecord = {
@@ -46,4 +46,8 @@ export function createSettingsRepository(database: RepositoryDatabase = getRepos
       return repoOk(null);
     },
   };
+}
+
+function getRepositoryDatabase(): RepositoryDatabase {
+  return getSqliteDatabase() as unknown as RepositoryDatabase;
 }

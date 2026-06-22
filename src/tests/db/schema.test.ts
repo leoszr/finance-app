@@ -13,11 +13,11 @@ function expectTableColumns(tableName: string, columns: string[]) {
 }
 
 describe('Sprint 01 local database schema', () => {
-  it('covers T0101: has SQLite and Drizzle installed', () => {
+  it('covers T0101: has SQLite installed', () => {
     const packageJson = require('../../../package.json') as { dependencies: Record<string, string> };
 
     expect(packageJson.dependencies['expo-sqlite']).toBeDefined();
-    expect(packageJson.dependencies['drizzle-orm']).toBeDefined();
+    expect(packageJson.dependencies['drizzle-orm']).toBeUndefined();
   });
 
   it('covers T0102: creates accounts schema with BRL default and integer cents', () => {

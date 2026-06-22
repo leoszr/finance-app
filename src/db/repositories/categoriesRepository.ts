@@ -1,4 +1,4 @@
-import { getRepositoryDatabase } from '@/db/repositories/database';
+import { getSqliteDatabase } from '@/db/client';
 import { notifyFinanceDataChanged } from '@/lib/dataEvents';
 import { repoErr, repoOk, type RepositoryDatabase, type RepositoryResult } from '@/db/repositories/types';
 import { validateCategory, type CategoryInput } from '@/lib/validation/categoryValidation';
@@ -115,4 +115,8 @@ export function createCategoriesRepository(database: RepositoryDatabase = getRep
   }
 
   return { createCategory, getCategories, getCategoriesByType, getCategoryById, updateCategory, deleteCategory };
+}
+
+function getRepositoryDatabase(): RepositoryDatabase {
+  return getSqliteDatabase() as unknown as RepositoryDatabase;
 }

@@ -1,4 +1,4 @@
-import { getRepositoryDatabase } from '@/db/repositories/database';
+import { getSqliteDatabase } from '@/db/client';
 import type { RepositoryDatabase, RepositoryResult } from '@/db/repositories/types';
 import { repoOk } from '@/db/repositories/types';
 import { getMonthRange } from '@/lib/month';
@@ -23,7 +23,7 @@ type TransactionRow = { account_id: number; category_id: number; type: Transacti
 
 export function createDashboardQueries(database: RepositoryDatabase = getRepositoryDatabase()) {
   async function getLatestTransactionMonth() {
-    const row = (await database.getAllAsync<{ transaction_date: string }>('SELECT transaction_date FROM transactions ORDER BY transaction_date DESC, id DESC LIMIT 1'))[0];
+    const row = await database.getFirstAsync<{ transaction_date: string }>('SELECT transaction_date FROM transactions ORDER BY transaction_date DESC, id DESC LIMIT 1');
     if (!row) return null;
     const [year, month] = row.transaction_date.split('-').map(Number);
     return Number.isInteger(year) && Number.isInteger(month) ? { year, month } : null;
@@ -76,4 +76,8 @@ export function createDashboardQueries(database: RepositoryDatabase = getReposit
   }
 
   return { getMonthlySummary, getLatestTransactionMonth };
+}
+
+function getRepositoryDatabase(): RepositoryDatabase {
+  return getSqliteDatabase() as unknown as RepositoryDatabase;
 }

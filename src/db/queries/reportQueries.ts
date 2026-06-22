@@ -1,4 +1,4 @@
-import { getRepositoryDatabase } from '@/db/repositories/database';
+import { getSqliteDatabase } from '@/db/client';
 import type { RepositoryDatabase, RepositoryResult } from '@/db/repositories/types';
 import { repoOk } from '@/db/repositories/types';
 import { getMonthRange } from '@/lib/month';
@@ -118,4 +118,8 @@ export function createReportQueries(database: RepositoryDatabase = getRepository
   }
 
   return { getMonthlyReport };
+}
+
+function getRepositoryDatabase(): RepositoryDatabase {
+  return getSqliteDatabase() as unknown as RepositoryDatabase;
 }

@@ -43,6 +43,7 @@ export function createFakeRepositoryDatabase(): RepositoryDatabase {
       if (source.includes('COUNT(*)') && source.includes('category_id')) return { total: countTransactions('category_id', params[0]) } as T;
       if (source.includes('FROM accounts')) return (tables.accounts.find((row) => row.id === params[0]) as T) ?? null;
       if (source.includes('FROM categories')) return (tables.categories.find((row) => row.id === params[0]) as T) ?? null;
+      if (source.includes('FROM transactions') && source.includes('ORDER BY transaction_date')) return (sortTransactions(tables.transactions)[0] as T) ?? null;
       if (source.includes('FROM transactions')) return (tables.transactions.find((row) => row.id === params[0]) as T) ?? null;
       if (source.includes('FROM settings')) return (tables.settings.find((row) => row.key === params[0]) as T) ?? null;
       return null;

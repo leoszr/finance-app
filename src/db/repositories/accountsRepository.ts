@@ -1,4 +1,4 @@
-import { getRepositoryDatabase } from '@/db/repositories/database';
+import { getSqliteDatabase } from '@/db/client';
 import { notifyFinanceDataChanged } from '@/lib/dataEvents';
 import { repoErr, repoOk, type RepositoryDatabase, type RepositoryResult } from '@/db/repositories/types';
 import { validateAccount, type AccountInput } from '@/lib/validation/accountValidation';
@@ -98,4 +98,8 @@ export function createAccountsRepository(database: RepositoryDatabase = getRepos
   }
 
   return { createAccount, getAccounts, getAccountById, updateAccount, deleteAccount };
+}
+
+function getRepositoryDatabase(): RepositoryDatabase {
+  return getSqliteDatabase() as unknown as RepositoryDatabase;
 }
