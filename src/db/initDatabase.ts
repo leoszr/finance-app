@@ -1,4 +1,4 @@
-import { getSqliteDatabase } from '@/db/client';
+import { openSqliteDatabase } from '@/db/client';
 import { initialMigrationStatements } from '@/db/migrations/0001_initial';
 
 export type DatabaseExecutor = {
@@ -31,7 +31,7 @@ export async function applyMigrations(database: DatabaseExecutor): Promise<void>
 
 export async function initDatabase(database?: DatabaseExecutor): Promise<DatabaseInitResult> {
   try {
-    await applyMigrations(database ?? getSqliteDatabase());
+    await applyMigrations(database ?? await openSqliteDatabase());
     return { ok: true };
   } catch (error) {
     return {

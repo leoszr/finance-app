@@ -95,7 +95,7 @@
 
 ### Sprint 12 — Configurações locais
 
-- Status: todo
+- Status: done
 - Branch: `feature/sprint-12-local-settings`
 - Tasks: `docs/sprint-12/TASK.md`
 - Progresso: `docs/sprint-12/PROGRESS.md`

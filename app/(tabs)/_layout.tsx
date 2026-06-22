@@ -1,7 +1,7 @@
 import { Tabs } from 'expo-router';
 import { Text } from 'react-native';
 
-import { TAB_ROUTES } from './routes';
+import { TAB_ROUTES } from '@/navigation/tabRoutes';
 
 export default function TabsLayout() {
   return (

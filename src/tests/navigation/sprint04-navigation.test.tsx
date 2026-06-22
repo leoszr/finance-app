@@ -2,7 +2,7 @@ import { render } from '@testing-library/react-native';
 import { Text, View } from 'react-native';
 
 import TabsLayout from '../../../app/(tabs)/_layout';
-import { TAB_ROUTES } from '../../../app/(tabs)/routes';
+import { TAB_ROUTES } from '@/navigation/tabRoutes';
 
 jest.mock('expo-router', () => {
   // eslint-disable-next-line @typescript-eslint/no-require-imports

@@ -18,14 +18,16 @@ export function parseCurrencyToCents(input: string): Result<number> {
   return ok(cents);
 }
 
-export function formatCentsToCurrency(cents: number): Result<string> {
+export type AppCurrency = 'BRL' | 'USD' | 'EUR';
+
+export function formatCentsToCurrency(cents: number, currency: AppCurrency = 'BRL'): Result<string> {
   if (!Number.isInteger(cents) || !Number.isSafeInteger(cents) || cents < 0) {
     return err('invalid_cents', 'Centavos devem ser um inteiro seguro maior ou igual a zero.', 'amountCents');
   }
 
   const formatted = new Intl.NumberFormat('pt-BR', {
     style: 'currency',
-    currency: 'BRL',
+    currency,
   })
     .format(cents / 100)
     .replace(/\u00a0/g, ' ');
