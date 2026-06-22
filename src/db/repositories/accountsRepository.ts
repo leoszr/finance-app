@@ -1,4 +1,5 @@
 import { getRepositoryDatabase } from '@/db/repositories/database';
+import { notifyFinanceDataChanged } from '@/lib/dataEvents';
 import { repoErr, repoOk, type RepositoryDatabase, type RepositoryResult } from '@/db/repositories/types';
 import { validateAccount, type AccountInput } from '@/lib/validation/accountValidation';
 import type { AccountType } from '@/types/finance';
@@ -55,6 +56,7 @@ export function createAccountsRepository(database: RepositoryDatabase = getRepos
     );
 
     const account = await getAccountById(result.lastInsertRowId ?? 0);
+    if (account) notifyFinanceDataChanged();
     return account ? repoOk(account) : repoErr('account_create_failed', 'Conta não foi criada.');
   }
 
@@ -73,6 +75,7 @@ export function createAccountsRepository(database: RepositoryDatabase = getRepos
     );
 
     const account = await getAccountById(id);
+    if (account) notifyFinanceDataChanged();
     return account ? repoOk(account) : repoErr('account_not_found', 'Conta não encontrada.', 'id');
   }
 
@@ -84,6 +87,7 @@ export function createAccountsRepository(database: RepositoryDatabase = getRepos
 
     try {
       const result = await database.runAsync(`DELETE FROM accounts WHERE id = ?`, [id]);
+      if ((result.changes ?? 0) > 0) notifyFinanceDataChanged();
       return result.changes === 0 ? repoErr('account_not_found', 'Conta não encontrada.', 'id') : repoOk(null);
     } catch (error) {
       if (isForeignKeyConstraintError(error)) {

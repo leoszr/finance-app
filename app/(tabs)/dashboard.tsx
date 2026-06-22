@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 
 import { Screen } from '@/components/Screen';
-import { Card, EmptyState } from '@/components/ui';
+import { DashboardManager } from '@/features/dashboard/DashboardManager';
 
 export default function DashboardScreen() {
   return (
@@ -11,13 +11,7 @@ export default function DashboardScreen() {
         <Text accessibilityRole="header" style={styles.title}>Dashboard</Text>
         <Text style={styles.subtitle}>Resumo financeiro local, sem sincronização externa.</Text>
       </View>
-      <Card>
-        <EmptyState
-          title="Sem dados ainda"
-          message="Cadastre contas e transações para liberar seu resumo financeiro."
-          testID="dashboard-empty-state"
-        />
-      </Card>
+      <DashboardManager />
     </Screen>
   );
 }

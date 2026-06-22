@@ -1,4 +1,5 @@
 import { getRepositoryDatabase } from '@/db/repositories/database';
+import { notifyFinanceDataChanged } from '@/lib/dataEvents';
 import { repoErr, repoOk, type RepositoryDatabase, type RepositoryResult } from '@/db/repositories/types';
 import { getMonthRange } from '@/lib/month';
 import { validateTransaction, type TransactionInput } from '@/lib/validation/transactionValidation';
@@ -86,6 +87,7 @@ export function createTransactionsRepository(database: RepositoryDatabase = getR
     );
 
     const transaction = await getTransactionById(result.lastInsertRowId ?? 0);
+    if (transaction) notifyFinanceDataChanged();
     return transaction ? repoOk(transaction) : repoErr('transaction_create_failed', 'Transação não foi criada.');
   }
 
@@ -126,11 +128,13 @@ export function createTransactionsRepository(database: RepositoryDatabase = getR
     );
 
     const transaction = await getTransactionById(id);
+    if (transaction) notifyFinanceDataChanged();
     return transaction ? repoOk(transaction) : repoErr('transaction_not_found', 'Transação não encontrada.', 'id');
   }
 
   async function deleteTransaction(id: number): Promise<RepositoryResult<null>> {
     const result = await database.runAsync(`DELETE FROM transactions WHERE id = ?`, [id]);
+    if ((result.changes ?? 0) > 0) notifyFinanceDataChanged();
     return result.changes === 0 ? repoErr('transaction_not_found', 'Transação não encontrada.', 'id') : repoOk(null);
   }
 
