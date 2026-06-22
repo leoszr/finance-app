@@ -17,8 +17,8 @@ export function SummaryCard({ label, value, tone = 'neutral' }: SummaryCardProps
 
 const styles = StyleSheet.create({
   stack: { gap: 8 },
-  label: { color: '#475569', fontSize: 13, fontWeight: '900', textTransform: 'uppercase' },
-  value: { color: '#0f172a', fontSize: 24, fontWeight: '900' },
+  label: { color: '#475569', fontSize: 14, fontWeight: '900' },
+  value: { color: '#0f172a', fontSize: 24, fontWeight: '900', fontVariant: ['tabular-nums'] },
   income: { color: '#047857' },
   expense: { color: '#b91c1c' },
   neutral: { color: '#0f172a' },

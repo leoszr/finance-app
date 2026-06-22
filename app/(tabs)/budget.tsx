@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 
 import { Screen } from '@/components/Screen';
-import { GlassFab, GlassMenuButton, ScreenHeader, Card } from '@/components/ui';
+import { GlassMenuButton, ScreenHeader, Card } from '@/components/ui';
 
 export default function BudgetScreen() {
   return (
@@ -12,13 +12,12 @@ export default function BudgetScreen() {
         <Text style={styles.title}>Budget em breve</Text>
         <Text style={styles.text}>Você vai definir um budget mensal geral e limites por categoria. O app compara despesas reais, mostra progresso e avisa antes do limite.</Text>
         <View style={styles.mock}>
-          <View style={[styles.bar, { width: '72%', backgroundColor: '#2563eb' }]} />
+          <View style={[styles.bar, { width: '72%', backgroundColor: '#0f766e' }]} />
           <View style={[styles.bar, { width: '46%', backgroundColor: '#22c55e' }]} />
           <View style={[styles.bar, { width: '84%', backgroundColor: '#f59e0b' }]} />
         </View>
         <Text style={styles.helper}>Enquanto isso, use Transações para registrar gastos e Relatórios para analisar o mês.</Text>
       </Card>
-      <GlassFab />
     </Screen>
   );
 }

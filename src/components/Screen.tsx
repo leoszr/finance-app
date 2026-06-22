@@ -32,7 +32,7 @@ export function Screen({ children, centered = false, testID }: ScreenProps) {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f3f7fb',
+    backgroundColor: '#eef6f4',
   },
   keyboardAvoiding: {
     flex: 1,
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingHorizontal: 16,
     paddingVertical: SCREEN_PADDING.vertical,
-    paddingBottom: 108,
+    paddingBottom: 132,
   },
   centered: {
     justifyContent: 'center',

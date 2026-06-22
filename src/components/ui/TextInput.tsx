@@ -8,7 +8,8 @@ export function TextInput({ label, error, style, ...props }: TextInputProps) {
       <Text style={styles.label}>{label}</Text>
       <RNTextInput
         accessibilityLabel={props.accessibilityLabel ?? label}
-        placeholderTextColor="#94a3b8"
+        placeholderTextColor="#64748b"
+        selectionColor="#0f766e"
         style={[styles.input, props.editable === false && styles.disabled, error && styles.error, style]}
         {...props}
       />
@@ -23,12 +24,13 @@ const styles = StyleSheet.create({
   input: {
     minHeight: 48,
     borderWidth: 1,
-    borderColor: '#cbd5e1',
+    borderColor: '#b7c7d7',
     borderRadius: 14,
     backgroundColor: '#ffffff',
     paddingHorizontal: 14,
     color: '#0f172a',
     fontSize: 16,
+    fontWeight: '700',
   },
   disabled: { backgroundColor: '#e2e8f0', color: '#64748b' },
   error: { borderColor: '#dc2626' },

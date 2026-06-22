@@ -18,7 +18,7 @@ function ringColor(ratio: number) {
   if (ratio >= 1) return '#dc2626';
   if (ratio >= 0.82) return '#d97706';
   if (ratio <= 0.55) return '#16a34a';
-  return '#2563eb';
+  return '#0f766e';
 }
 
 export function BudgetDonut({ spentCents, totalCents, daysLeft, currency = 'BRL' }: BudgetDonutProps) {
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
   kicker: { color: '#475569', fontSize: 13, fontWeight: '900' },
-  value: { marginTop: 6, color: '#0f172a', fontSize: 24, fontWeight: '900' },
-  days: { marginTop: 4, color: '#64748b', fontSize: 13, fontWeight: '800' },
+  value: { marginTop: 6, color: '#0f172a', fontSize: 24, fontWeight: '900', fontVariant: ['tabular-nums'], textAlign: 'center' },
+  days: { marginTop: 4, color: '#64748b', fontSize: 13, fontWeight: '800', fontVariant: ['tabular-nums'] },
   helper: { color: '#475569', fontSize: 14, fontWeight: '800' },
 });

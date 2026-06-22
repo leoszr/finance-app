@@ -39,10 +39,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 8,
     borderRadius: 16,
-    backgroundColor: '#2563eb',
+    backgroundColor: '#0f766e',
     paddingHorizontal: 18,
   },
-  pressed: { opacity: 0.82, transform: [{ scale: 0.99 }] },
+  pressed: { opacity: 0.88, transform: [{ scale: 0.96 }] },
   disabled: { backgroundColor: '#64748b', opacity: 0.72 },
   label: { color: '#f8fafc', fontSize: 16, fontWeight: '800' },
 });

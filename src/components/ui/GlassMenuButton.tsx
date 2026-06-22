@@ -22,6 +22,6 @@ export function GlassMenuButton() {
 const styles = StyleSheet.create({
   button: { alignSelf: 'flex-end', marginBottom: 14 },
   surface: { width: 48, height: 48, alignItems: 'center', justifyContent: 'center', borderRadius: 18 },
-  pressed: { opacity: 0.8, transform: [{ scale: 0.98 }] },
+  pressed: { opacity: 0.84, transform: [{ scale: 0.96 }] },
   icon: { color: '#0f172a', fontSize: 24, fontWeight: '900', lineHeight: 28 },
 });

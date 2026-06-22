@@ -32,9 +32,9 @@ export function SegmentedControl<T extends string>({ options, value, onChange, t
 
 const styles = StyleSheet.create({
   wrap: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, borderRadius: 18, backgroundColor: '#e2e8f0', padding: 5 },
-  item: { minHeight: 42, flexGrow: 1, alignItems: 'center', justifyContent: 'center', borderRadius: 14, paddingHorizontal: 14 },
+  item: { minHeight: 44, flexGrow: 1, alignItems: 'center', justifyContent: 'center', borderRadius: 13, paddingHorizontal: 14 },
   selected: { backgroundColor: '#ffffff' },
-  pressed: { opacity: 0.78 },
+  pressed: { opacity: 0.84, transform: [{ scale: 0.96 }] },
   label: { color: '#475569', fontSize: 15, fontWeight: '900' },
-  selectedLabel: { color: '#2563eb' },
+  selectedLabel: { color: '#0f766e' },
 });

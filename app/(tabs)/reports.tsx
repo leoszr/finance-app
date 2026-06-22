@@ -1,5 +1,5 @@
 import { Screen } from '@/components/Screen';
-import { GlassFab, GlassMenuButton, ScreenHeader } from '@/components/ui';
+import { GlassMenuButton, ScreenHeader } from '@/components/ui';
 import { ReportScreen } from '@/features/reports/ReportScreen';
 
 export default function ReportsRoute() {
@@ -8,7 +8,6 @@ export default function ReportsRoute() {
       <GlassMenuButton />
       <ScreenHeader kicker="Relatórios locais" title="Relatórios" subtitle="Análise mensal criada só com dados do aparelho." />
       <ReportScreen />
-      <GlassFab />
     </Screen>
   );
 }

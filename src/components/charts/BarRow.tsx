@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
   stack: { gap: 6 },
   row: { flexDirection: 'row', justifyContent: 'space-between', gap: 12 },
   label: { color: '#0f172a', fontSize: 15, fontWeight: '900' },
-  value: { color: '#334155', fontSize: 15, fontWeight: '800' },
+  value: { color: '#334155', fontSize: 15, fontWeight: '800', fontVariant: ['tabular-nums'] },
   track: { height: 10, overflow: 'hidden', borderRadius: 999, backgroundColor: '#e2e8f0' },
   bar: { height: 10, borderRadius: 999 },
 });

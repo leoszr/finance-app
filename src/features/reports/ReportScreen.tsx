@@ -189,6 +189,6 @@ const styles = StyleSheet.create({
   transactionRow: { marginTop: 14, gap: 4 },
   rowName: { color: '#0f172a', fontSize: 16, fontWeight: '900' },
   rowText: { marginTop: 10, color: '#475569', fontSize: 15, fontWeight: '800' },
-  amount: { color: '#047857', fontSize: 16, fontWeight: '900' },
+  amount: { color: '#047857', fontSize: 16, fontWeight: '900', fontVariant: ['tabular-nums'] },
   expense: { color: '#b91c1c' },
 });

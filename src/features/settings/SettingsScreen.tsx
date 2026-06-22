@@ -180,6 +180,6 @@ const styles = StyleSheet.create({
   title: { color: '#0f172a', fontSize: 22, fontWeight: '900' },
   section: { color: '#0f172a', fontSize: 20, fontWeight: '900', marginBottom: 10 },
   label: { color: '#0f172a', fontSize: 16, fontWeight: '900', marginTop: 10 },
-  text: { color: '#475569', fontSize: 15, fontWeight: '700', marginTop: 6 },
-  status: { color: '#334155', fontWeight: '900' },
+  text: { color: '#475569', fontSize: 15, fontWeight: '700', lineHeight: 22, marginTop: 6 },
+  status: { color: '#115e59', borderRadius: 18, backgroundColor: '#ccfbf1', padding: 12, fontWeight: '900', textAlign: 'center' },
 });

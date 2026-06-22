@@ -18,7 +18,7 @@ jest.mock('expo-router', () => {
     return <Text testID={`tab-${name}`}>{options?.title ?? name}</Text>;
   };
 
-  return { Tabs };
+  return { router: { push: jest.fn() }, Tabs, usePathname: () => '/dashboard' };
 });
 
 describe('Sprint 04 navigation', () => {

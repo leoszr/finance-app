@@ -193,6 +193,6 @@ const styles = StyleSheet.create({
   error: { color: '#b91c1c', fontWeight: '900' },
   accountRow: { marginTop: 12, flexDirection: 'row', justifyContent: 'space-between', gap: 12 },
   accountName: { color: '#0f172a', fontSize: 16, fontWeight: '900' },
-  accountValue: { color: '#334155', fontSize: 16, fontWeight: '900' },
+  accountValue: { color: '#334155', fontSize: 16, fontWeight: '900', fontVariant: ['tabular-nums'] },
   quickActions: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 14 },
 });

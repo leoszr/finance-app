@@ -15,9 +15,9 @@ export function EmptyState({ title, message, action, testID }: EmptyStateProps) 
 }
 
 const styles = StyleSheet.create({
-  container: { alignItems: 'center', borderRadius: 22, backgroundColor: '#e0f2fe', padding: 24 },
-  icon: { color: '#0369a1', fontSize: 34, fontWeight: '900' },
+  container: { alignItems: 'center', borderRadius: 22, backgroundColor: '#ccfbf1', padding: 24 },
+  icon: { color: '#0f766e', fontSize: 34, fontWeight: '900' },
   title: { marginTop: 8, color: '#0f172a', fontSize: 20, fontWeight: '900', textAlign: 'center' },
-  message: { marginTop: 8, color: '#475569', fontSize: 15, lineHeight: 22, textAlign: 'center' },
+  message: { marginTop: 8, color: '#334155', fontSize: 15, lineHeight: 22, textAlign: 'center' },
   action: { marginTop: 16, width: '100%' },
 });

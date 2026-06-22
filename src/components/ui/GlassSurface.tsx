@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     }),
   },
   strong: {
-    borderColor: 'rgba(37, 99, 235, 0.24)',
+    borderColor: 'rgba(15, 118, 110, 0.20)',
     backgroundColor: 'rgba(255, 255, 255, 0.9)',
   },
   solid: {

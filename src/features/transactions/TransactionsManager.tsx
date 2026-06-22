@@ -308,5 +308,5 @@ const styles = StyleSheet.create({
   sectionTitle: { color: '#0f172a', fontSize: 20, fontWeight: '900' }, sectionTitleLight: { color: '#0f172a', fontSize: 20, fontWeight: '900' },
   label: { color: '#1e293b', fontWeight: '800' }, error: { color: '#b91c1c', fontWeight: '800' },
   filterLabel: { alignSelf: 'center', color: '#0f172a', fontSize: 16, fontWeight: '900', textTransform: 'capitalize' },
-  summary: { gap: 6, borderTopWidth: 1, borderTopColor: '#e2e8f0', paddingTop: 12 }, summaryText: { color: '#0f172a', fontSize: 15, fontWeight: '800' },
+  summary: { gap: 6, borderTopWidth: 1, borderTopColor: '#e2e8f0', paddingTop: 12 }, summaryText: { color: '#0f172a', fontSize: 15, fontWeight: '800', fontVariant: ['tabular-nums'] },
 });

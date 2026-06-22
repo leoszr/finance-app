@@ -1,51 +1,106 @@
-import { Tabs } from 'expo-router';
-import { Text } from 'react-native';
+import { router, Tabs, usePathname } from 'expo-router';
+import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { TAB_ROUTES } from '@/navigation/tabRoutes';
 
 export default function TabsLayout() {
+  const pathname = usePathname();
+  const showFab = TAB_ROUTES.some((route) => pathname === `/${route.name}`);
+
   return (
-    <Tabs
-      screenOptions={{
-        headerShown: false,
-        tabBarActiveTintColor: '#2563eb',
-        tabBarInactiveTintColor: '#64748b',
-        tabBarLabelStyle: { fontSize: 11, fontWeight: '800' },
-        tabBarStyle: {
-          position: 'absolute',
-          left: 18,
-          right: 18,
-          bottom: 18,
-          minHeight: 68,
-          borderTopWidth: 0,
-          borderWidth: 1,
-          borderColor: 'rgba(148, 163, 184, 0.34)',
-          borderRadius: 28,
-          backgroundColor: 'rgba(255, 255, 255, 0.9)',
-          paddingBottom: 10,
-          paddingTop: 10,
-          shadowColor: '#0f172a',
-          shadowOpacity: 0.12,
-          shadowRadius: 18,
-          shadowOffset: { width: 0, height: 10 },
-          elevation: 6,
-        },
-      }}
-    >
-      <Tabs.Screen name="backup" options={{ href: null, tabBarStyle: { display: 'none' } }} />
-      <Tabs.Screen name="settings" options={{ href: null, tabBarStyle: { display: 'none' } }} />
-      <Tabs.Screen name="categories" options={{ href: null }} />
-      <Tabs.Screen name="accounts" options={{ href: null }} />
-      {TAB_ROUTES.map((route) => (
-        <Tabs.Screen
-          key={route.name}
-          name={route.name}
-          options={{
-            title: route.title,
-            tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 18 }}>{route.icon}</Text>,
-          }}
-        />
-      ))}
-    </Tabs>
+    <View style={styles.shell}>
+      <Tabs
+        screenOptions={{
+          headerShown: false,
+          tabBarActiveTintColor: '#0f766e',
+          tabBarInactiveTintColor: '#64748b',
+          tabBarLabelStyle: styles.tabLabel,
+          tabBarItemStyle: styles.tabItem,
+          tabBarStyle: styles.tabBar,
+        }}
+      >
+        <Tabs.Screen name="backup" options={{ href: null, tabBarStyle: { display: 'none' } }} />
+        <Tabs.Screen name="settings" options={{ href: null, tabBarStyle: { display: 'none' } }} />
+        <Tabs.Screen name="categories" options={{ href: null }} />
+        <Tabs.Screen name="accounts" options={{ href: null }} />
+        {TAB_ROUTES.map((route) => (
+          <Tabs.Screen
+            key={route.name}
+            name={route.name}
+            options={{
+              title: route.title,
+              tabBarIcon: ({ color }) => <Text style={[styles.tabIcon, { color }]}>{route.icon}</Text>,
+            }}
+          />
+        ))}
+      </Tabs>
+      {showFab ? (
+        <Pressable
+          accessibilityLabel="Nova transação"
+          accessibilityRole="button"
+          onPress={() => router.push('/transactions' as never)}
+          style={({ pressed }) => [styles.fab, pressed && styles.fabPressed]}
+          testID="glass-fab"
+        >
+          <Text style={styles.fabText}>+</Text>
+        </Pressable>
+      ) : null}
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  shell: { flex: 1 },
+  tabBar: {
+    position: 'absolute',
+    left: 16,
+    right: 16,
+    bottom: 16,
+    minHeight: 72,
+    borderTopWidth: 0,
+    borderWidth: 1,
+    borderColor: 'rgba(15, 118, 110, 0.16)',
+    borderRadius: 30,
+    backgroundColor: 'rgba(248, 250, 252, 0.96)',
+    paddingBottom: 11,
+    paddingTop: 10,
+    ...Platform.select({
+      web: { boxShadow: '0 18px 44px rgba(15, 23, 42, 0.16)' },
+      default: {
+        shadowColor: '#0f172a',
+        shadowOpacity: 0.16,
+        shadowRadius: 22,
+        shadowOffset: { width: 0, height: 14 },
+        elevation: 7,
+      },
+    }),
+  },
+  tabItem: { borderRadius: 22 },
+  tabLabel: { fontSize: 11, fontWeight: '800' },
+  tabIcon: { fontSize: 18, lineHeight: 22 },
+  fab: {
+    position: 'absolute',
+    right: 28,
+    bottom: 31,
+    width: 58,
+    height: 58,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 29,
+    borderWidth: 1,
+    borderColor: 'rgba(94, 234, 212, 0.55)',
+    backgroundColor: '#0f766e',
+    ...Platform.select({
+      web: { boxShadow: '0 14px 34px rgba(15, 118, 110, 0.34)' },
+      default: {
+        shadowColor: '#0f766e',
+        shadowOpacity: 0.3,
+        shadowRadius: 18,
+        shadowOffset: { width: 0, height: 10 },
+        elevation: 8,
+      },
+    }),
+  },
+  fabPressed: { opacity: 0.88, transform: [{ scale: 0.96 }] },
+  fabText: { marginTop: -3, color: '#f8fafc', fontSize: 34, fontWeight: '900', lineHeight: 38 },
+});

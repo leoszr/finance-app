@@ -10,6 +10,6 @@ export function LoadingState({ message = 'Carregando...' }: { message?: string }
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#f3f7fb', padding: 24 },
+  container: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#eef6f4', padding: 24 },
   message: { marginTop: 12, color: '#334155', fontSize: 16, fontWeight: '800', textAlign: 'center' },
 });

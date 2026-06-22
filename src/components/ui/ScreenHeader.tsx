@@ -18,7 +18,7 @@ export function ScreenHeader({ title, subtitle, kicker }: ScreenHeaderProps) {
 
 const styles = StyleSheet.create({
   header: { marginBottom: 18 },
-  kicker: { color: '#2563eb', fontSize: 13, fontWeight: '900', textTransform: 'uppercase' },
+  kicker: { color: '#0f766e', fontSize: 13, fontWeight: '900' },
   title: { marginTop: 6, color: '#0f172a', fontSize: 34, fontWeight: '900', letterSpacing: -0.6 },
   subtitle: { marginTop: 8, color: '#475569', fontSize: 16, lineHeight: 23, fontWeight: '700' },
 });
