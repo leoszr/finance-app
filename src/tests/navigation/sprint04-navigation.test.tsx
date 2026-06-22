@@ -22,14 +22,12 @@ jest.mock('expo-router', () => {
 });
 
 describe('Sprint 04 navigation', () => {
-  it('covers T0401: defines six clear main tabs', () => {
+  it('covers T0401: defines four clear main tabs', () => {
     expect(TAB_ROUTES.map((route) => route.title)).toEqual([
       'Dashboard',
       'Transações',
-      'Categorias',
-      'Contas',
+      'Budget',
       'Relatórios',
-      'Configurações',
     ]);
   });
 

@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 8,
     borderRadius: 16,
-    backgroundColor: '#0f766e',
+    backgroundColor: '#2563eb',
     paddingHorizontal: 18,
   },
   pressed: { opacity: 0.82, transform: [{ scale: 0.99 }] },

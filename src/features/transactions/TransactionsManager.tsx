@@ -1,18 +1,22 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Alert, StyleSheet, Text, View } from 'react-native';
 
-import { Button, Card, EmptyState, MoneyInput, TextInput } from '@/components/ui';
+import { TransactionListItem } from '@/components/finance/TransactionListItem';
+import { Button, Card, EmptyState, InlineStatus, MoneyInput, SegmentedControl, TextInput } from '@/components/ui';
 import { createAccountsRepository, type AccountRecord } from '@/db/repositories/accountsRepository';
 import { createCategoriesRepository, type CategoryRecord } from '@/db/repositories/categoriesRepository';
+import { createSettingsRepository } from '@/db/repositories/settingsRepository';
 import { createTransactionsRepository, type TransactionRecord } from '@/db/repositories/transactionsRepository';
 import type { RepositoryResult } from '@/db/repositories/types';
-import { parseCurrencyToCents } from '@/lib/money';
+import { formatSignedCentsToCurrency, parseCurrencyToCents, type AppCurrency } from '@/lib/money';
+import { normalizeCurrency, SETTINGS_KEYS } from '@/lib/settings/preferences';
 import type { TransactionInput } from '@/lib/validation/transactionValidation';
 import type { TransactionType } from '@/types/finance';
 
 type TransactionsRepository = ReturnType<typeof createTransactionsRepository>;
 type AccountsRepository = ReturnType<typeof createAccountsRepository>;
 type CategoriesRepository = ReturnType<typeof createCategoriesRepository>;
+type SettingsRepository = ReturnType<typeof createSettingsRepository>;
 
 type FormState = {
   id?: number;
@@ -30,6 +34,7 @@ type TypeFilter = 'all' | TransactionType;
 let defaultTransactionsRepository: TransactionsRepository | undefined;
 let defaultAccountsRepository: AccountsRepository | undefined;
 let defaultCategoriesRepository: CategoriesRepository | undefined;
+let defaultSettingsRepository: SettingsRepository | undefined;
 
 const emptyForm: FormState = { type: 'expense', amount: '0,00', transactionDate: todayIsoDate(), description: '' };
 const typeLabels: Record<TransactionType, string> = { income: 'Receita', expense: 'Despesa' };
@@ -71,18 +76,21 @@ function getDefaultCategoriesRepository() {
   return defaultCategoriesRepository;
 }
 
-function centsToMoney(cents: number) {
-  return (cents / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+function getDefaultSettingsRepository() {
+  defaultSettingsRepository ??= createSettingsRepository();
+  return defaultSettingsRepository;
 }
 
 export function TransactionsManager({
   transactionsRepository,
   accountsRepository,
   categoriesRepository,
+  settingsRepository,
 }: {
   transactionsRepository?: TransactionsRepository;
   accountsRepository?: AccountsRepository;
   categoriesRepository?: CategoriesRepository;
+  settingsRepository?: SettingsRepository;
 }) {
   const activeTransactionsRepository = useMemo(() => transactionsRepository ?? getDefaultTransactionsRepository(), [transactionsRepository]);
   const activeAccountsRepository = useMemo(() => accountsRepository ?? getDefaultAccountsRepository(), [accountsRepository]);
@@ -90,6 +98,7 @@ export function TransactionsManager({
   const [transactions, setTransactions] = useState<TransactionRecord[]>([]);
   const [accounts, setAccounts] = useState<AccountRecord[]>([]);
   const [categories, setCategories] = useState<CategoryRecord[]>([]);
+  const [currency, setCurrency] = useState<AppCurrency>('BRL');
   const [form, setForm] = useState<FormState>(emptyForm);
   const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState('');
@@ -131,6 +140,15 @@ export function TransactionsManager({
   useEffect(() => {
     void loadData();
   }, [loadData]);
+
+  useEffect(() => {
+    if (!settingsRepository && transactionsRepository) return;
+    const timer = setTimeout(() => {
+      const repository = settingsRepository ?? getDefaultSettingsRepository();
+      void repository.getSetting(SETTINGS_KEYS.currency).then((setting) => setCurrency(normalizeCurrency(setting?.value))).catch(() => undefined);
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [settingsRepository, transactionsRepository]);
 
   function setType(type: TransactionType) {
     setFieldErrors((current) => ({ ...current, type: undefined, categoryId: undefined }));
@@ -189,7 +207,7 @@ export function TransactionsManager({
       setStatus('Transação excluída.');
     };
     if (Alert.alert) {
-      Alert.alert('Excluir transação', `Remover ${transaction.description || centsToMoney(transaction.amountCents)}?`, [{ text: 'Cancelar' }, { text: 'Excluir', style: 'destructive', onPress: remove }]);
+      Alert.alert('Excluir transação', `Remover ${transaction.description || formatSignedCentsToCurrency(transaction.amountCents, currency)}?`, [{ text: 'Cancelar' }, { text: 'Excluir', style: 'destructive', onPress: remove }]);
       return;
     }
     await remove();
@@ -223,8 +241,7 @@ export function TransactionsManager({
         <Text style={styles.sectionTitle}>{form.id ? 'Editar transação' : 'Nova transação'}</Text>
         <View style={styles.form}>
           <View style={styles.rowActions}>
-            <Button onPress={() => setType('income')} disabled={form.type === 'income'}>Receita</Button>
-            <Button onPress={() => setType('expense')} disabled={form.type === 'expense'}>Despesa</Button>
+            <SegmentedControl options={[{ label: 'Receita', value: 'income' }, { label: 'Despesa', value: 'expense' }]} value={form.type} onChange={setType} />
           </View>
           <MoneyInput testID="transaction-amount-input" label="Valor" value={form.amount} onChangeText={(amount) => { setFieldErrors((current) => ({ ...current, amountCents: undefined })); setForm((current) => ({ ...current, amount })); }} error={fieldErrors.amountCents} />
           <TextInput testID="transaction-date-input" label="Data" value={form.transactionDate} onChangeText={(transactionDate) => { setFieldErrors((current) => ({ ...current, transactionDate: undefined })); setForm((current) => ({ ...current, transactionDate })); }} error={fieldErrors.transactionDate} />
@@ -235,8 +252,8 @@ export function TransactionsManager({
           <Text style={styles.label}>Categoria</Text>
           <View style={styles.rowActions}>{compatibleCategories.map((category) => <Button key={category.id} onPress={() => { setFieldErrors((current) => ({ ...current, categoryId: undefined })); setForm((current) => ({ ...current, categoryId: category.id })); }} disabled={form.categoryId === category.id}>{category.name}</Button>)}</View>
           {fieldErrors.categoryId ? <Text accessibilityRole="alert" style={styles.error}>{fieldErrors.categoryId}</Text> : null}
-          {error ? <Text accessibilityRole="alert" style={styles.error}>{error}</Text> : null}
-          {status ? <Text accessibilityLiveRegion="polite" style={styles.status}>{status}</Text> : null}
+          {error ? <InlineStatus tone="error" message={error} /> : null}
+          {status ? <InlineStatus message={status} /> : null}
           <Button testID="save-transaction-button" onPress={saveTransaction} disabled={isSaving}>Salvar transação</Button>
         </View>
       </Card>
@@ -249,44 +266,47 @@ export function TransactionsManager({
             <Text testID="selected-month-label" style={styles.filterLabel}>{formatMonth(selectedMonth.year, selectedMonth.month)}</Text>
             <Button testID="next-month-button" onPress={() => setSelectedMonth((current) => moveMonth(current.year, current.month, 1))}>Mês seguinte</Button>
           </View>
-          <View style={styles.rowActions}>
-            <Button onPress={() => setTypeFilter('all')} disabled={typeFilter === 'all'}>Todos</Button>
-            <Button onPress={() => setTypeFilter('income')} disabled={typeFilter === 'income'}>Receitas</Button>
-            <Button onPress={() => setTypeFilter('expense')} disabled={typeFilter === 'expense'}>Despesas</Button>
-          </View>
+          <SegmentedControl
+            options={[{ label: 'Todos', value: 'all' }, { label: 'Receitas', value: 'income' }, { label: 'Despesas', value: 'expense' }]}
+            value={typeFilter}
+            onChange={setTypeFilter}
+          />
           <View style={styles.rowActions}>
             <Button onPress={() => setAccountFilter('all')} disabled={accountFilter === 'all'}>Todas as contas</Button>
             {accounts.map((account) => <Button key={account.id} onPress={() => setAccountFilter(account.id)} disabled={accountFilter === account.id}>{account.name}</Button>)}
           </View>
           <TextInput testID="transaction-search-input" label="Buscar descrição" value={search} onChangeText={setSearch} />
           <View style={styles.summary}>
-            <Text style={styles.summaryText}>Receitas: {centsToMoney(totalIncome)}</Text>
-            <Text style={styles.summaryText}>Despesas: {centsToMoney(totalExpense)}</Text>
-            <Text style={styles.summaryText}>Saldo: {centsToMoney(balance)}</Text>
+            <Text style={styles.summaryText}>Receitas: {formatSignedCentsToCurrency(totalIncome, currency)}</Text>
+            <Text style={styles.summaryText}>Despesas: {formatSignedCentsToCurrency(totalExpense, currency)}</Text>
+            <Text style={styles.summaryText}>Saldo: {formatSignedCentsToCurrency(balance, currency)}</Text>
           </View>
         </View>
       </Card>
-      {filteredTransactions.length === 0 ? <EmptyState title="Adicione sua primeira transação" message="Registre uma receita ou despesa para acompanhar saldo, relatórios e gráficos deste mês." /> : filteredTransactions.map((transaction) => (
-        <Card key={transaction.id}>
-          <Text style={styles.itemTitle}>{transaction.description || typeLabels[transaction.type]}</Text>
-          <Text style={styles.itemMeta}>{findCategoryName(transaction.categoryId)} · {findAccountName(transaction.accountId)} · {transaction.transactionDate}</Text>
-          <Text style={[styles.amount, transaction.type === 'income' ? styles.income : styles.expense]}>{transaction.type === 'income' ? '+' : '-'} {centsToMoney(transaction.amountCents)}</Text>
-          <View style={styles.rowActions}>
-            <Button onPress={() => editTransaction(transaction)}>Editar</Button>
-            <Button testID={`delete-transaction-${transaction.id}`} onPress={() => void deleteTransaction(transaction)}>Excluir</Button>
-          </View>
+      {filteredTransactions.length === 0 ? <EmptyState title="Adicione sua primeira transação" message="Registre uma receita ou despesa para acompanhar saldo, relatórios e gráficos deste mês." /> : (
+        <Card>
+          {filteredTransactions.map((transaction) => (
+            <TransactionListItem
+              key={transaction.id}
+              title={transaction.description || typeLabels[transaction.type]}
+              meta={`${findCategoryName(transaction.categoryId)} · ${findAccountName(transaction.accountId)} · ${transaction.transactionDate}`}
+              amount={`${transaction.type === 'income' ? '+' : '-'} ${formatSignedCentsToCurrency(transaction.amountCents, currency)}`}
+              type={transaction.type}
+              onEdit={() => editTransaction(transaction)}
+              onDelete={() => void deleteTransaction(transaction)}
+              deleteTestID={`delete-transaction-${transaction.id}`}
+            />
+          ))}
         </Card>
-      ))}
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   stack: { gap: 16 }, form: { gap: 12 }, rowActions: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
-  sectionTitle: { color: '#0f172a', fontSize: 20, fontWeight: '900' }, sectionTitleLight: { color: '#f8fafc', fontSize: 20, fontWeight: '900' },
-  label: { color: '#1e293b', fontWeight: '800' }, itemTitle: { color: '#0f172a', fontSize: 18, fontWeight: '900' },
-  itemMeta: { marginTop: 6, color: '#475569', fontSize: 15, fontWeight: '700' }, amount: { marginTop: 8, fontSize: 18, fontWeight: '900' },
-  income: { color: '#047857' }, expense: { color: '#b91c1c' }, error: { color: '#b91c1c', fontWeight: '800' }, status: { borderWidth: 1, borderColor: '#99f6e4', borderRadius: 999, backgroundColor: '#ccfbf1', padding: 10, color: '#115e59', fontWeight: '900', textAlign: 'center' },
+  sectionTitle: { color: '#0f172a', fontSize: 20, fontWeight: '900' }, sectionTitleLight: { color: '#0f172a', fontSize: 20, fontWeight: '900' },
+  label: { color: '#1e293b', fontWeight: '800' }, error: { color: '#b91c1c', fontWeight: '800' },
   filterLabel: { alignSelf: 'center', color: '#0f172a', fontSize: 16, fontWeight: '900', textTransform: 'capitalize' },
   summary: { gap: 6, borderTopWidth: 1, borderTopColor: '#e2e8f0', paddingTop: 12 }, summaryText: { color: '#0f172a', fontSize: 15, fontWeight: '800' },
 });

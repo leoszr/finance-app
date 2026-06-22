@@ -19,7 +19,7 @@ export function ErrorState({
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', backgroundColor: '#0b1220', padding: 24, gap: 14 },
-  title: { color: '#fee2e2', fontSize: 22, fontWeight: '900' },
-  message: { color: '#fecaca', fontSize: 15, lineHeight: 22, fontWeight: '600' },
+  container: { flex: 1, justifyContent: 'center', backgroundColor: '#f3f7fb', padding: 24, gap: 14 },
+  title: { color: '#991b1b', fontSize: 22, fontWeight: '900' },
+  message: { color: '#475569', fontSize: 15, lineHeight: 22, fontWeight: '600' },
 });

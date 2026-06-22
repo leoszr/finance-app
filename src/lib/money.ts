@@ -34,3 +34,8 @@ export function formatCentsToCurrency(cents: number, currency: AppCurrency = 'BR
 
   return ok(formatted);
 }
+
+export function formatSignedCentsToCurrency(cents: number, currency: AppCurrency = 'BRL'): string {
+  const formatted = formatCentsToCurrency(Math.abs(cents), currency);
+  return `${cents < 0 ? '-' : ''}${formatted.ok ? formatted.value : 'R$ 0,00'}`;
+}

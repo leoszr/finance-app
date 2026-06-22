@@ -1,7 +1,9 @@
+import { router } from 'expo-router';
 import { useState } from 'react';
-import { Alert, Button as RNButton, Text } from 'react-native';
+import { Alert, StyleSheet, Text, View } from 'react-native';
 
 import { Screen } from '@/components/Screen';
+import { Button, Card, ScreenHeader } from '@/components/ui';
 import { exportBackupFile, pickBackupJson } from '@/lib/backup/backupFile';
 import { importBackup } from '@/lib/backup/importBackup';
 
@@ -36,5 +38,22 @@ export function BackupScreen() {
     }
   }
 
-  return <Screen testID="backup-screen"><Text accessibilityRole="header" style={{ color: '#f8fafc', fontSize: 30, fontWeight: '900', marginBottom: 18 }}>Backup</Text><Text style={{ color: '#cbd5e1', marginBottom: 12 }}>Backup manual local. Nenhuma conta online ou sincronização externa.</Text><RNButton title="Exportar e compartilhar JSON" onPress={onExport} /><RNButton title="Importar JSON" onPress={onPickFile} /><Text style={{ color: '#cbd5e1', marginTop: 12 }}>{status}</Text></Screen>;
+  return (
+    <Screen testID="backup-screen">
+      <Button onPress={() => router.replace('/settings' as never)}>Voltar às Configurações</Button>
+      <ScreenHeader title="Backup" subtitle="Backup manual local. Nenhuma conta online ou sincronização externa." />
+      <Card>
+        <View style={styles.actions}>
+          <Button onPress={onExport}>Exportar e compartilhar JSON</Button>
+          <Button onPress={onPickFile}>Importar JSON</Button>
+        </View>
+        {status ? <Text style={styles.status}>{status}</Text> : null}
+      </Card>
+    </Screen>
+  );
 }
+
+const styles = StyleSheet.create({
+  actions: { gap: 10 },
+  status: { marginTop: 12, color: '#334155', fontWeight: '900' },
+});

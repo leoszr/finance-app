@@ -122,7 +122,7 @@ describe('Sprint 10 geração de PDF local', () => {
     await waitFor(() => expect(screen.getByTestId('generate-report-pdf-button')).toBeTruthy());
     await act(async () => { fireEvent.press(screen.getByTestId('generate-report-pdf-button')); });
 
-    expect(pdfGenerator).toHaveBeenCalledWith(expect.objectContaining({ incomeCents: 300000 }), dateFor(0).year, dateFor(0).month);
+    expect(pdfGenerator).toHaveBeenCalledWith(expect.objectContaining({ incomeCents: 300000 }), dateFor(0).year, dateFor(0).month, 'BRL');
     expect(screen.getByTestId('button-loading')).toBeTruthy();
 
     await act(async () => { resolvePdf?.(ok({ uri: 'file:///tmp/report.pdf', shared: false })); });

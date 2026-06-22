@@ -14,9 +14,9 @@ export function Card({ children, testID }: CardProps) {
 const styles = StyleSheet.create({
   card: {
     borderWidth: 1,
-    borderColor: '#dbe4f0',
+    borderColor: 'rgba(148, 163, 184, 0.32)',
     borderRadius: 24,
-    backgroundColor: '#f8fafc',
+    backgroundColor: 'rgba(255, 255, 255, 0.88)',
     padding: 20,
     ...Platform.select({
       web: { boxShadow: '0 8px 16px rgba(2, 6, 23, 0.08)' },

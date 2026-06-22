@@ -78,8 +78,8 @@ export function useAppLock(settingsRepository?: SettingsRepository, auth: LocalA
   const unlock = useCallback(async () => {
     if (unlockingRef.current) return;
     if (!availability.available) {
-      setLocked(false);
-      setMessage('Entrada liberada sem biometria. Revise a configuração de bloqueio.');
+      await refreshLock();
+      setMessage('Bloqueio ativo. Autenticação do aparelho indisponível.');
       return;
     }
 
@@ -90,7 +90,7 @@ export function useAppLock(settingsRepository?: SettingsRepository, auth: LocalA
     setUnlocking(false);
     setLocked(!ok);
     setMessage(ok ? '' : 'Não foi possível autenticar. Tente novamente.');
-  }, [auth, availability.available]);
+  }, [auth, availability.available, refreshLock]);
 
   return { availability, enabled, loading, locked, message, unlock, unlocking };
 }

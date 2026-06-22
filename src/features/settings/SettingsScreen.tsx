@@ -6,9 +6,10 @@ import { Button, Card } from '@/components/ui';
 import { createSettingsRepository } from '@/db/repositories/settingsRepository';
 import { APP_NAME, APP_TAGLINE } from '@/lib/appInfo';
 import { clearDemoData, seedDemoData } from '@/lib/demoData';
+import { setCachedGlassEnabled } from '@/hooks/useGlassEnabled';
 import { localAuth as defaultLocalAuth, type BiometricAvailability, type LocalAuth } from '@/lib/localAuth';
 import { formatCentsToCurrency, type AppCurrency } from '@/lib/money';
-import { DEFAULT_CURRENCY, DEFAULT_INITIAL_MONTH, normalizeBooleanSetting, normalizeCurrency, normalizeInitialMonth, SETTINGS_KEYS, type InitialMonthPreference } from '@/lib/settings/preferences';
+import { DEFAULT_CURRENCY, DEFAULT_INITIAL_MONTH, DEFAULT_GLASS_ENABLED, normalizeBooleanSetting, normalizeCurrency, normalizeGlassSetting, normalizeInitialMonth, SETTINGS_KEYS, type InitialMonthPreference } from '@/lib/settings/preferences';
 import { notifySettingsChanged } from '@/lib/settings/settingsEvents';
 
 type SettingsRepository = ReturnType<typeof createSettingsRepository>;
@@ -24,6 +25,7 @@ export function SettingsScreen({ localAuth = defaultLocalAuth, settingsRepositor
   const repository = useMemo(() => settingsRepository ?? getDefaultSettingsRepository(), [settingsRepository]);
   const [currency, setCurrency] = useState<AppCurrency>(DEFAULT_CURRENCY);
   const [initialMonth, setInitialMonth] = useState<InitialMonthPreference>(DEFAULT_INITIAL_MONTH);
+  const [glassEnabled, setGlassEnabled] = useState(DEFAULT_GLASS_ENABLED);
   const [appLockEnabled, setAppLockEnabled] = useState(false);
   const [biometrics, setBiometrics] = useState<BiometricAvailability>({ available: false, labels: [] });
   const [status, setStatus] = useState('');
@@ -33,10 +35,12 @@ export function SettingsScreen({ localAuth = defaultLocalAuth, settingsRepositor
       void Promise.all([
         repository.getSetting(SETTINGS_KEYS.currency),
         repository.getSetting(SETTINGS_KEYS.initialMonth),
+        repository.getSetting(SETTINGS_KEYS.glassEnabled),
         repository.getSetting(SETTINGS_KEYS.appLockEnabled),
-      ]).then(([savedCurrency, savedInitialMonth, savedAppLock]) => {
+      ]).then(([savedCurrency, savedInitialMonth, savedGlass, savedAppLock]) => {
         setCurrency(normalizeCurrency(savedCurrency?.value));
         setInitialMonth(normalizeInitialMonth(savedInitialMonth?.value));
+        setGlassEnabled(normalizeGlassSetting(savedGlass?.value));
         setAppLockEnabled(normalizeBooleanSetting(savedAppLock?.value));
       });
       void localAuth.getBiometricAvailability()
@@ -58,6 +62,15 @@ export function SettingsScreen({ localAuth = defaultLocalAuth, settingsRepositor
     if (!result.ok) { setStatus(result.error.message); return; }
     setInitialMonth(next);
     setStatus('Mês inicial salvo.');
+  }
+
+  async function saveGlassEnabled(next: boolean) {
+    const result = await repository.setSetting(SETTINGS_KEYS.glassEnabled, String(next));
+    if (!result.ok) { setStatus(result.error.message); return; }
+    setGlassEnabled(next);
+    setCachedGlassEnabled(next);
+    notifySettingsChanged();
+    setStatus(next ? 'Efeito glass ativado.' : 'Efeito glass desativado.');
   }
 
   async function saveAppLock(next: boolean) {
@@ -114,6 +127,11 @@ export function SettingsScreen({ localAuth = defaultLocalAuth, settingsRepositor
           <Button onPress={() => void saveInitialMonth('current')} disabled={initialMonth === 'current'}>Mês atual</Button>
           <Button onPress={() => void saveInitialMonth('lastWithData')} disabled={initialMonth === 'lastWithData'}>Último mês com dados</Button>
         </View>
+        <Text style={styles.label}>Efeito glass: {glassEnabled ? 'ativado' : 'desativado'}</Text>
+        <View style={styles.row}>
+          <Button onPress={() => void saveGlassEnabled(true)} disabled={glassEnabled}>Ativar glass</Button>
+          <Button onPress={() => void saveGlassEnabled(false)} disabled={!glassEnabled}>Desativar glass</Button>
+        </View>
       </Card>
 
       <Card>
@@ -121,7 +139,11 @@ export function SettingsScreen({ localAuth = defaultLocalAuth, settingsRepositor
         <Text style={styles.text}>Seus dados ficam neste dispositivo.</Text>
         <Text style={styles.text}>Não há sincronização automática.</Text>
         <Text style={styles.text}>Faça backup manual com frequência.</Text>
-        <Button onPress={() => router.push('/backup' as never)}>Backup</Button>
+        <View style={styles.row}>
+          <Button onPress={() => router.push('/accounts' as never)}>Contas</Button>
+          <Button onPress={() => router.push('/categories' as never)}>Categorias</Button>
+          <Button onPress={() => router.push('/backup' as never)}>Backup</Button>
+        </View>
       </Card>
 
       <Card>
@@ -159,5 +181,5 @@ const styles = StyleSheet.create({
   section: { color: '#0f172a', fontSize: 20, fontWeight: '900', marginBottom: 10 },
   label: { color: '#0f172a', fontSize: 16, fontWeight: '900', marginTop: 10 },
   text: { color: '#475569', fontSize: 15, fontWeight: '700', marginTop: 6 },
-  status: { color: '#f8fafc', fontWeight: '900' },
+  status: { color: '#334155', fontWeight: '900' },
 });

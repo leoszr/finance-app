@@ -4,17 +4,21 @@ import { StyleSheet, Text, View } from 'react-native';
 import { SummaryCard } from '@/components/finance/SummaryCard';
 import { Button, Card, EmptyState } from '@/components/ui';
 import { createReportQueries, type MonthlyReport } from '@/db/queries/reportQueries';
+import { createSettingsRepository } from '@/db/repositories/settingsRepository';
 import { subscribeToFinanceDataChanges } from '@/lib/dataEvents';
-import { formatCentsToCurrency } from '@/lib/money';
+import { formatSignedCentsToCurrency, type AppCurrency } from '@/lib/money';
 import { formatMonthLabel } from '@/lib/month';
 import { generateAndShareReportPdf, type PdfResult } from '@/features/reports/pdf/reportPdf';
 import { buildLocalReportSummary } from '@/lib/reportSummary';
 import type { Result } from '@/lib/result';
+import { normalizeCurrency, SETTINGS_KEYS } from '@/lib/settings/preferences';
 
 type ReportQueries = ReturnType<typeof createReportQueries>;
-type PdfGenerator = (report: MonthlyReport, year: number, month: number) => Promise<Result<PdfResult>>;
+type SettingsRepository = ReturnType<typeof createSettingsRepository>;
+type PdfGenerator = (report: MonthlyReport, year: number, month: number, currency: AppCurrency) => Promise<Result<PdfResult>>;
 
 let defaultReportQueries: ReportQueries | undefined;
+let defaultSettingsRepository: SettingsRepository | undefined;
 
 function currentYearMonth() {
   const date = new Date();
@@ -31,9 +35,9 @@ function getDefaultReportQueries() {
   return defaultReportQueries;
 }
 
-function money(cents: number) {
-  const formatted = formatCentsToCurrency(Math.abs(cents));
-  return `${cents < 0 ? '-' : ''}${formatted.ok ? formatted.value : 'R$ 0,00'}`;
+function getDefaultSettingsRepository() {
+  defaultSettingsRepository ??= createSettingsRepository();
+  return defaultSettingsRepository;
 }
 
 function monthLabel(year: number, month: number) {
@@ -45,8 +49,9 @@ function percent(value: number | null) {
   return value === null ? 'sem base anterior' : `${value > 0 ? '+' : ''}${value}%`;
 }
 
-export function ReportScreen({ reportQueries, pdfGenerator = generateAndShareReportPdf }: { reportQueries?: ReportQueries; pdfGenerator?: PdfGenerator }) {
+export function ReportScreen({ reportQueries, settingsRepository, pdfGenerator = generateAndShareReportPdf }: { reportQueries?: ReportQueries; settingsRepository?: SettingsRepository; pdfGenerator?: PdfGenerator }) {
   const [selectedMonth, setSelectedMonth] = useState(currentYearMonth);
+  const [currency, setCurrency] = useState<AppCurrency>('BRL');
   const [report, setReport] = useState<MonthlyReport | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pdfLoading, setPdfLoading] = useState(false);
@@ -74,6 +79,15 @@ export function ReportScreen({ reportQueries, pdfGenerator = generateAndShareRep
     return () => { clearTimeout(timer); unsubscribe(); };
   }, [loadData]);
 
+  useEffect(() => {
+    if (!settingsRepository && reportQueries) return;
+    const timer = setTimeout(() => {
+      const repository = settingsRepository ?? getDefaultSettingsRepository();
+      void repository.getSetting(SETTINGS_KEYS.currency).then((setting) => setCurrency(normalizeCurrency(setting?.value))).catch(() => undefined);
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [reportQueries, settingsRepository]);
+
   function changeMonth(offset: number) {
     loadRequestRef.current += 1;
     pdfRequestRef.current += 1;
@@ -91,7 +105,7 @@ export function ReportScreen({ reportQueries, pdfGenerator = generateAndShareRep
     setPdfLoading(true);
     setPdfMessage(null);
     setPdfError(null);
-    const result = await pdfGenerator(report, selectedMonth.year, selectedMonth.month);
+    const result = await pdfGenerator(report, selectedMonth.year, selectedMonth.month, currency);
     if (requestId !== pdfRequestRef.current) return;
     setPdfLoading(false);
     if (!result.ok) { setPdfError(result.error.message); return; }
@@ -120,20 +134,20 @@ export function ReportScreen({ reportQueries, pdfGenerator = generateAndShareRep
       {!report.hasData ? <Card><EmptyState title="Relatório sem dados" message="Registre transações neste mês para gerar análise, comparação e PDF local." testID="report-empty-state" /></Card> : null}
 
       <View style={styles.grid}>
-        <SummaryCard label="Receitas" value={money(report.incomeCents)} tone="income" />
-        <SummaryCard label="Despesas" value={money(report.expenseCents)} tone="expense" />
-        <SummaryCard label="Saldo do período" value={money(report.balanceCents)} tone={report.balanceCents < 0 ? 'expense' : 'income'} />
+        <SummaryCard label="Receitas" value={formatSignedCentsToCurrency(report.incomeCents, currency)} tone="income" />
+        <SummaryCard label="Despesas" value={formatSignedCentsToCurrency(report.expenseCents, currency)} tone="expense" />
+        <SummaryCard label="Saldo do período" value={formatSignedCentsToCurrency(report.balanceCents, currency)} tone={report.balanceCents < 0 ? 'expense' : 'income'} />
       </View>
 
       <Card>
         <Text style={styles.sectionTitle}>Observações locais</Text>
-        <Text style={styles.muted}>{buildLocalReportSummary(report)}</Text>
+        <Text style={styles.muted}>{buildLocalReportSummary(report, currency)}</Text>
       </Card>
 
       <Card>
         <Text style={styles.sectionTitle}>Comparação com mês anterior</Text>
-        <Text style={styles.rowText}>Receitas anteriores: {money(report.previous.previousIncomeCents)} ({money(report.previous.incomeDiffCents)}, {percent(report.previous.incomeDiffPercent)})</Text>
-        <Text style={styles.rowText}>Despesas anteriores: {money(report.previous.previousExpenseCents)} ({money(report.previous.expenseDiffCents)}, {percent(report.previous.expenseDiffPercent)})</Text>
+        <Text style={styles.rowText}>Receitas anteriores: {formatSignedCentsToCurrency(report.previous.previousIncomeCents, currency)} ({formatSignedCentsToCurrency(report.previous.incomeDiffCents, currency)}, {percent(report.previous.incomeDiffPercent)})</Text>
+        <Text style={styles.rowText}>Despesas anteriores: {formatSignedCentsToCurrency(report.previous.previousExpenseCents, currency)} ({formatSignedCentsToCurrency(report.previous.expenseDiffCents, currency)}, {percent(report.previous.expenseDiffPercent)})</Text>
       </Card>
 
       <Card>
@@ -141,7 +155,7 @@ export function ReportScreen({ reportQueries, pdfGenerator = generateAndShareRep
         {report.expenseCategories.length === 0 ? <Text style={styles.muted}>Lance despesas para ver a participação de cada categoria.</Text> : report.expenseCategories.map((category) => (
           <View key={category.categoryId} style={styles.row}>
             <Text style={styles.rowName}>{category.categoryName}</Text>
-            <Text style={styles.rowText}>{money(category.amountCents)} • {category.percent}%</Text>
+            <Text style={styles.rowText}>{formatSignedCentsToCurrency(category.amountCents, currency)} • {category.percent}%</Text>
           </View>
         ))}
       </Card>
@@ -152,7 +166,7 @@ export function ReportScreen({ reportQueries, pdfGenerator = generateAndShareRep
           <View key={transaction.id} style={styles.transactionRow}>
             <Text style={styles.rowName}>{transaction.date} · {transaction.description}</Text>
             <Text style={styles.rowText}>{transaction.categoryName} · {transaction.accountName}</Text>
-            <Text style={[styles.amount, transaction.type === 'expense' && styles.expense]}>{transaction.type === 'expense' ? '-' : ''}{money(transaction.amountCents)}</Text>
+            <Text style={[styles.amount, transaction.type === 'expense' && styles.expense]}>{transaction.type === 'expense' ? '-' : ''}{formatSignedCentsToCurrency(transaction.amountCents, currency)}</Text>
           </View>
         ))}
       </Card>
@@ -167,8 +181,8 @@ const styles = StyleSheet.create({
   month: { color: '#0f172a', fontSize: 16, fontWeight: '900', textTransform: 'capitalize' },
   sectionTitle: { color: '#0f172a', fontSize: 20, fontWeight: '900' },
   muted: { marginTop: 10, color: '#64748b', fontSize: 15, fontWeight: '700', lineHeight: 22 },
-  lightText: { color: '#f8fafc', fontWeight: '800' },
-  error: { color: '#fecaca', fontWeight: '900' },
+  lightText: { color: '#475569', fontWeight: '800' },
+  error: { color: '#b91c1c', fontWeight: '900' },
   success: { marginTop: 10, color: '#047857', fontSize: 15, fontWeight: '900' },
   pdfError: { marginTop: 10, color: '#b91c1c', fontSize: 15, fontWeight: '900' },
   row: { marginTop: 12, flexDirection: 'row', justifyContent: 'space-between', gap: 12 },

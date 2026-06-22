@@ -35,6 +35,12 @@ function isDemoCategory(category: CategoryRecord) {
   return category.name === DEMO_INCOME_CATEGORY_NAME || category.name === DEMO_EXPENSE_CATEGORY_NAME;
 }
 
+function demoDate(day: number) {
+  const now = new Date();
+  const safeDay = Math.min(day, new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate());
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(safeDay).padStart(2, '0')}`;
+}
+
 export async function clearDemoData(repositories?: DemoRepositories) {
   const { accountsRepository, categoriesRepository, transactionsRepository } = getRepositories(repositories);
   const transactions = await transactionsRepository.getTransactions();
@@ -86,7 +92,7 @@ export async function seedDemoData(repositories?: DemoRepositories) {
     type: 'income',
     amountCents: 520000,
     description: DEMO_INCOME_DESCRIPTION,
-    transactionDate: '2026-06-05',
+    transactionDate: demoDate(5),
   });
   if (!income.ok) return income;
 
@@ -96,6 +102,6 @@ export async function seedDemoData(repositories?: DemoRepositories) {
     type: 'expense',
     amountCents: 8345,
     description: DEMO_EXPENSE_DESCRIPTION,
-    transactionDate: '2026-06-10',
+    transactionDate: demoDate(10),
   });
 }

@@ -1,12 +1,14 @@
-import { Text } from 'react-native';
+import { router } from 'expo-router';
 
 import { Screen } from '@/components/Screen';
+import { Button, ScreenHeader } from '@/components/ui';
 import { CategoriesManager } from '@/features/categories/CategoriesManager';
 
 export default function CategoriesScreen() {
   return (
     <Screen testID="categories-screen">
-      <Text accessibilityRole="header" style={{ color: '#f8fafc', fontSize: 30, fontWeight: '900', marginBottom: 18 }}>Categorias</Text>
+      <Button onPress={() => router.replace('/settings' as never)}>Voltar às Configurações</Button>
+      <ScreenHeader title="Categorias" subtitle="Organize receitas e despesas para filtros e relatórios." />
       <CategoriesManager />
     </Screen>
   );

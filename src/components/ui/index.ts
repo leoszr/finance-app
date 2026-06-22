@@ -1,5 +1,11 @@
 export { Button } from './Button';
 export { Card } from './Card';
 export { EmptyState } from './EmptyState';
+export { GlassFab } from './GlassFab';
+export { GlassMenuButton } from './GlassMenuButton';
+export { GlassSurface } from './GlassSurface';
+export { InlineStatus } from './InlineStatus';
 export { MoneyInput } from './MoneyInput';
+export { ScreenHeader } from './ScreenHeader';
+export { SegmentedControl } from './SegmentedControl';
 export { TextInput } from './TextInput';

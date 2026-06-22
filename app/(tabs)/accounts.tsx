@@ -1,12 +1,14 @@
-import { Text } from 'react-native';
+import { router } from 'expo-router';
 
 import { Screen } from '@/components/Screen';
+import { Button, ScreenHeader } from '@/components/ui';
 import { AccountsManager } from '@/features/accounts/AccountsManager';
 
 export default function AccountsScreen() {
   return (
     <Screen testID="accounts-screen">
-      <Text accessibilityRole="header" style={{ color: '#f8fafc', fontSize: 30, fontWeight: '900', marginBottom: 18 }}>Contas</Text>
+      <Button onPress={() => router.replace('/settings' as never)}>Voltar às Configurações</Button>
+      <ScreenHeader title="Contas" subtitle="Cadastre as origens do dinheiro usadas nas transações." />
       <AccountsManager />
     </Screen>
   );

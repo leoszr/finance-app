@@ -1,12 +1,14 @@
-import { Text } from 'react-native';
+import { router } from 'expo-router';
 
 import { Screen } from '@/components/Screen';
+import { Button, ScreenHeader } from '@/components/ui';
 import { SettingsScreen as SettingsManager } from '@/features/settings/SettingsScreen';
 
 export default function SettingsScreen() {
   return (
     <Screen testID="settings-screen">
-      <Text accessibilityRole="header" style={{ color: '#f8fafc', fontSize: 30, fontWeight: '900', marginBottom: 18 }}>Configurações</Text>
+      <Button onPress={() => router.replace('/dashboard' as never)}>Voltar ao Dashboard</Button>
+      <ScreenHeader title="Configurações" subtitle="Preferências locais, backup, segurança e demonstração." />
       <SettingsManager />
     </Screen>
   );

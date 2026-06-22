@@ -18,7 +18,7 @@ export function AppLockScreen({ available, message, onUnlock, unlocking = false 
           <Text accessibilityRole="header" style={styles.title}>App bloqueado</Text>
           <Text style={styles.text}>Autentique no aparelho para ver seus dados financeiros.</Text>
           {message ? <Text style={styles.warning}>{message}</Text> : null}
-          <Button loading={unlocking} onPress={onUnlock}>{available ? 'Desbloquear' : 'Continuar sem biometria'}</Button>
+          <Button loading={unlocking} onPress={onUnlock}>{available ? 'Desbloquear' : 'Tentar novamente'}</Button>
         </View>
       </Card>
     </Screen>

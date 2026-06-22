@@ -80,7 +80,7 @@ describe('Sprint 13 local security', () => {
     expect(localAuth.authenticate).toHaveBeenCalledTimes(2);
   });
 
-  it('shows controlled fallback when biometrics are unavailable', async () => {
+  it('stays locked when biometrics are unavailable', async () => {
     const repository = createSettingsRepository(createFakeRepositoryDatabase());
     await repository.setSetting('appLockEnabled', 'true');
 
@@ -91,9 +91,10 @@ describe('Sprint 13 local security', () => {
     );
 
     await waitFor(() => expect(screen.getByText('Cadastre uma biometria no aparelho para ativar o bloqueio.')).toBeTruthy());
-    await act(async () => { fireEvent.press(screen.getByText('Continuar sem biometria')); });
+    await act(async () => { fireEvent.press(screen.getByText('Tentar novamente')); });
 
-    await waitFor(() => expect(screen.getByText('Dados preservados')).toBeTruthy());
+    await waitFor(() => expect(screen.getByText('Bloqueio ativo. Autenticação do aparelho indisponível.')).toBeTruthy());
+    expect(screen.queryByText('Dados preservados')).toBeNull();
   });
 
   it('does not block users with app lock disabled when native auth fails', async () => {
