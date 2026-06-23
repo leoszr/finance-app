@@ -1,13 +1,13 @@
 import { err, ok, type Result } from '@/lib/result';
 
-const currencyInputPattern = /^\s*(?:R\$\s*)?(?:(?:\d{1,3}(?:\.\d{3})+)|\d+)(?:,\d{2})?\s*$/;
+const currencyInputPattern = /^\s*(?:(?:R\$|US\$|€|\$)\s*)?(?:(?:\d{1,3}(?:\.\d{3})+)|\d+)(?:,\d{2})?\s*$/;
 
 export function parseCurrencyToCents(input: string): Result<number> {
   if (!currencyInputPattern.test(input)) {
     return err('invalid_currency', 'Valor monetário inválido.', 'amount');
   }
 
-  const normalized = input.replace(/\s/g, '').replace(/^R\$/, '').replace(/\./g, '').replace(',', '.');
+  const normalized = input.replace(/\s/g, '').replace(/^(?:R\$|US\$|€|\$)/, '').replace(/\./g, '').replace(',', '.');
   const value = Number(normalized);
   const cents = Math.round(value * 100);
 

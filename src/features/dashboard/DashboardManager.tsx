@@ -6,6 +6,7 @@ import { BarRow } from '@/components/charts/BarRow';
 import { BudgetDonut } from '@/components/charts/BudgetDonut';
 import { SummaryCard } from '@/components/finance/SummaryCard';
 import { Button, Card, EmptyState } from '@/components/ui';
+import { createBudgetQueries, type MonthlyBudgetSummary } from '@/db/queries/budgetQueries';
 import { createDashboardQueries, type MonthlyDashboardSummary } from '@/db/queries/dashboardQueries';
 import { createSettingsRepository } from '@/db/repositories/settingsRepository';
 import { formatMonthLabel } from '@/lib/month';
@@ -14,9 +15,11 @@ import { formatSignedCentsToCurrency, type AppCurrency } from '@/lib/money';
 import { normalizeCurrency, normalizeInitialMonth, SETTINGS_KEYS } from '@/lib/settings/preferences';
 
 type DashboardQueries = ReturnType<typeof createDashboardQueries>;
+type BudgetQueries = ReturnType<typeof createBudgetQueries>;
 type SettingsRepository = ReturnType<typeof createSettingsRepository>;
 
 let defaultDashboardQueries: DashboardQueries | undefined;
+let defaultBudgetQueries: BudgetQueries | undefined;
 let defaultSettingsRepository: SettingsRepository | undefined;
 
 function currentYearMonth() {
@@ -32,6 +35,11 @@ function moveMonth(year: number, month: number, offset: number) {
 function getDefaultDashboardQueries() {
   defaultDashboardQueries ??= createDashboardQueries();
   return defaultDashboardQueries;
+}
+
+function getDefaultBudgetQueries() {
+  defaultBudgetQueries ??= createBudgetQueries();
+  return defaultBudgetQueries;
 }
 
 function getDefaultSettingsRepository() {
@@ -64,17 +72,23 @@ export function DashboardManager({ dashboardQueries, settingsRepository }: { das
   const [selectedMonth, setSelectedMonth] = useState(currentYearMonth);
   const [currency, setCurrency] = useState<AppCurrency>('BRL');
   const [summary, setSummary] = useState<MonthlyDashboardSummary | null>(null);
+  const [budgetSummary, setBudgetSummary] = useState<MonthlyBudgetSummary | null>(null);
   const [error, setError] = useState<string | null>(null);
   const loadRequestRef = useRef(0);
 
   const loadData = useCallback(async () => {
     const requestId = ++loadRequestRef.current;
     try {
-      const result = await (dashboardQueries ?? getDefaultDashboardQueries()).getMonthlySummary(selectedMonth.year, selectedMonth.month);
+      const [result, budgetResult] = await Promise.all([
+        (dashboardQueries ?? getDefaultDashboardQueries()).getMonthlySummary(selectedMonth.year, selectedMonth.month),
+        dashboardQueries ? Promise.resolve(null) : getDefaultBudgetQueries().getMonthlyBudgetSummary(selectedMonth.year, selectedMonth.month),
+      ]);
       if (requestId !== loadRequestRef.current) return;
       if (!result.ok) { setError(result.error.message); return; }
+      if (budgetResult && !budgetResult.ok) { setError(budgetResult.error.message); return; }
       setError(null);
       setSummary(result.value);
+      setBudgetSummary(budgetResult?.ok ? budgetResult.value : null);
     } catch {
       if (requestId === loadRequestRef.current) setError('Dashboard indisponível.');
     }
@@ -120,6 +134,7 @@ export function DashboardManager({ dashboardQueries, settingsRepository }: { das
   const maxCategory = Math.max(...summary.expenseCategories.map((category) => category.amountCents), 0);
   const maxFlow = Math.max(summary.incomeCents, summary.expenseCents, 0);
   const flowBase = Math.max(summary.incomeCents, summary.expenseCents, 1);
+  const budgetBase = budgetSummary?.hasBudget ? Math.max(budgetSummary.totalBudgetCents, 1) : flowBase;
 
   return (
     <View style={styles.stack}>
@@ -138,7 +153,7 @@ export function DashboardManager({ dashboardQueries, settingsRepository }: { das
       ) : null}
 
       <Card>
-        <BudgetDonut spentCents={summary.expenseCents} totalCents={flowBase} daysLeft={daysLeftInMonth(selectedMonth.year, selectedMonth.month)} currency={currency} />
+        <BudgetDonut spentCents={summary.expenseCents} totalCents={budgetBase} daysLeft={daysLeftInMonth(selectedMonth.year, selectedMonth.month)} currency={currency} />
       </Card>
 
       <Card>

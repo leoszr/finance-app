@@ -38,7 +38,29 @@ export const initialMigrationStatements = [
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
   );`,
+  `CREATE TABLE IF NOT EXISTS budgets (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    year INTEGER NOT NULL,
+    month INTEGER NOT NULL CHECK (month >= 1 AND month <= 12),
+    total_cents INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (year, month)
+  );`,
+  `CREATE TABLE IF NOT EXISTS budget_categories (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    budget_id INTEGER NOT NULL,
+    category_id INTEGER NOT NULL,
+    amount_cents INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (budget_id, category_id),
+    FOREIGN KEY (budget_id) REFERENCES budgets(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (category_id) REFERENCES categories(id) ON UPDATE CASCADE ON DELETE CASCADE
+  );`,
   `CREATE INDEX IF NOT EXISTS transactions_account_id_idx ON transactions(account_id);`,
   `CREATE INDEX IF NOT EXISTS transactions_category_id_idx ON transactions(category_id);`,
   `CREATE INDEX IF NOT EXISTS transactions_transaction_date_idx ON transactions(transaction_date);`,
+  `CREATE INDEX IF NOT EXISTS budget_categories_budget_id_idx ON budget_categories(budget_id);`,
+  `CREATE INDEX IF NOT EXISTS budget_categories_category_id_idx ON budget_categories(category_id);`,
 ] as const;
