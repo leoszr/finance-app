@@ -1,8 +1,9 @@
 import type { ReactNode } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { colors, layout } from '@/theme';
 
-export const SCREEN_PADDING = { horizontal: 20, vertical: 24 } as const;
+export const SCREEN_PADDING = { horizontal: layout.screenPaddingHorizontal, vertical: layout.screenPaddingVertical } as const;
 
 type ScreenProps = {
   children: ReactNode;
@@ -32,23 +33,23 @@ export function Screen({ children, centered = false, testID }: ScreenProps) {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#eef6f4',
+    backgroundColor: colors.background.app,
   },
   keyboardAvoiding: {
     flex: 1,
   },
   content: {
     flexGrow: 1,
-    paddingHorizontal: 16,
-    paddingVertical: SCREEN_PADDING.vertical,
-    paddingBottom: 132,
+    paddingHorizontal: layout.screenPaddingHorizontal,
+    paddingVertical: layout.screenPaddingVertical,
+    paddingBottom: layout.screenBottomPadding,
   },
   centered: {
     justifyContent: 'center',
   },
   body: {
     width: '100%',
-    maxWidth: 720,
+    maxWidth: layout.maxContentWidth,
     alignSelf: 'center',
   },
 });

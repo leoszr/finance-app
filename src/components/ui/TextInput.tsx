@@ -1,4 +1,5 @@
 import { StyleSheet, Text, TextInput as RNTextInput, type TextInputProps as RNTextInputProps, View } from 'react-native';
+import { colors, radius, spacing, typography } from '@/theme';
 
 type TextInputProps = RNTextInputProps & { label: string; error?: string };
 
@@ -8,8 +9,8 @@ export function TextInput({ label, error, style, ...props }: TextInputProps) {
       <Text style={styles.label}>{label}</Text>
       <RNTextInput
         accessibilityLabel={props.accessibilityLabel ?? label}
-        placeholderTextColor="#64748b"
-        selectionColor="#0f766e"
+        placeholderTextColor={colors.text.secondary}
+        selectionColor={colors.border.focus}
         style={[styles.input, props.editable === false && styles.disabled, error && styles.error, style]}
         {...props}
       />
@@ -19,20 +20,20 @@ export function TextInput({ label, error, style, ...props }: TextInputProps) {
 }
 
 const styles = StyleSheet.create({
-  wrapper: { gap: 8 },
-  label: { color: '#1e293b', fontSize: 14, fontWeight: '800' },
+  wrapper: { gap: spacing.xs },
+  label: { color: colors.text.primary, fontSize: 14, fontWeight: typography.weight.bold },
   input: {
     minHeight: 48,
     borderWidth: 1,
-    borderColor: '#b7c7d7',
-    borderRadius: 14,
-    backgroundColor: '#ffffff',
+    borderColor: colors.border.strong,
+    borderRadius: radius.md,
+    backgroundColor: colors.component.inputBackground,
     paddingHorizontal: 14,
-    color: '#0f172a',
-    fontSize: 16,
-    fontWeight: '700',
+    color: colors.text.primary,
+    fontSize: typography.size.lg,
+    fontWeight: typography.weight.semibold,
   },
-  disabled: { backgroundColor: '#e2e8f0', color: '#64748b' },
-  error: { borderColor: '#dc2626' },
-  errorText: { color: '#b91c1c', fontSize: 13, fontWeight: '700' },
+  disabled: { backgroundColor: colors.background.subtle, color: colors.text.secondary },
+  error: { borderColor: colors.border.danger },
+  errorText: { color: colors.text.danger, fontSize: typography.size.sm, fontWeight: typography.weight.semibold },
 });

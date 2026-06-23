@@ -73,15 +73,21 @@ export function DashboardManager({ dashboardQueries, settingsRepository }: { das
   const [currency, setCurrency] = useState<AppCurrency>('BRL');
   const [summary, setSummary] = useState<MonthlyDashboardSummary | null>(null);
   const [budgetSummary, setBudgetSummary] = useState<MonthlyBudgetSummary | null>(null);
+  const [budgetLoadFailed, setBudgetLoadFailed] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const loadRequestRef = useRef(0);
 
   const loadData = useCallback(async () => {
     const requestId = ++loadRequestRef.current;
     try {
+      const budgetPromise = dashboardQueries
+        ? Promise.resolve(null)
+        : Promise.resolve()
+          .then(() => getDefaultBudgetQueries().getMonthlyBudgetSummary(selectedMonth.year, selectedMonth.month))
+          .catch(() => null);
       const [result, budgetResult] = await Promise.all([
         (dashboardQueries ?? getDefaultDashboardQueries()).getMonthlySummary(selectedMonth.year, selectedMonth.month),
-        dashboardQueries ? Promise.resolve(null) : getDefaultBudgetQueries().getMonthlyBudgetSummary(selectedMonth.year, selectedMonth.month),
+        budgetPromise,
       ]);
       if (requestId !== loadRequestRef.current) return;
       if (!result.ok) { setError(result.error.message); return; }
@@ -89,6 +95,7 @@ export function DashboardManager({ dashboardQueries, settingsRepository }: { das
       setError(null);
       setSummary(result.value);
       setBudgetSummary(budgetResult?.ok ? budgetResult.value : null);
+      setBudgetLoadFailed(!dashboardQueries && budgetResult === null);
     } catch {
       if (requestId === loadRequestRef.current) setError('Dashboard indisponível.');
     }
@@ -133,8 +140,6 @@ export function DashboardManager({ dashboardQueries, settingsRepository }: { das
 
   const maxCategory = Math.max(...summary.expenseCategories.map((category) => category.amountCents), 0);
   const maxFlow = Math.max(summary.incomeCents, summary.expenseCents, 0);
-  const flowBase = Math.max(summary.incomeCents, summary.expenseCents, 1);
-  const budgetBase = budgetSummary?.hasBudget ? Math.max(budgetSummary.totalBudgetCents, 1) : flowBase;
 
   return (
     <View style={styles.stack}>
@@ -152,9 +157,20 @@ export function DashboardManager({ dashboardQueries, settingsRepository }: { das
         </Card>
       ) : null}
 
-      <Card>
-        <BudgetDonut spentCents={summary.expenseCents} totalCents={budgetBase} daysLeft={daysLeftInMonth(selectedMonth.year, selectedMonth.month)} currency={currency} />
-      </Card>
+      {budgetLoadFailed ? (
+        <Card>
+          <Text style={styles.sectionTitle}>Budget</Text>
+          <Text style={styles.muted}>Budget indisponível agora. Abra a tela Budget para revisar o planejamento do mês.</Text>
+        </Card>
+      ) : budgetSummary?.hasBudget ? (
+        <Card>
+          <BudgetDonut spentCents={summary.expenseCents} totalCents={Math.max(budgetSummary.totalBudgetCents, 1)} daysLeft={daysLeftInMonth(selectedMonth.year, selectedMonth.month)} currency={currency} />
+        </Card>
+      ) : (
+        <Card>
+          <EmptyState title="Budget não definido" message="Defina um budget mensal para acompanhar gasto planejado no dashboard." />
+        </Card>
+      )}
 
       <Card>
         <Text style={styles.sectionTitle}>Adicionar rápido</Text>

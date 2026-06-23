@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
+import { colors, motion, radius, shadows, spacing, typography } from '@/theme';
 
 type ButtonProps = {
   children: ReactNode;
@@ -23,7 +24,7 @@ export function Button({ accessibilityLabel, children, onPress, disabled = false
       style={({ pressed }) => [styles.button, pressed && styles.pressed, inactive && styles.disabled]}
       testID={testID}
     >
-      {loading ? <ActivityIndicator color="#e0f2fe" testID="button-loading" /> : null}
+      {loading ? <ActivityIndicator color={colors.text.inverse} testID="button-loading" /> : null}
       <Text style={styles.label}>{children}</Text>
     </Pressable>
   );
@@ -37,12 +38,13 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 8,
-    borderRadius: 16,
-    backgroundColor: '#0f766e',
+    gap: spacing.xs,
+    borderRadius: radius.lg,
+    backgroundColor: colors.action.primary,
     paddingHorizontal: 18,
+    ...shadows.button,
   },
-  pressed: { opacity: 0.88, transform: [{ scale: 0.96 }] },
-  disabled: { backgroundColor: '#64748b', opacity: 0.72 },
-  label: { color: '#f8fafc', fontSize: 16, fontWeight: '800' },
+  pressed: { opacity: motion.pressedOpacity, transform: [{ scale: motion.pressScale }] },
+  disabled: { backgroundColor: colors.action.disabled, opacity: 0.72 },
+  label: { color: colors.text.inverse, fontSize: typography.size.lg, fontWeight: typography.weight.bold },
 });

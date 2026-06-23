@@ -8,3 +8,9 @@
   - monthly spent calculations
   - backup export/import of budgets
   - Budget screen save flow
+
+## Deferred from UI/design review
+
+- Fix app lock fallback when biometrics/hardware/enrollment become unavailable after lock is enabled.
+- Implement a real `new-transaction` creation route or remove the misleading primary route/tab.
+- Remove the glass/translucency toggle and `GlassSurface`, or convert them to opaque tokenized surfaces.
