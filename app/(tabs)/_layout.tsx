@@ -1,56 +1,60 @@
-import { router, Tabs, usePathname } from 'expo-router';
-import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Tabs } from 'expo-router';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 
 import { TAB_ROUTES } from '@/navigation/tabRoutes';
 
 export default function TabsLayout() {
-  const pathname = usePathname();
-  const showFab = TAB_ROUTES.some((route) => pathname === `/${route.name}`);
-
   return (
-    <View style={styles.shell}>
-      <Tabs
-        screenOptions={{
-          headerShown: false,
-          tabBarActiveTintColor: '#0f766e',
-          tabBarInactiveTintColor: '#64748b',
-          tabBarLabelStyle: styles.tabLabel,
-          tabBarItemStyle: styles.tabItem,
-          tabBarStyle: styles.tabBar,
+    <Tabs
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: '#0f766e',
+        tabBarInactiveTintColor: '#64748b',
+        tabBarLabelStyle: styles.tabLabel,
+        tabBarItemStyle: styles.tabItem,
+        tabBarStyle: styles.tabBar,
+      }}
+    >
+      <Tabs.Screen name="backup" options={{ href: null, tabBarStyle: { display: 'none' } }} />
+      <Tabs.Screen name="settings" options={{ href: null, tabBarStyle: { display: 'none' } }} />
+      <Tabs.Screen name="categories" options={{ href: null, tabBarStyle: { display: 'none' } }} />
+      <Tabs.Screen name="accounts" options={{ href: null, tabBarStyle: { display: 'none' } }} />
+      {TAB_ROUTES.slice(0, 2).map((route) => (
+        <Tabs.Screen
+          key={route.name}
+          name={route.name}
+          options={{
+            title: route.title,
+            tabBarIcon: ({ color }) => <Text style={[styles.tabIcon, { color }]}>{route.icon}</Text>,
+          }}
+        />
+      ))}
+      <Tabs.Screen
+        name="new-transaction"
+        options={{
+          title: 'Novo',
+          tabBarIcon: ({ focused }) => (
+            <View style={[styles.addIcon, focused && styles.addIconFocused]}>
+              <Text style={styles.addIconText}>+</Text>
+            </View>
+          ),
         }}
-      >
-        <Tabs.Screen name="backup" options={{ href: null, tabBarStyle: { display: 'none' } }} />
-        <Tabs.Screen name="settings" options={{ href: null, tabBarStyle: { display: 'none' } }} />
-        <Tabs.Screen name="categories" options={{ href: null }} />
-        <Tabs.Screen name="accounts" options={{ href: null }} />
-        {TAB_ROUTES.map((route) => (
-          <Tabs.Screen
-            key={route.name}
-            name={route.name}
-            options={{
-              title: route.title,
-              tabBarIcon: ({ color }) => <Text style={[styles.tabIcon, { color }]}>{route.icon}</Text>,
-            }}
-          />
-        ))}
-      </Tabs>
-      {showFab ? (
-        <Pressable
-          accessibilityLabel="Nova transação"
-          accessibilityRole="button"
-          onPress={() => router.push('/transactions' as never)}
-          style={({ pressed }) => [styles.fab, pressed && styles.fabPressed]}
-          testID="glass-fab"
-        >
-          <Text style={styles.fabText}>+</Text>
-        </Pressable>
-      ) : null}
-    </View>
+      />
+      {TAB_ROUTES.slice(2).map((route) => (
+        <Tabs.Screen
+          key={route.name}
+          name={route.name}
+          options={{
+            title: route.title,
+            tabBarIcon: ({ color }) => <Text style={[styles.tabIcon, { color }]}>{route.icon}</Text>,
+          }}
+        />
+      ))}
+    </Tabs>
   );
 }
 
 const styles = StyleSheet.create({
-  shell: { flex: 1 },
   tabBar: {
     position: 'absolute',
     left: 16,
@@ -62,7 +66,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(15, 118, 110, 0.16)',
     borderRadius: 30,
     backgroundColor: 'rgba(248, 250, 252, 0.96)',
-    paddingBottom: 11,
+    paddingBottom: 10,
     paddingTop: 10,
     ...Platform.select({
       web: { boxShadow: '0 18px 44px rgba(15, 23, 42, 0.16)' },
@@ -78,10 +82,7 @@ const styles = StyleSheet.create({
   tabItem: { borderRadius: 22 },
   tabLabel: { fontSize: 11, fontWeight: '800' },
   tabIcon: { fontSize: 18, lineHeight: 22 },
-  fab: {
-    position: 'absolute',
-    right: 28,
-    bottom: 31,
+  addIcon: {
     width: 58,
     height: 58,
     alignItems: 'center',
@@ -101,6 +102,6 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  fabPressed: { opacity: 0.88, transform: [{ scale: 0.96 }] },
-  fabText: { marginTop: -3, color: '#f8fafc', fontSize: 34, fontWeight: '900', lineHeight: 38 },
+  addIconFocused: { backgroundColor: '#115e59' },
+  addIconText: { marginTop: -3, color: '#f8fafc', fontSize: 34, fontWeight: '900', lineHeight: 38 },
 });

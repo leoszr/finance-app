@@ -69,7 +69,7 @@ export function SettingsScreen({ localAuth = defaultLocalAuth, settingsRepositor
     if (!result.ok) { setStatus(result.error.message); return; }
     setGlassEnabled(next);
     setCachedGlassEnabled(next);
-    notifySettingsChanged();
+    notifySettingsChanged(SETTINGS_KEYS.glassEnabled);
     setStatus(next ? 'Efeito glass ativado.' : 'Efeito glass desativado.');
   }
 
@@ -81,7 +81,7 @@ export function SettingsScreen({ localAuth = defaultLocalAuth, settingsRepositor
     const result = await repository.setSetting(SETTINGS_KEYS.appLockEnabled, String(next));
     if (!result.ok) { setStatus(result.error.message); return; }
     setAppLockEnabled(next);
-    notifySettingsChanged();
+    notifySettingsChanged(SETTINGS_KEYS.appLockEnabled);
     setStatus(next ? 'Bloqueio local ativado.' : 'Bloqueio local desativado.');
   }
 

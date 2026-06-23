@@ -791,32 +791,367 @@ Alert nativo para destrutivo
 - Cards de listas, forms e filtros usam o mesmo peso visual, criando pouca hierarquia.
 - EmptyState às vezes aparece dentro de `Card`, criando nested surface.
 
-## Próxima direção sugerida
+## Plano de ação recomendado
 
-Sprint de design deveria começar por extrair componentes pequenos, não redesenhar tudo:
+Decisão principal: **evoluir o design system próprio do app com direção visual inspirada nos websites da Apple**, não migrar para `shadcn/ui` web nem adotar biblioteca pesada de componentes. O projeto é Expo/React Native, já tem componentes base e precisa preservar sensação nativa, local-first, calma e confiável.
 
-1. `ScreenHeader`: unificar título, subtítulo e kicker opcional.
-2. `InlineStatus`: unificar sucesso, erro e aviso local.
-3. `SegmentedControl`: substituir botões disabled usados como seleção.
-4. `ActionRow`: padronizar linhas de ações responsivas.
-5. `ListItemCard`: padronizar cards de conta, categoria e transação.
-6. `BackupScreen`: migrar para design system atual.
+Direção estética: **Apple website adaptado para app financeiro**. Fundo claro, muito espaço, tipografia forte, cards limpos, bordas sutis, sombras mínimas, azul como ação/link, conteúdo financeiro com contraste alto. Sem Liquid Glass, sem glassmorphism, sem blur decorativo, sem translucidez em dados.
 
+### Stack visual escolhida
+
+| Área | Escolha | Motivo |
+| --- | --- | --- |
+| Componentes | Design system próprio em `src/components/ui` | Menos dependência, mais controle visual, encaixe direto com Expo/React Native. |
+| Ícones | `lucide-react-native` | Ícones consistentes, leves e melhores que símbolos textuais. |
+| Estilo | `StyleSheet` + tokens centralizados | Mantém padrão atual, sem custo de configurar NativeWind/Tamagui. |
+| Direção visual | Apple websites: editorial, claro, preciso, premium | Mais atual para produto de confiança, sem depender de efeitos frágeis. |
+| Superfícies | Opacas, brancas ou cinza frio claro | Legibilidade máxima para dados financeiros. |
+| shadcn | Não usar `shadcn/ui` web | Usa DOM/Radix/Tailwind web, não encaixa direto em React Native. |
+| NativeWind/reusables | Não usar agora | Útil no futuro, mas neste momento adiciona migração maior que o benefício. |
+
+### Objetivos do redesenho
+
+1. Criar fundação visual reutilizável antes de alterar telas.
+2. Reduzir inconsistências entre forms, filtros, listas e feedbacks.
+3. Trocar símbolos textuais por ícones reais.
+4. Separar ação, seleção, perigo e estado desabilitado.
+5. Melhorar hierarquia: forms, filtros, dados financeiros e listas não devem ter o mesmo peso visual.
+6. Usar estética clara, editorial e precisa, inspirada nos websites da Apple.
+7. Manter legibilidade AA em dados críticos.
+8. Remover a ideia de Liquid Glass/glassmorphism do plano.
+
+### Princípios visuais Apple-like
+
+- **Clareza primeiro**: texto grande, contraste alto, conteúdo direto.
+- **Espaço como luxo**: respiro generoso em headers, seções e cards principais.
+- **Superfícies opacas**: nada de blur, vidro, frost ou translucidez ornamental.
+- **Tipografia nativa forte**: system font, títulos grandes, pesos 700-900, corpo 16-17px.
+- **Azul como linguagem de ação**: primário, links, seleção e navegação ativa.
+- **Pouca decoração**: bordas finas, sombras muito suaves, divisores quando bastam.
+- **Dados acima do efeito**: valores monetários têm prioridade visual sobre ícones e cromas.
+- **Motion funcional**: microinterações curtas, não coreografia.
+
+### Fase 1 — Fundação de tokens semânticos
+
+Criar tokens em `src/theme/` para remover cores e medidas soltas dos componentes.
+
+Paths planejados:
+
+```txt
+src/theme/colors.ts
+src/theme/spacing.ts
+src/theme/radius.ts
+src/theme/shadows.ts
+src/theme/typography.ts
+src/theme/motion.ts
+src/theme/index.ts
+```
+
+Estrutura recomendada:
+
+```txt
+primitive tokens
+  blue.500, slate.900, red.600, green.600...
+semantic tokens
+  background.app, surface.card, text.primary, action.primary...
+component tokens
+  button.primary.bg, card.border, tab.active, input.focusBorder...
+```
+
+Conteúdo mínimo:
+
+- `background.app`: `#f5f5f7` ou cinza frio equivalente.
+- `surface.card`: branco opaco.
+- `surface.subtle`: cinza claro para blocos secundários.
+- `text.primary`, `text.secondary`, `text.tertiary`.
+- `border.subtle`, `border.focus`, `border.danger`.
+- `action.primary`: azul calmo inspirado em ação Apple, sem neon.
+- `semantic.success`, `semantic.danger`, `semantic.warning`, `semantic.info`.
+- `spacing`: `4`, `8`, `12`, `16`, `20`, `24`, `32`, `40`, `48`.
+- `radius`: `sm`, `md`, `lg`, `xl`, `xxl`, `pill`, `round`.
+- `shadows`: `none`, `hairline`, `soft`, `floating`; sombras leves.
+- `typography`: title, largeTitle, sectionTitle, body, label, caption, amount.
+- `motion`: duração 120ms, 180ms, 220ms e curvas simples.
+
+Critérios de aceite:
+
+- Nenhum componente novo deve declarar cor crítica inline.
+- Componentes base importam tokens de `src/theme`.
+- Tokens são semânticos, não só paleta de cor.
+- `npm run typecheck` passa.
+
+### Fase 2 — Ícones consistentes
+
+Instalar `lucide-react-native` e substituir ícones textuais.
+
+Uso inicial:
+
+- Tab bar: `LayoutDashboard`, `ArrowUpDown`, `ChartPie`, `FileText`.
+- Configurações: `Settings` ou `SlidersHorizontal`, não hamburger se abrir só configurações.
+- FAB: `Plus`.
+- Empty states: ícone por contexto (`Wallet`, `Tags`, `ReceiptText`, `Shield`, `DatabaseBackup`).
+- Ações: `Pencil`, `Trash2`, `Download`, `Upload`, `FileDown`.
+
+Critérios de aceite:
+
+- `src/navigation/tabRoutes.ts` não deve depender de símbolos unicode como ícone final.
+- Ícones têm tamanho e cor via tokens.
+- Ícones decorativos usam `accessibilityElementsHidden` quando necessário; ações mantêm label textual/acessível.
+- Botões só com ícone usam `accessibilityLabel`, `accessibilityHint` e `hitSlop`.
+
+### Fase 3 — Primitivos do design system
+
+Evoluir componentes existentes antes de mexer nas telas.
+
+#### `Button`
+
+Adicionar variantes:
+
+```tsx
+variant="primary" | "secondary" | "tertiary" | "ghost" | "danger" | "success"
+size="sm" | "md" | "lg" | "icon"
+selected?: boolean
+leftIcon?: ReactNode
+rightIcon?: ReactNode
+fullWidth?: boolean
+```
+
+Regras:
+
+- `primary`: azul sólido, uma ação principal por bloco.
+- `secondary`: cinza claro/opaco com texto forte.
+- `tertiary`: texto azul, estilo link/ação leve à Apple.
+- `ghost`: ação discreta dentro de listas/cards.
+- `danger`: destrutivo claro, nunca usado por estética.
+- `disabled` significa indisponível.
+- `selected` significa opção ativa.
+
+#### `Card`
+
+Adicionar variantes:
+
+```tsx
+variant="default" | "subtle" | "elevated" | "interactive" | "critical"
+padding="sm" | "md" | "lg" | "xl"
+```
+
+Regras:
+
+- `default`: conteúdo financeiro principal, branco opaco.
+- `subtle`: filtros, apoio e seções menos importantes.
+- `elevated`: resumo principal ou bloco hero.
+- `interactive`: lista tocável ou item clicável.
+- `critical`: só para dados/avisos que exigem atenção.
+- Evitar `Card` dentro de `Card`; preferir divisores ou seções internas.
+
+#### `TextInput` e `MoneyInput`
+
+Melhorias:
+
+- estado `focused` com borda azul e sombra mínima.
+- `helperText` além de `error`.
+- placeholder com contraste adequado.
+- ícone opcional à esquerda/direita.
+- altura mínima 48px preservada.
+- suporte a Dynamic Type sem cortar valor.
+
+#### Novos primitivos
+
+| Componente | Path sugerido | Função |
+| --- | --- | --- |
+| `ScreenHeader` | `src/components/ui/ScreenHeader.tsx` | Título grande, subtítulo curto e ação opcional. |
+| `InlineStatus` | `src/components/ui/InlineStatus.tsx` | Sucesso, erro, aviso e info locais. |
+| `SegmentedControl` | `src/components/ui/SegmentedControl.tsx` | Abas e escolhas com seleção real. |
+| `ActionRow` | `src/components/ui/ActionRow.tsx` | Linhas responsivas de ações. |
+| `ListItemCard` | `src/components/ui/ListItemCard.tsx` | Base para conta, categoria e transação. |
+| `FloatingTabBar` | `src/components/ui/FloatingTabBar.tsx` | Tab bar inferior opaca, arredondada, sem blur. |
+| `FloatingActionButton` | `src/components/ui/FloatingActionButton.tsx` | Botão `+` para nova transação. |
+| `SettingsButton` | `src/components/ui/SettingsButton.tsx` | Acesso a Configurações no topo. |
+
+Critérios de aceite:
+
+- Nenhum seletor usa `disabled` para indicar seleção.
+- `BackupScreen` deixa de usar `RNButton`.
+- Status inline repetido começa a migrar para `InlineStatus`.
+- Alvos de toque ficam com mínimo 44px, preferencial 48px.
+
+### Fase 4 — Navegação e estrutura global
+
+Objetivo: tornar a navegação premium, clara e parecida com produto Apple, sem vidro.
+
+Implementar:
+
+- `FloatingTabBar`: tab bar inferior opaca, branca, com borda sutil e sombra leve.
+- `FloatingActionButton`: botão `+` azul integrado à navegação, ação primária de nova transação.
+- `SettingsButton`: canto superior direito, abre Configurações.
+- `ScreenHeader` em todas as views principais.
+
+Regras:
+
+- Tab bar final deve mostrar só: Dashboard, Transações, Budget, Relatórios.
+- Configurações sai da tab bar e vira tela acessada pelo botão de configurações.
+- Backup e segurança ficam dentro de Configurações.
+- Nada de blur, glass, frosted surface ou translucidez ornamental.
+- Superfícies de navegação são opacas, com borda fina e sombra muito leve.
+
+Critérios de aceite:
+
+- Rotas atuais continuam acessíveis durante migração.
+- Navegação funciona em iOS, Android e web.
+- FAB não cobre conteúdo importante nem fica preso ao teclado.
+- Botão de Configurações usa ícone de configurações, não hamburger genérico.
+
+### Fase 5 — Componentes financeiros e listas
+
+Criar componentes específicos para leitura financeira.
+
+| Componente | Path sugerido | Uso |
+| --- | --- | --- |
+| `TransactionListItem` | `src/components/finance/TransactionListItem.tsx` | Lista densa de gastos/recebimentos. |
+| `AccountListItem` | `src/components/finance/AccountListItem.tsx` | Contas cadastradas. |
+| `CategoryListItem` | `src/components/finance/CategoryListItem.tsx` | Categorias com swatch, não hexadecimal visível. |
+| `MetricCard` ou `SummaryCard` v2 | `src/components/finance/SummaryCard.tsx` | Métricas com hierarquia melhor. |
+| `BudgetDonut` | `src/components/charts/BudgetDonut.tsx` | Budget restante no Dashboard/Budget. |
+| `TrendBars` | `src/components/charts/TrendBars.tsx` | Gastos vs ganhos ao longo do tempo. |
+| `DateFilterBar` | `src/components/ui/DateFilterBar.tsx` | Dia, mês, ano e data específica. |
+
+Regras:
+
+- Valores monetários alinhados à direita quando em lista.
+- Despesa usa vermelho controlado; receita usa verde; saldo neutro usa ink/accent conforme contexto.
+- Categoria usa swatch visual e nome legível, não texto hexadecimal.
+- Gráficos sem gradiente decorativo; cores apenas para diferenciar dado e estado.
+- Listas usam densidade confortável, com divisores sutis ou cards compactos, não cards pesados repetidos.
+
+### Fase 6 — Budget mínimo funcional
+
+Não colocar uma tab principal só com “em breve”. Budget deve ter funcionalidade mínima antes de entrar como tab final.
+
+Mínimo aceitável:
+
+- usuário define budget mensal geral.
+- valor fica salvo localmente.
+- Dashboard mostra gasto real vs budget.
+- Budget mostra progresso, restante e estado.
+- Sem budget definido: estado vazio bonito com CTA `Definir budget mensal`.
+
+Objetivo futuro:
+
+- budget por categoria.
+- comparação automática com despesas reais.
+- alertas por categoria.
+
+### Fase 7 — Motion e feedback mobile
+
+Adicionar microinterações funcionais, sem espetáculo.
+
+Regras:
+
+- Press feedback: scale `0.96–0.98` e opacidade leve.
+- Mudança de segmento/filtro: 150–220ms.
+- FAB: feedback curto ao toque.
+- Loading em conteúdo: preferir skeleton/placeholder local quando possível.
+- Respeitar reduzir movimento quando disponível.
+- Usar `react-native-reanimated` só onde melhorar estado/percepção.
+
+Opcional pós-fundação:
+
+```bash
+npm install expo-haptics
+```
+
+Uso recomendado:
+
+- salvar transação: success.
+- erro de validação: warning.
+- ação destrutiva confirmada: impact.
+- trocar segmento/filtro: light.
+
+### Fase 8 — Polimento por tela
+
+Ordem recomendada:
+
+1. **Backup**: tela menor, ótimo alvo para validar novos `Button`, `Card`, `InlineStatus` e `ScreenHeader`.
+2. **Configurações**: consolidar preferências, backup, segurança e aparência.
+3. **Nova transação**: FAB deve abrir tela dedicada `/new-transaction`, mais acessível e keyboard-safe que bottom sheet.
+4. **Transações**: maior ganho de UX; aplicar `SegmentedControl`, `DateFilterBar`, `TransactionListItem` e FAB.
+5. **Dashboard**: melhorar hierarquia, resumo principal, `BudgetDonut` e gráficos.
+6. **Budget**: mínimo funcional antes de virar tab principal.
+7. **Relatórios**: reutilizar métricas/gráficos do Dashboard e organizar PDF como ação secundária clara.
+8. **Contas/Categorias**: migrar acesso para fluxos internos ou Configurações conforme a navegação final.
+
+### Fase 9 — Acessibilidade, regressão e acabamento
+
+Checklist obrigatório antes de encerrar o redesign:
+
+- Contraste AA para texto normal.
+- Placeholder legível.
+- Labels acessíveis em campos, botões de ícone e FAB.
+- `accessibilityRole`, `accessibilityLabel` e `accessibilityHint` nos controles principais.
+- `hitSlop` em botões de ícone.
+- Estado `selected` diferente de `disabled`.
+- Loading não remove o texto do botão sem indicar progresso.
+- Erros têm mensagem textual, não só cor.
+- Cards não ficam aninhados sem necessidade.
+- Layout confortável em 375px.
+- Dynamic Type/fonte aumentada não corta valores importantes.
+- Forms continuam seguros com teclado aberto.
+- Hover/focus funcionam no web.
+- `npm run lint`, `npm run typecheck` e `npm test` passam.
+
+### Entregáveis esperados
+
+```txt
+Etapa 1: tokens semânticos + Button/Card/TextInput v2
+Etapa 2: lucide icons + ScreenHeader/InlineStatus/SegmentedControl
+Etapa 3: Backup + Configurações alinhadas ao design system
+Etapa 4: navegação final com FloatingTabBar, FloatingActionButton e SettingsButton
+Etapa 5: nova transação via FAB
+Etapa 6: Transações refinada
+Etapa 7: Dashboard + Budget mínimo funcional
+Etapa 8: Relatórios refinados
+Etapa 9: hardening visual, acessibilidade e testes
+```
 
 ## Modelo final de design decidido
 
-Esta seção registra as decisões finais coletadas etapa por etapa para orientar a próxima implementação visual.
+Esta seção registra as decisões finais para orientar a próxima implementação visual.
+
+### Referência visual final
+
+Referência: **websites da Apple**, adaptados para um app financeiro mobile.
+
+Usar:
+- fundo claro `#f5f5f7` ou próximo.
+- cards brancos opacos.
+- tipografia grande e confiante.
+- subtítulos curtos em cinza escuro.
+- botões azuis arredondados.
+- links/tertiary actions em azul.
+- divisores e bordas sutis.
+- sombras mínimas.
+- motion curto e funcional.
+
+Não usar:
+- Liquid Glass.
+- glassmorphism.
+- blur/frost.
+- cards translúcidos.
+- gradientes decorativos.
+- neon.
+- tema fintech escuro pesado.
+- hamburger se o botão abre só Configurações.
 
 ### Views principais finais
 
-A navegação principal deve conter somente quatro views:
+A navegação principal deve conter somente quatro views quando todas estiverem úteis:
 
 1. **Dashboard**
 2. **Transações**
 3. **Budget**
 4. **Relatórios**
 
-Configurações deixa de ser tab principal. Deve abrir por ícone de menu no canto superior direito.
+Configurações deixa de ser tab principal. Deve abrir por botão de configurações no canto superior direito.
 
 Backup e segurança ficam dentro de Configurações.
 
@@ -828,8 +1163,8 @@ Objetivo:
 - permitir leitura rápida do budget e do fluxo de dinheiro.
 
 Componentes desejados:
-- título dentro da própria view.
-- card/resumo principal.
+- título grande dentro da própria view.
+- resumo principal em card hero branco.
 - donut chart de budget.
 - gráfico de gastos/ganhos x tempo.
 - ações rápidas para adicionar transação, ir para Budget e ir para Relatórios.
@@ -848,10 +1183,10 @@ Donut de budget:
   - vermelho para budget estourado.
 
 Gráfico temporal:
-- inspirado na referência enviada com barras por período.
+- inspirado em leitura limpa de produto Apple: eixos simples, labels poucos, barras precisas.
 - deve comparar **gastos vs ganhos** ao longo do tempo.
 - pode ter filtros `Semana`, `Mês`, `Trimestre` no futuro.
-- sem gradientes.
+- sem gradientes decorativos.
 
 ### Transações
 
@@ -879,30 +1214,32 @@ Filtros necessários:
 
 Adição de transação:
 - botão flutuante `+`.
-- deve ficar na parte inferior, integrado à linha/barra de navegação.
-- visual: botão circular destacado, azul calmo ou verde somente se for ação positiva confirmada.
+- ação: abrir tela dedicada `/new-transaction`.
+- visual: botão circular destacado em azul calmo.
 
 ### Budget
 
-Objetivo atual:
-- placeholder explicativo bonito.
-- não fingir funcionalidade pronta.
+Objetivo inicial:
+- funcionalidade mínima real, não placeholder.
+
+Mínimo funcional:
+- usuário define budget mensal geral.
+- app salva localmente.
+- app compara despesas reais do mês vs budget.
+- app mostra restante, percentual usado e estado.
+- se não houver budget, mostrar estado vazio com CTA claro.
 
 Objetivo futuro:
-- usuário define budget mensal geral.
 - usuário define budget por categoria.
 - app compara despesas reais vs budget.
 - app mostra progresso e alertas por categoria.
 
-Estrutura atual recomendada:
-- título dentro da view.
-- hero/card `Budget em breve`.
-- mock visual simples com barras/progresso ilustrativo.
-- texto explicando:
-  - budget mensal.
-  - budget por categoria.
-  - comparação com despesas reais.
-- CTA secundário para usar Transações ou Relatórios enquanto Budget não está ativo.
+Estrutura recomendada:
+- título grande dentro da view.
+- card hero com budget restante.
+- progresso visual simples.
+- lista de categorias quando existir budget por categoria.
+- CTA primário para definir/editar budget.
 
 ### Relatórios
 
@@ -911,28 +1248,28 @@ Objetivo:
 - PDF como opção disponível, não como foco absoluto.
 
 Componentes desejados:
-- título dentro da view.
+- título grande dentro da view.
 - filtros por período.
 - gráficos principais.
 - comparação com mês anterior.
 - gastos por categoria.
 - tendência do período.
-- botão para exportar PDF.
+- botão para exportar PDF como ação secundária ou tertiary.
 
 ### Configurações
 
 Objetivo:
-- tela inteira acessada por menu.
+- tela inteira acessada por botão de configurações.
 - concentrar opções menos frequentes.
 
 Acesso:
-- ícone de 3 barras no canto superior direito.
-- ícone deve ter tratamento glass.
+- ícone `Settings` ou `SlidersHorizontal` no canto superior direito.
+- botão opaco, circular ou pill, com fundo branco e borda sutil.
 - toque abre tela inteira de Configurações.
 
 Conteúdo:
 - preferências locais.
-- toggle para ativar/desativar efeito glass.
+- aparência, se houver opções futuras.
 - backup.
 - segurança local.
 - dados de demonstração, se mantidos.
@@ -940,7 +1277,7 @@ Conteúdo:
 ### Navegação final
 
 Tipo:
-- barra inferior **glass flutuante**.
+- barra inferior **flutuante opaca**.
 
 Itens:
 - Dashboard.
@@ -954,28 +1291,32 @@ Ação central:
 
 Configurações:
 - fora da barra inferior.
-- acessada por ícone no topo direito.
+- acessada por botão no topo direito.
 
 ### Header final
 
 Topo global:
-- somente ícone de menu glass no canto superior direito.
+- somente botão de configurações no canto superior direito.
 - sem barra superior cheia.
 - sem título global.
 
 Títulos:
-- cada view tem seu próprio título dentro do conteúdo.
+- cada view tem seu próprio título grande dentro do conteúdo.
+- subtítulo curto quando ajudar a explicar o estado ou contexto.
 
 ### Tema visual
 
 Tema escolhido:
-- **Claro glass**.
+- **Claro editorial inspirado nos websites da Apple**.
 
 Regras:
-- sem gradientes.
+- sem glassmorphism.
+- sem Liquid Glass.
+- sem blur/frost/translucidez ornamental.
+- sem gradientes decorativos.
 - fundo claro suave.
-- cards claros levemente translúcidos.
-- navegação/menu/FAB com glass mais forte.
+- cards brancos opacos.
+- navegação/menu/FAB opacos com borda e sombra leve.
 - dados financeiros críticos sempre legíveis.
 
 Acento principal:
@@ -988,39 +1329,15 @@ Uso de cores:
 - âmbar: alerta/perto do limite.
 - cinzas frios: texto, bordas, fundos neutros.
 
-### Glassmorphism/Liquid Glass
-
-Decisão técnica:
-- manter Expo React Native.
-- não usar `liquid-glass-react` diretamente porque é React/DOM.
-- usar `rdev/liquid-glass-react` como referência visual.
-- criar equivalente React Native próprio.
-
-Intensidade:
-- glass forte só na navegação:
-  - tab bar.
-  - menu.
-  - FAB.
-- cards e conteúdo usam glass sutil.
-- superfícies de dados críticos devem ser menos translúcidas.
-
-Configuração:
-- app deve ter opção para ativar/desativar efeito glass.
-- quando desativado:
-  - sem blur/frost.
-  - superfícies opacas.
-  - mantém borda e sombra leve.
-
 ### Componentes novos planejados
 
 Pacote completo aprovado:
 
 | Componente | Objetivo |
 | --- | --- |
-| `GlassSurface` | Base para superfícies translúcidas/opacas com fallback. |
-| `GlassTabBar` | Barra inferior flutuante com tabs principais. |
-| `GlassMenuButton` | Botão de menu no canto superior direito. |
-| `GlassFab` | Botão `+` inferior integrado à navegação. |
+| `FloatingTabBar` | Barra inferior flutuante opaca com tabs principais. |
+| `SettingsButton` | Botão de configurações no canto superior direito. |
+| `FloatingActionButton` | Botão `+` inferior integrado à navegação. |
 | `ScreenHeader` | Título/subtítulo dentro da view, não no topo global. |
 | `SegmentedControl` | Abas e escolhas como Gastos/Recebimentos, Semana/Mês/Trimestre. |
 | `DateFilterBar` | Filtros por dia, mês, ano e data específica. |
@@ -1040,10 +1357,10 @@ Tabs finais
   ├─ Budget
   └─ Relatórios
 
-Menu superior direito
+Topo direito
   └─ Configurações tela inteira
       ├─ Preferências
-      ├─ Glass on/off
+      ├─ Aparência, se houver opções futuras
       ├─ Backup
       ├─ Segurança local
       └─ Demo data

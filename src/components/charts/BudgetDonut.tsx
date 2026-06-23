@@ -24,16 +24,15 @@ function ringColor(ratio: number) {
 export function BudgetDonut({ spentCents, totalCents, daysLeft, currency = 'BRL' }: BudgetDonutProps) {
   const safeTotal = Math.max(totalCents, 1);
   const ratio = spentCents / safeTotal;
-  const remaining = Math.max(safeTotal - spentCents, 0);
 
   return (
     <View style={styles.wrap}>
       <View style={[styles.ring, { borderColor: ringColor(ratio) }]}>
-        <Text style={styles.kicker}>Budget restante</Text>
-        <Text style={styles.value}>Restante: {money(remaining, currency)}</Text>
+        <Text style={styles.kicker}>Gastos do mês</Text>
+        <Text style={styles.value}>Gasto: {money(spentCents, currency)}</Text>
         <Text style={styles.days}>{daysLeft} dias restantes</Text>
       </View>
-      <Text style={styles.helper}>{Math.min(Math.round(ratio * 100), 999)}% usado no mês</Text>
+      <Text style={styles.helper}>{Math.min(Math.round(ratio * 100), 999)}% das movimentações do mês</Text>
     </View>
   );
 }

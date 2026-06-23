@@ -49,6 +49,10 @@ function percent(value: number | null) {
   return value === null ? 'sem base anterior' : `${value > 0 ? '+' : ''}${value}%`;
 }
 
+function transactionAmountCents(transaction: { amountCents: number; type: 'income' | 'expense' }) {
+  return transaction.type === 'expense' ? -Math.abs(transaction.amountCents) : Math.abs(transaction.amountCents);
+}
+
 export function ReportScreen({ reportQueries, settingsRepository, pdfGenerator = generateAndShareReportPdf }: { reportQueries?: ReportQueries; settingsRepository?: SettingsRepository; pdfGenerator?: PdfGenerator }) {
   const [selectedMonth, setSelectedMonth] = useState(currentYearMonth);
   const [currency, setCurrency] = useState<AppCurrency>('BRL');
@@ -166,7 +170,7 @@ export function ReportScreen({ reportQueries, settingsRepository, pdfGenerator =
           <View key={transaction.id} style={styles.transactionRow}>
             <Text style={styles.rowName}>{transaction.date} · {transaction.description}</Text>
             <Text style={styles.rowText}>{transaction.categoryName} · {transaction.accountName}</Text>
-            <Text style={[styles.amount, transaction.type === 'expense' && styles.expense]}>{transaction.type === 'expense' ? '-' : ''}{formatSignedCentsToCurrency(transaction.amountCents, currency)}</Text>
+            <Text style={[styles.amount, transaction.type === 'expense' && styles.expense]}>{formatSignedCentsToCurrency(transactionAmountCents(transaction), currency)}</Text>
           </View>
         ))}
       </Card>

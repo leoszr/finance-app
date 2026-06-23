@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
 
 import { BarRow } from '@/components/charts/BarRow';
@@ -48,6 +48,16 @@ function daysLeftInMonth(year: number, month: number) {
   const now = new Date();
   if (now.getFullYear() !== year || now.getMonth() + 1 !== month) return new Date(year, month, 0).getDate();
   return new Date(year, month, 0).getDate() - now.getDate() + 1;
+}
+
+function QuickAction({ icon, title, hint, onPress }: { icon: string; title: string; hint: string; onPress: () => void }) {
+  return (
+    <Pressable accessibilityRole="button" onPress={onPress} style={({ pressed }) => [styles.quickAction, pressed && styles.quickActionPressed]}>
+      <View style={styles.quickIcon}><Text style={styles.quickIconText}>{icon}</Text></View>
+      <Text style={styles.quickTitle}>{title}</Text>
+      <Text style={styles.quickHint}>{hint}</Text>
+    </Pressable>
+  );
 }
 
 export function DashboardManager({ dashboardQueries, settingsRepository }: { dashboardQueries?: DashboardQueries; settingsRepository?: SettingsRepository }) {
@@ -109,7 +119,7 @@ export function DashboardManager({ dashboardQueries, settingsRepository }: { das
 
   const maxCategory = Math.max(...summary.expenseCategories.map((category) => category.amountCents), 0);
   const maxFlow = Math.max(summary.incomeCents, summary.expenseCents, 0);
-  const budgetBase = Math.max(summary.incomeCents, summary.expenseCents, 1);
+  const flowBase = Math.max(summary.incomeCents, summary.expenseCents, 1);
 
   return (
     <View style={styles.stack}>
@@ -128,15 +138,15 @@ export function DashboardManager({ dashboardQueries, settingsRepository }: { das
       ) : null}
 
       <Card>
-        <BudgetDonut spentCents={summary.expenseCents} totalCents={budgetBase} daysLeft={daysLeftInMonth(selectedMonth.year, selectedMonth.month)} currency={currency} />
+        <BudgetDonut spentCents={summary.expenseCents} totalCents={flowBase} daysLeft={daysLeftInMonth(selectedMonth.year, selectedMonth.month)} currency={currency} />
       </Card>
 
       <Card>
-        <Text style={styles.sectionTitle}>Ações rápidas</Text>
-        <View style={styles.quickActions}>
-          <Button onPress={() => router.push('/transactions' as never)}>Adicionar transação</Button>
-          <Button onPress={() => router.push('/budget' as never)}>Ir para Budget</Button>
-          <Button onPress={() => router.push('/reports' as never)}>Ver relatórios</Button>
+        <Text style={styles.sectionTitle}>Adicionar rápido</Text>
+        <View style={styles.quickGrid}>
+          <QuickAction icon="◎" title="Conta" hint="origem" onPress={() => router.push('/accounts' as never)} />
+          <QuickAction icon="◌" title="Budget" hint="limite" onPress={() => router.push('/budget' as never)} />
+          <QuickAction icon="+" title="Transação" hint="lançar" onPress={() => router.push('/transactions' as never)} />
         </View>
       </Card>
 
@@ -194,5 +204,19 @@ const styles = StyleSheet.create({
   accountRow: { marginTop: 12, flexDirection: 'row', justifyContent: 'space-between', gap: 12 },
   accountName: { color: '#0f172a', fontSize: 16, fontWeight: '900' },
   accountValue: { color: '#334155', fontSize: 16, fontWeight: '900', fontVariant: ['tabular-nums'] },
-  quickActions: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 14 },
+  quickGrid: { flexDirection: 'row', gap: 10, marginTop: 14 },
+  quickAction: {
+    minHeight: 108,
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 18,
+    backgroundColor: '#ecfdf5',
+    padding: 10,
+  },
+  quickActionPressed: { opacity: 0.86, transform: [{ scale: 0.96 }] },
+  quickIcon: { width: 42, height: 42, alignItems: 'center', justifyContent: 'center', borderRadius: 16, backgroundColor: '#0f766e' },
+  quickIconText: { color: '#f8fafc', fontSize: 23, fontWeight: '900', lineHeight: 28 },
+  quickTitle: { marginTop: 8, color: '#0f172a', fontSize: 15, fontWeight: '900', textAlign: 'center' },
+  quickHint: { marginTop: 2, color: '#64748b', fontSize: 12, fontWeight: '800', textAlign: 'center' },
 });

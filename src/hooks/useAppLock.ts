@@ -62,7 +62,9 @@ export function useAppLock(settingsRepository?: SettingsRepository, auth: LocalA
     return () => { mounted = false; };
   }, [refreshLock]);
 
-  useEffect(() => subscribeToSettingsChanges(() => void refreshLock()), [refreshLock]);
+  useEffect(() => subscribeToSettingsChanges((key) => {
+    if (!key || key === SETTINGS_KEYS.appLockEnabled) void refreshLock();
+  }), [refreshLock]);
 
   useEffect(() => {
     let state: AppStateStatus = AppState.currentState;

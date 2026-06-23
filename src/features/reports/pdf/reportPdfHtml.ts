@@ -12,13 +12,17 @@ function monthLabel(year: number, month: number) {
   return formatted.ok ? formatted.value : `${month}/${year}`;
 }
 
+function transactionAmountCents(transaction: { amountCents: number; type: 'income' | 'expense' }) {
+  return transaction.type === 'expense' ? -Math.abs(transaction.amountCents) : Math.abs(transaction.amountCents);
+}
+
 export function buildReportPdfHtml(report: MonthlyReport, year: number, month: number, currency: AppCurrency = 'BRL') {
   const categories = report.expenseCategories.length === 0
     ? '<tr><td colspan="3">Sem despesas neste mês.</td></tr>'
     : report.expenseCategories.map((category) => `<tr><td>${escapeHtml(category.categoryName)}</td><td>${formatSignedCentsToCurrency(category.amountCents, currency)}</td><td>${category.percent}%</td></tr>`).join('');
   const transactions = report.transactions.length === 0
     ? '<tr><td colspan="5">Nenhuma transação no período.</td></tr>'
-    : report.transactions.map((transaction) => `<tr><td>${escapeHtml(transaction.date)}</td><td>${escapeHtml(transaction.description)}</td><td>${escapeHtml(transaction.categoryName)}</td><td>${escapeHtml(transaction.accountName)}</td><td>${transaction.type === 'expense' ? '-' : ''}${formatSignedCentsToCurrency(transaction.amountCents, currency)}</td></tr>`).join('');
+    : report.transactions.map((transaction) => `<tr><td>${escapeHtml(transaction.date)}</td><td>${escapeHtml(transaction.description)}</td><td>${escapeHtml(transaction.categoryName)}</td><td>${escapeHtml(transaction.accountName)}</td><td>${formatSignedCentsToCurrency(transactionAmountCents(transaction), currency)}</td></tr>`).join('');
 
   return `<!doctype html>
 <html lang="pt-BR">
